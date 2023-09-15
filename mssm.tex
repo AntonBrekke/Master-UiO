@@ -1,0 +1,722 @@
+% Standalone document
+\documentclass[notes.tex]{subfiles}
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{The Minimal Supersymmetric Standard Model}
+\label{chap:mssm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The Minimal Supersymmetric Standard Model (MSSM) is a minimal supersymmetric model in the sense that it has the smallest field (and gauge) content consistent with the known Standard Model fields. We will now construct this model on the basis of what we have learnt the previous chapters, and look at some of its consequences.
+
+
+%%%%%%%%%%%%%%%
+\section{MSSM field content}
+%%%%%%%%%%%%%%%
+To specify a supersymmetric model we need to specify the superfield content and the gauge symmetries. The gauge symmetry is already given as the Standard Model $SU(3)_C\times SU(2)_L\times U(1)_Y$. Previously we learnt that each (left-handed) scalar superfield S has a (left-handed) Weyl spinor $\psi_A$, a complex scalar $A_s$ and an auxiliary complex scalar field $F_s$, since they are a $j=0$ representation of the superalgebra. After an application of the equations of motion $\psi_A$ and $A_s$ have two fermionic and two bosonic degree of freedom remaining respectively, while the auxiliary field has been eliminated along with two fermionic d.o.f.. 
+
+In order to construct a Dirac fermion, which are plentiful in the Standard Model, we need a right-handed Weyl spinor as well. We can acquire the needed right-handed Weyl spinor from the hermitian conjugate $\bar{T}^\dagger$ of a different scalar superfield $\bar{T}$ with the right-handed Weyl spinor $\bar{\varphi}_{\dot{A}}$.\footnote{The bar here is used to (not) confuse us, it is part of the name of the superfields and does not denote any hermitian or complex conjugate. The bar signifies that this is the field where, when hermitian conjugated, we will pick the right-handed (bared) Weyl-spinor from in the Dirac fermion.} With these four fermionic d.o.f.\ we can construct {\it two} Dirac fermions, a particle--anti-particle pair, and four scalars, two particle--anti-particle pairs.
+
+We use these two superfield ingredients to construct all the known fermions:
+\begin{itemize}
+\item To represent the Standard Model leptons we introduce the superfields $l_i$ and $\bar{E}_i$ for the charged leptons ($i$ is the generation index) and $\nu_i$ for the neutrinos, and form $SU(2)_L$ doublet superfield vectors $L_i = (\nu_i, l_i)$, which contain the left-handed Weyl spinors for the particles.
+We do not introduce the $\bar{N}_i$ that would contain right-handed neutrino spinors needed for massive Dirac neutrinos.\footnote{The anti-neutrino contained in the superfield $\nu_i^\dagger$ is right-handed consistent with experiment.}
+This is a convention -- the MSSM is older than the discovery of neutrino mass -- and including $\bar{N}_i$ fields has some interesting consequences.\footnote{Note that component fields in the same superfield must have the same charge under all the gauge groups, {\it i.e.}\ the scalar partner of the electron has electric charge $-e$, so it cannot be a neutrino.}
+The right-handed neutrinos themselves would not couple to anything since they are SM singlets,\footnote{They can not be colour-charged, they are right-handed singlets under $SU(2)_L$ thus they have zero weak isospin, but since they should also have zero electric charge the hypercharge must also be zero.} however, their supersymmetric scalar partners could be a potential dark matter candidate.
+\item For quarks the situation is similar. Up-type and down-type quarks get the superfields $u_i$, $\bar{U}_i$ and $d_i$, $\bar{D}_i$, forming the $SU(2)_L$ doublets $Q_i = (u_i, d_i).$\footnote{Here we should really also include a color index $a$ so that $u_i^a$ is a component in an$SU(3)_C$ triplet superfield vector. We omit these for simplicity.}
+\end{itemize}
+
+With all possible apologies, we now change notation for the component fields to what is conventional in phenomenology, as opposed to pure theory. The left-handed Weyl spinors in these superfields will now be named for example $l_{iL}$ for the spinor in the superfield $l_i$, and $\bar l_{iL}$ for the one in $\bar E_i$, and similarly for the other superfields. This signifies that they are the left-handed Weyl spinors for the particle and anti-particle, respectively. For the right-handed Weyl spinors in the hermitian conjugate superfields we swap the bar and $L/R$ labels, so that for example $l_i^\dagger$ contains $\bar l_{iR}$ and $\bar E_i^\dagger$ contains $l_{iR}$. 
+
+The scalar component fields are named after the fermions using the tilde notation, for example in the superfield $l_i$ we have the scalar $\tilde l_{iL}$ as the supersymmetric partner particle, often just called {\bf sparticle}, of the fermion $l_{iL}$.  Similarly, $\bar E_i$, contains $\tilde l_{iL}^*$ which is the anti-particle of $\tilde l_{iL}$, $l_i^\dagger$ contains $\tilde l_{iR}^*$, and $\bar E_i^\dagger$ contains $\tilde l_{iR}$.  Since scalars do not have any notion of handedness the $L$ or $R$ here is just part of the conventional name, we still call these particles for left-handed and right-handed  scalar leptons though. 
+
+Additionally, we need vector superfields, which, after the e.o.m.\ have eliminated the auxiliary field, contain a {\it massless} vector boson component field with two scalar d.o.f.\ and two Weyl-spinors, one of each handedness $\lambda$ and $\bar{\lambda}$, with two fermionic degrees of freedom. Together these form a $j=\frac{1}{2}$ representation of the superalgebra. If the vector superfield is neutral, the fermions can form a Majorana fermion, if not they can be combined with the Weyl-spinors from other fields to form Dirac fermions. 
+
+Looking at the construction $V\equiv qt^aV^a$ for the vector superfields in the supersymmetric Lagrangian we see that, as expected, we need one superfield $V^a$ per generator $t^a$ of the algebra, with the normal $SU(3)_C$, $SU(2)_L$ and $U(1)_Y$ vector bosons as component fields. We call these superfields $C^a$, $W^a$ and $B^0$.\footnote{And there we have another W.} In order to be really confusing, we use the following symbols for the fermions constructed from the respective Weyl-spinors: $\tilde g$, $\tilde W^0$ and $\tilde B^0$. The tilde here is supposed to tells us -- just as for the scalar component fields of the scalar superfields -- that they are supersymmetric partners of the known Standard Model particles. 
+
+We also need superfields for the scalar Higgs boson. Now life gets interesting. The Higgs $SU(2)_L$ doublet scalar field $H$ used in the Standard Model cannot give mass to all fermions because it relies on the construction $H^C \equiv -i(H^\dagger\sigma_2)^T$ to give masses to up-type quarks, and possibly neutrinos. The superfield version of this cannot appear in the superpotential because it would mix left- and right-handed superfields. The minimal Higgs content we can get away with are two Higgs superfield $SU(2)_L$ doublets, which we will call $H_u$ and $H_d$, indexing the quarks they give mass to.\footnote{In some further insanity some authors prefer $H_1$ and $H_2$ so that you have no idea which is which.} These must have (more on the reason for that in Sec.~\ref{sec:mssm_kinetic_terms}) weak hypercharge $Y = \pm 1$ for $H_u$ and $H_d$ respectively, so that we have the superfield doublets:
+\begin{equation}
+H_u = \begin{pmatrix} H_u^+\\H_u^0\end{pmatrix},\quad
+H_d = \begin{pmatrix} H_d^0\\H_d^-\end{pmatrix},
+\end{equation}
+where we have given the electric charges of the scalar superfield components of the superfield doublets based on the standard $Q=\half Y+T_3$ relationship after electroweak symmetry breaking, where $T_3$ is the weak isospin. The fermion component fields of these superfields will be denoted $\tilde H_u^+$, $\tilde H_u^0$, $\tilde H_d^0$, and $\tilde H_d^-$. The scalar component fields of these fields, before their mixing following electroweak symmetry breaking, will have the same symbols as the superfields. (Yes, really!)
+
+
+%%%%%%%%%%%%%
+\section{The kinetic terms}
+\label{sec:mssm_kinetic_terms}
+%%%%%%%%%%%%%
+It is now straight forward to write down the kinetic terms of the MSSM Lagrangian giving the matter-gauge interaction terms
+\begin{eqnarray}\label{eq:kinlag}
+\mathcal{L}_\text{kin} &=& L_i^\dagger e^{\frac{1}{2}g \sigma W - \frac{1}{2} g' B}L_i + Q_i^\dagger e^{\frac{1}{2}g_s\lambda C + \frac{1}{2}g\sigma W + \frac{1}{3}\cdot \frac{1}{2} g' B}Q_i \nonumber\\
+&&+\bar{U}_{i}^\dagger e^{\frac{1}{2}g_s \lambda C - \frac{4}{3}\cdot \frac{1}{2} g' B}\bar{U}_i + \bar{D}_i^\dagger e^{\frac{1}{2} g_s\lambda C + \frac{2}{3}\cdot \frac{1}{2} g' B}\bar{D}_i \nonumber\\
+&& + \bar{E}_i^\dagger e^{2\frac{1}{2} g' B}\bar{E}_i + H_u^\dagger e^{\frac{1}{2} g \sigma W + \frac{1}{2} g'B}H_u + H_d^\dagger e^{\frac{1}{2}g \sigma W - \frac{1}{2} g' B}H_d,
+\end{eqnarray}
+where $g'$, $g$ and $g_s$ are the couplings constants (strengths) of $U(1)_Y$, $SU(2)_L$, and $SU(3)_C$, respectively, and $\half\sigma_i$ and $\half\lambda_a$ are the generators of  $SU(2)_L$ and $SU(3)_C$. As a convention we assign the charges under $U(1)$, hypercharge, in units of $\frac{1}{2}g'$. All non-singlets of $SU(2)_L$ and $SU(3)_C$ have the same charge, the factor $\frac{1}{2}$ here is used to get by without accumulation of numerical factors since the algebras for the Pauli ($\sigma_i$) and Gell-Mann matrices ($\lambda_a$) are:
+\[[\frac{1}{2}\sigma_i, \frac{1}{2} \sigma_j] = i \epsilon_{ijk}\frac{1}{2}\sigma_k,\]
+and
+\[[\frac{1}{2}\lambda_a, \frac{1}{2} \lambda_b] = i f_{ab}^c\frac{1}{2}\lambda_c.\]
+These conventions lead to the wanted Standard Model gauge transformations for the component fields and the familiar relations after electroweak symmetry breaking, $e = g\sin\theta_W = g'\cos\theta_W$.
+
+We mentioned earlier that the two Higgs superfields have opposite hypercharge. This is needed for so-called {\bf anomaly cancellation} in the MSSM. Gauge anomaly is the possibility that at loop level contributions to processes such as in Fig.~\ref{fig:anomaly} break the gauge invariance that we have established at the classical level in the Lagrangian, and ruins the predictability of the theory. This rather miraculously does not happen in the SM because it has the exactly field content it has, so that all such possible gauge anomalies exactly cancel -- we do not know of a deeper reason for why it has exactly this field content. If we have only {\it one} Higgs doublet this cancellation does not happen for the MSSM. With two Higgs doublets, and with opposite hypercharge, it does.
+
+%%%
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{feynman}
+%
+\diagram [layered layout, horizontal=a to b] {
+a [particle=$B$] -- [boson] b,
+b -- [boson] c [particle=$B$],
+b -- [boson] d [particle=$B$],
+};
+%
+\diagram [xshift=6cm, small, horizontal=a to t1] {
+a [particle=$B$] -- [boson] t1 -- [fermion] t2 -- [fermion, edge label=$f$] t3 -- [fermion] t1,
+t2 -- [boson] p1 [particle=$B$],
+t3 -- [boson] p2 [particle=$B$],
+p1 -- [opacity=0] p2,
+};
+\end{feynman}
+\end{tikzpicture}
+\caption{The tree level coupling between three gauge bosons $B$ (left), and the one-loop fermion contribution to the same process (right).}  
+\label{fig:anomaly}
+\end{figure}
+%%%
+
+
+
+%%%%%%%%%%%
+\section{Gauge terms}
+%%%%%%%%%%%
+The pure gauge terms with supersymmetric field strengths are also fairly easy to write down:
+\begin{eqnarray}\label{eq:gaugelag}
+\mathcal{L}_V = \bar{\theta}\bar{\theta}\tr{C^AC_A} +\bar{\theta}\bar{\theta}\tr{W^AW_A} +  \frac{1}{2}\bar{\theta}\bar{\theta}B^AB_A,
+\end{eqnarray}
+where we have used the Dynkin indices of the gauge group representations
+\[T(R)_L = {\rm Tr\,}\left[\frac{1}{2}\sigma_1\cdot \frac{1}{2}\sigma_1\right] = \frac{1}{2},\]
+and
+\[T(R)_C = {\rm Tr\,}\left[\frac{1}{2}\lambda_1\cdot \frac{1}{2}\lambda_1\right] = \frac{1}{2},\]
+in the normalization of the terms, and where the field strengths are given as:
+\begin{eqnarray}
+C_A &=& -\frac{1}{4}\bar{D}\bar{D}e^{-C}D_Ae^C \text{ , \indent \indent}C = \frac{1}{2} \lambda_aC^a,\\
+W_A &=& -\frac{1}{4}\bar{D}\bar{D}e^{-W}D_Ae^W \text{ , \indent \indent}W = \frac{1}{2} \sigma_iW^i,\\
+B_A &=& -\frac{1}{4}\bar{D}\bar{D}D_AB \text{ , \indent \indent}B = \frac{1}{2} B^0.
+\end{eqnarray}
+
+
+
+%%%%%%%%%%%%%%%%%%
+\section{The MSSM superpotential}
+%%%%%%%%%%%%%%%%%%
+With the gauge structure of the Standard Model  in place we are ready to write down all possible terms in the superpotential. First, we notice that there can be no {\bf tadpole terms} (terms with only one superfield), since there are no superfields that are singlets (zero charge) under all Standard Model gauge groups. The only alternative would be if we introduced right-handed neutrino superfields $\bar{N}_i$. 
+
+For the possible mass terms $m\Phi_i\Phi_j$ we first check the abelian gauge group $U(1)_Y$, where the requirement reduces to the relatively simple sum of hypercharges $Y_i + Y_j = 0$. In Table \ref{tab:hyper} we see that the only possible contributions from the superfields that contain the Standard Model fermions are particle--anti-particle combinations such as $l_i{}_L\bar{l}_i{}_R$, but these come from superfields with different handedness and cannot be used together. 
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{l | c | c | c | c | c | c | c | c | c | c } 
+\noalign{\smallskip}\hline\noalign{\smallskip}
+{\bf Superfield} & $L_i$ & $\bar{E}^\dagger_i$ & $Q_i$ & $\bar{U}_i^\dagger$ & $\bar{D}_i^\dagger$ & $L_i^\dagger$ & $\bar{E}_i$ & $Q_i^\dagger$ & $\bar{U}_i$ & $\bar{D}_i$ \\
+\noalign{\smallskip}\hline\noalign{\smallskip} 
+{\bf Fermion}    & $\nu_i{}_L$, $l_i{}_L$ & $l_i{}_R$ & $u_i{}_L$,$d_i{}_L$ & $u_i{}_R$ & $d_i{}_R$ & $\bar{\nu}_i{}_R$, $\bar{l}_i{}_R$ & $\bar{l}_i{}_L$ & $\bar{u}_i{}_R$,$\bar{d}_i{}_R$ & $\bar{u}_i{}_L$ & $\bar{d}_i{}_L$ \\
+{\bf Hypercharge} & $-1$ & $-2$ & $\frac{1}{3}$ & $\frac{4}{3}$ & $-\frac{2}{3}$ & $1$ & $2$ & $-\frac{1}{3}$ & $-\frac{4}{3}$ & $\frac{2}{3}$ \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+\end{tabular}
+\caption{The MSSM superfields with Standard Model fermion content and their hypercharges $Y$.}
+\label{tab:hyper}
+\end{center}
+\end{table}
+
+The exception is a mass term with the two Higgs superfields that have opposite hypercharge $Y=\pm1$. In order to also be invariant under $SU(2)_L$ we have to write this superpotential term as\footnote{This is immediately invariant under $SU(3)_C$ since the Higgs fields have no colour charge.}
+\begin{equation}
+W_\text{mass}=\mu H^T_ui\sigma_2 H_d,
+\label{eq:higgsmasstermsuperpot}
+\end{equation}
+where $\mu$ is the superpotential mass parameter. This is invariant under $SU(2)_L$ because, with the supergauge transformations $H_d \to e^{-ig\frac{1}{2}\sigma_kW^k}H_d$ and $H^T_u \to H^T_u e^{-ig\frac{1}{2}\sigma^T_kW^k}$, we get
+\begin{eqnarray*}
+H_u^T i\sigma_2 H_d &\to& H_u^T e^{ig\frac{1}{2}\sigma_k^TW^k}i\sigma_2 e^{ig\frac{1}{2}\sigma_k W^k}H_d\\
+ &=& H_u^T i\sigma_2e^{i\frac{1}{2}g\sigma_kW^k}e^{-i\frac{1}{2}g\sigma_kW^k}H_d = H_u^T i\sigma_2 H_d,
+\end{eqnarray*}
+since $\sigma_k^T\sigma_2 = -\sigma_2\sigma_k$. Usually we ignore the $SU(2)_L$ specific structure and write terms like  this as $\mu H_u H_d$, confusing the hell out of anyone that is not used to this convention since we really do mean Eq.~(\ref{eq:higgsmasstermsuperpot}). Notice that if we write (\ref{eq:higgsmasstermsuperpot}) in terms of component fields we get
+\[W_\text{mass}=H_u^Ti\sigma_2 H_d = H_u^+ H_d^- - H_u^0 H_d^0,\]
+which we should have been able to guess because the Lagrangian must also conserve electric charge.
+
+If you have paid very close attention to the argument above you may have noticed that there is one more possibility, namely
+\[W_\text{mass}=\mu'_i L_iH_u \equiv \mu_i' L_i^T i\sigma_2 H_u = \mu_i'(\nu_i H_u^0 - l_iH_u^+),\]
+where $\mu'$ is some other mass parameter in the superpotential. This is clearly an allowable term (and we will return to it below), however, it also raises a very interesting question: Could we have $L_i\equiv H_d$? Could the lepton superfields $L_i$ play the r\^ole of Higgs superfields, thus reducing the field content needed to describe the SM particles in a supersymmetric theory? While not immediately forbidden, this suggestions unfortunately leads to problems with anomaly cancelation, processes with large lepton flavour violation (LFV) and much too massive neutrinos, and has been abandoned.
+
+We have now found all possible mass terms in the superpotential. What about the Yukawa terms? The hypercharge requirement here is $Y_i + Y_j + Y_k = 0$. From our table of hypercharges only the following terms are found to be viable:
+\[W_\text{Yukawa}=y^e_{ij}L_iH_d E_j + y^u_{ij}Q_iH_u\bar{U}_j +  y^d_{ij}Q_iH_d\bar{D}_j+ \lambda_{ijk} L_iL_j\bar{E}_k + \lambda'_{ijk} L_iQ_j\bar{D}_k + \lambda''_{ijk}\bar{U}_i\bar{D}_j\bar{D}_k,\]
+where we have named and indexed the Yukawa couplings in a hopefully natural way.\footnote{For some particular opinion of what is natural.} 
+For all these terms we can simultaneously keep $SU(2)_L$ invariance with the $i\sigma_2$ construction implicitly inserted between any superfield doublets.  Note that because of the $SU(2)_L$  invariance, we must have $i\ne j$ for  $\lambda_{ijk}$, since $i=j$ gives $ L_iL_i\bar{E}_k =(\nu_i l_i- l_i\nu_i)\bar E_k=0$.
+
+For $SU(3)_C$ to be conserved, we need to have colour singlets. Some of these terms are colour singlets by construction since they do not contain any coloured fields. The terms with only two quark superfields contain left-handed Weyl spinors for quarks and anti-quarks, which are $SU(3)_C$ singlets if the superfields come in colour--anti-colour pairs. In representation language they are in the $\mathbf 3$ and $\mathbf{\bar 3}$ representations of $SU(3)_C$. Written with  colour indices explicit we have {\it e.g.} $L_i Q_j \bar{D}_k= L_i i\sigma_2 Q_j^a \bar{D}_k^a$, where $a$ is the colour index. The final term $\bar{U}_i\bar{D}_j\bar{D}_k$ is a colour singlet once we demand that it is totally anti-symmetric in the colour indices: $\bar{U}_i\bar{D}_j\bar{D}_k\equiv\epsilon_{abc}\bar{U}_i^a\bar{D}_j^b\bar{D}_k^c$. The anti-symmetry property of the Levi-Civita tensor $\epsilon_{abc}$ means that we must have $j\ne k$ in $ \lambda''_{ijk}$.
+
+Our complete superpotential is then:
+\begin{eqnarray}
+\label{eq:supolag}
+W &=& \mu H_u H_d + \mu'_i L_iH_u + y^e_{ij}L_iH_d E_j + y^u_{ij}Q_iH_u\bar{U}_j +  y^d_{ij}Q_iH_d\bar{D}_j \nonumber\\
+&&+ \lambda_{ijk} L_iL_j\bar{E}_k + \lambda'_{ijk} L_iQ_j\bar{D}_k + \lambda''_{ijk}\bar{U}_i\bar{D}_j\bar{D}_k.
+\end{eqnarray}
+The parameter $\mu$, potentially complex, is a brand new supersymmetric parameter appearing in the superpotential, with no corresponding parameter existing in the Standard Model Lagrangian. However, the Yukawa couplings $y_{ij}$ are identical to the Standard Model Yukawa couplings since they will be required to give mass to the Standard Model fermions after electroweak symmetry breaking when the Higgs fields get a vev, see Section~\ref{sec:rewsb}. The fate of the other parameters will be discussed in the next section.
+
+
+
+%%%%%%%%%
+\section{R-parity}
+%%%%%%%%%
+The superpotential terms $LH_u$, $LLE$ and $LQ\bar{D}$ that we have written down in (\ref{eq:supolag}) all violate lepton number conservation, and $\bar{U}\bar{D}\bar{D}$ violates baryon number conservation. Such terms do not exist in the Standard Model, although there is no symmetry forbidding their existence there, instead a combination of what fields exist and the gauge symmetries that limit their interactions means that there are no such tree-level interactions. We call this an {\bf accidental symmetry} of the Standard Model.  
+
+Allowing such terms in the MSSM would lead to, among other phenomenological problems, processes like proton decay, for example through $p\to e^+ \pi^0$ as shown in Fig.~\ref{fig:proton}, which breaks both baryon number and lepton number. We can estimate the resulting proton life-time by noting that the exchange of a scalar particle (in this example a strange squark $\tilde s$) creates an effective dimension-6 four-fermion interaction Lagrangian term $\lambda\bar u \bar deu$ with coupling 
+\begin{equation}
+\lambda = \frac{\lambda'_{112}\lambda''_{112}}{m_{\tilde{s}}^2},
+\end{equation}
+where the sparticle mass $m_{\tilde s}$ comes from the scalar propagator in the diagram. The resulting matrix element for the total proton decay process must then be proportional to $|\lambda|^2$, which has mass dimension $M^{-4}$. Since decay width has mass dimension $M$, the phase space part of the calculation must provide something of mass dimension $M^5$.
+The only mass scale involved in the problem is the proton mass $m_p$, thus we approximate the phase space integration part of the proton decay width by $m_p^5$. We then have
+\begin{equation}
+\Gamma_{p\to e^+ \pi^0} \sim |\lambda|^2 m_p^5 = |\lambda'_{112}\lambda''_{112}|^2\frac{m_p^5}{m_{\tilde{s}}^4}.
+\end{equation}
+
+%%%
+\begin{figure}[h]
+\begin{center}
+\includegraphics{figures/protondecay.eps}
+\caption{Possible Feynman diagram for proton decay with R-parity violating couplings $\lambda_{112}^{\prime\prime}$ and $\lambda_{112}'$.\label{fig:proton}}
+\end{center}
+\end{figure}
+%%%
+
+%%%%
+%\begin{figure}[h]
+%\centering
+%\begin{tikzpicture}
+%\begin{feynman}
+%%
+%\diagram [horizontal=b to c] {
+%a [particle=$d$] -- [fermion] b -- [scalar] c -- [anti fermion] d [particle=$e^+$],
+%e [particle=$u$] -- [fermion] b ,
+%c -- [fermion] f [particle=$\bar u$],
+%d --  [opacity=0] f,
+%a --  [opacity=0] e,
+%};
+%\diagram [yshift=1cm, horizontal=a to b] {
+%a [particle=$u$] -- [fermion] b [particle=$u$],
+%};
+%%\path (b)--++(90:0.8) coordinate (A);
+%%\draw [dashed] (A) circle(0.8);
+%%
+%\end{feynman}
+%\end{tikzpicture}
+%\caption{The tree level coupling between three gauge bosons $B$ (left), and the one-loop fermion contribution to the same process (right).}  
+%\label{fig:proton}
+%\end{figure}
+%%%%
+
+The current measured lower limit on the lifetime from watching a lot of protons not decay is $\tau_{p\to e^+\pi^0}> 1.6\cdot 10^{34}~{\rm y}$~\cite{Super-Kamiokande:2016exg}, or, converting to seconds, $ \tau_{p\to e^+\pi^0}> \pi\cdot 10^7~{\rm s/y} \times1.6\cdot 10^{34}~{\rm y} = 5.0\cdot 10^{41}$\,s, which gives a limit on the width
+\[\Gamma_{p\to e^+ \pi^0}=\frac{\hbar}{\tau}< \frac{6.582\cdot 10^{-25}\,\text{GeV s}}{5.0\cdot 10^{41}\,\text{s}} \simeq 1.3 \cdot 10^{-66}\,\text{GeV}, \]
+so that we have the following very strict limit on the combination of the two couplings
+\begin{equation}
+|\lambda'_{112}\lambda''_{112}|< 1.3 \cdot 10^{-27}\left(\frac{m_{\tilde{s}}}{1~{\rm TeV}}\right)^2.
+\end{equation}
+Such strict limits can be found on most of the lepton and baryon number couplings using the measured properties of the Standard Model particles, with some exceptions for coupling involving the second and third generation fermions.
+
+To avoid all such lepton and baryon number couplings Fayet (1975) \cite{Fayet:1975ki} introduced the conservation of R-partity.
+\df{{\bf R-parity} is a multiplicatively conserved quantum number given by
+\[R = (-1)^{2s + 3B + L}\]
+where $s$ is a particle's spin, $B$ its baryon number and $L$ its lepton number.}
+For all Standard Model particles, including all the scalar Higgs bosons, this gives $R=1$, while the superpartners all have $R=-1$. One usually {\it defines} the MSSM as conserving R-parity. For the MSSM this excludes the terms $L H_u$, $LL\bar{E}$, $LQ\bar{D}$ and $\bar{U}\bar{D} \bar{D}$ from the superpotential,\footnote{All the superpotential Yukawa terms lead to component field terms of the form $A_i\psi_j\psi_k$. If the scalar $A_i$ here is {\it not} a Higgs boson, then it is a superpartner and if none of the fermions come from a Higgs superfield so that they are also a superpartner the term breaks R-parity conservation. The superpotential mass terms have component field terms of the form $\psi_i\psi_j$. If one of the fermions here comes from a Higgs superfield, then it is a superpartner, and if the other does not, the term breaks R-parity.}
+leaving us with the R-partiy conserving superpotential
+\begin{eqnarray}
+W &=& \mu H_u H_d + y^e_{ij}L_iH_d E_j + y^u_{ij}Q_iH_u\bar{U}_j +  y^d_{ij}Q_iH_d\bar{D}_j.
+\label{eq:RPCsuperpot}
+\end{eqnarray}
+
+The consequence of this somewhat {\it ad hoc} definition is that in all interactions the total number of incoming and outgoing supersymmetric particles must be an even number $2n$, so that the total R-number is $(-1)^{2n}=1$. This leads to the following very important phenomenological consequences:
+\begin{enumerate}
+\item All sparticles must be produced in pairs (ignoring the very low probability of producing four or more).
+\item Sparticles must annihilate in pairs.
+\item The {\bf lightest supersymmetric particle} (LSP) is absolutely stable, and every other sparticle must decay down to the LSP (possibly in multiple steps).
+\end{enumerate}
+
+
+
+%%%%%%%%%%%%%%%
+\section{Supersymmetry breaking terms in the MSSM}
+\label{sec:MSSM_soft_terms}
+%%%%%%%%%%%%%%%
+We can directly apply our previous arguments on gauge invariance, that we used when discussing the superpotential, on the general soft-breaking terms in Eq.~(\ref{eq:gensoftterms}) in order to determine which supersymmetry breaking terms are allowed in the MSSM, keeping also in mind the requirement of R-party conservation.
+
+Mass terms of the form
+\[ -\frac{1}{4T(R)} M\theta\theta\bar{\theta}\bar{\theta}\tr{W^AW_A}+\text{h.c.}, \]
+are allowed because they have the same gauge structure as the supersymmetric field strength terms. In component fields only the fermions in the vector superfields survive, and are for the MSSM:
+\[\mathcal L_\text{soft} =  -\frac{1}{2}M_1\tilde{B}\tilde{B} - \frac{1}{2}M_2\tilde{W}^i \tilde{W}^i- \frac{1}{2}M_3 \tilde{g}^{a}\tilde{g}^a + \text{c.c.},\]
+where the $M_i$ are potentially complex-valued. This gives six new parameters. 
+
+Yukawa terms
+\[-\frac{1}{6} a_{ijk}\theta\theta\bar{\theta}\bar{\theta} \Phi_i\Phi_j\Phi_k+\text{h.c.},\]
+are allowed when a corresponding term exist in the superpotential  -- meaning they are gauge invariant. In component fields only the scalar parts of the superfields survive, and the allowed terms are
+\[ \mathcal L_\text{soft} =  -a^e_{ij}\tilde{L}_iH_d\tilde{l}^*_j{}_R - a_{ij}^u \tilde{Q}_i H_u \tilde{u}^*_j{}_R - a_{ij}^d \tilde{Q}_i H_d \tilde{d}^*_j{}_R + \text{c.c.},\]
+where we remind you that the $H$ here refers to scalar parts of the Higgs superfields. 
+We can see that all of these terms are R-parity conserving, since they consist of two sparticles and one (Higgs) particle.
+The couplings $a_{ij}$ are all potentially complex valued, so this gives us 54 new parameters. 
+
+The mass terms
+\[-\frac{1}{2}b_{ij}\theta\theta\bar{\theta}\bar{\theta}\Phi_i \Phi_j+\text{h.c.},\]
+are again only allowed for corresponding terms in the superpotential, {\it i.e.}\ 
+\[ \mathcal L_\text{soft} = -bH_uH_d + \text{c.c.},\]
+where $b$ is potentially complex valued, which gives us 2 new parameters.\footnote{The coupling $b$ is sometimes written $B\mu$ where $B$ is a unitless constant that indicates how different the coupling is from the corresponding coupling in the superpotential.} Tadpole terms are not allowed, as there are no tadpoles in the superpotential. 
+
+Mass terms
+\[-m_{ij}^2\theta\theta\bar{\theta}\bar{\theta}\Phi^\dagger_i \Phi_j,\]
+are allowed because they have the same gauge structure as the supersymmetric kinetic terms. In component fields again only the scalar fields survive, and in the MSSM they are:
+\begin{eqnarray}
+\mathcal L_\text{soft} &=& -(m^L_{ij})^2\tilde{L}_i^\dagger\tilde{L}_j -(m^e_{ij})^2\tilde{l}_{iR}^*\tilde{l}_{jR} - (m_{ij}^Q)^2\tilde{Q}_i^\dagger \tilde{Q}_j - (m^u_{ij})^2\tilde{u}^*_{iR}\tilde{u}_{jR} - (m_{ij}^d)^2\tilde{d}^*_{iR}\tilde{d}_{jR}\nonumber\\
+&& - m_{H_u}^2H_u^\dagger H_u - m_{H_d}^2 H_d^\dagger H_d,
+\end{eqnarray}
+where the $m_{ij}^2$ are complex valued, however, also hermetic. This gives rise to 47 new parameters. Despite technically being allowed the MSSM ignores the ``maybe-soft" terms in Eq.~(\ref{eq:maybesoft}).
+
+In total, after using our freedom to choose our basis for the fields wisely in order to remove what freedom we can, the MSSM has 105 new parameters compared to the Standard Model, 104 of these are soft-breaking terms and $\mu$ is the only new parameter in the superpotential.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+\section{Renormalisation group equations}
+\label{sec:RGE}
+%%%%%%%%%%%%%%%%%%%%%%
+Renormalisation, the removal of infinities from field theory predictions, introduces a fixed scale $\mu$ at which the parameters of the Lagrangian, the couplings, are defined. For example, the charge of the electron is not simply the bare charge $e$, but a charge at a given energy scale $\mu$, $e(\mu)$, which is the scale at which the theory describes the electron, and which we can measure in an experiment at that scale. Scattering an electron at very high energy will  require a different value of $e(\mu)$ than at a low energy. This is an experimentally well verified fact.\footnote{It is also impossible to avoid if we accept that the electron is a point particle. Since the potential has the form $V(r)\propto e/r$ an infinite energy would appear unless we were somehow to modify the charge at high energies, or equivalently, short distances.}
+
+However, since $\mu$ is not an observable {\it per se} but in principle a choice of how to write down the theory (at which energy to write down the Lagrangian), the action $S$ should be invariant under a change of $\mu$, which is expressed as:
+\begin{equation}
+\mu \frac{d}{d\mu}S(\Phi, \lambda, \mu) = 0,
+\end{equation}
+where $\lambda$ is a generic name for the couplings of the theory and $\Phi$ represents the (super)fields that have been renormalised.\footnote{In Sec.~\ref{sec:vacuum_energy} we mentioned how the non-renormalisation theorem implies that we do not need to renormalise the coupling constants of the superpotential separately.} This equation can be re-written in terms of partial derivatives
+\begin{equation}
+\left(\mu \frac{\partial}{\partial \mu} + \mu \frac{\partial \lambda}{\partial \mu} \frac{\partial}{\partial\lambda}\right)S(\Phi, \lambda, \mu)=0,
+\end{equation}
+which is the {\bf renormalisation group equation} (RGE). 
+
+We can look at the behaviour of a Lagrangian parameter $\lambda$ as a function of the energy scale $\mu$ away from the value where it was defined, often denoted $\mu_0$. This is controlled by the {\bf $\beta$-function}:
+\begin{equation}
+\beta_\lambda\equiv\mu\frac{\partial \lambda}{\partial \mu}.
+\end{equation}
+These $\beta$-functions can be found from the so-called counterterm $Z$ that renormalises the parameter. 
+
+As an example, take a {\bf gauge coupling constant} $g_0$ defined (taken from measurement) at some scale $\mu_0$. This is given by (in $d= 4-\epsilon$ dimensions):\footnote{The factor $\mu^{-\epsilon/2}$ is there to ensure that the scale of $g_0$ is correct.}
+\[g_0 = Zg\mu^{-\epsilon/2}.\]
+Then, differentiating both sides with respect to $\mu$,
+\begin{eqnarray*}
+0 &=& \frac{\partial Z}{\partial \mu} g\mu^{-\epsilon/2} + Z\frac{\partial g}{\partial \mu}\mu^{-\epsilon/2}-\frac{\epsilon}{2}Zg\mu^{-\epsilon/2-1}\\
+\mu \frac{\partial g}{\partial \mu} &=&\frac{\epsilon}{2}g - \frac{g\mu}{Z}\frac{\partial Z}{\partial \mu}\\
+\mu \frac{\partial g}{\partial \mu} &=&\frac{\epsilon}{2}g - g\mu \frac{\partial }{\partial \mu}\ln Z,
+\end{eqnarray*}
+and taking the limit $\epsilon \to 0$:
+\[\beta_g = \mu\frac{\partial g}{\partial\mu} = -g\gamma_g,\]
+where we have defined the {\bf anomalous dimension} of $g$
+\begin{equation}
+\gamma_g =\mu \frac{\partial}{\partial\mu}\ln Z.
+\end{equation}
+
+The reason for keeping around the factor of $\mu$ in the definition of the $\beta$-function is that it typically changes very slowly over large differences in energy scale, so it is practical to change variable to $t = \ln\frac{\mu}{\mu_0}$, so that $\mu\frac{\partial}{\partial\mu}=\frac{\partial}{\partial t}$ and $\beta_g = \frac{\partial g}{\partial t}$.
+
+$Z$ can now be calculated to the required loop-order to find the $\beta$-function to that order, and in turn the running of the coupling constant with $\mu$. By evaluating to one-loop order we can find that for our particular example of a gauge coupling constant for a generic supersymmetric model
+\begin{equation}
+\gamma_g\left|_{\rm 1-loop}\right. = -\frac{1}{16\pi^2}\,g^2\left(\sum_R T(R) - 3C(A)\right), 
+\label{eq:ccbeta}
+\end{equation}
+where the sum of Dynkin indices is over all superfields that transform under a representation $R$ of the gauge group in question, and $C(A)$ is the {\bf quadratic Casimir invariant} of the representation $A$ of the vector field under the gauge group
+\[ C(A)\delta_{ij}=(T^aT^a)_{ij}. \]
+For the adjoint representation of $U(1)$ this is 0, and for $SU(N)$ this is $N$. The running of the coupling constants is particularly important since it will later lead us to the concept of gauge coupling unification. 
+
+%Notice both that the running of the couplings with scale $\mu$ is very slow because the $\beta$-function is a logarithmic function of $\mu$ and that the anomolous dimension may be negative for some gauge groups.
+
+%For the parameters in the superpotential the non-renormalisation theorem discussed in Sec.~\ref{sec:vacuum_energy} implies that these do not need separate renormalisation. This means that the anomalous dimensions for these are the same as the anomalous dimensions for the superfields. The $\beta$-functions are
+%\begin{eqnarray}
+%\beta_g
+%\end{eqnarray}
+
+As a second relevant example, for the soft-breaking parameters $M_i$ in (\ref{eq:gensoftterms}) we have the one-loop  $\beta$-functions
+\begin{equation}
+\beta_{M_i}\equiv \frac{d}{dt}M_i = \frac{1}{16\pi^2}g_i^2M_i\left(2\sum_R T(R)-6C(A)\right).
+\label{eq:Mi_beta}
+\end{equation}
+
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Gauge coupling unification}
+%%%%%%%%%%%%%%%%%%
+The one-loop $\beta$-functions for gauge couplings in a generic supersymmetric model were given in Eq.~(\ref{eq:ccbeta}). With the MSSM field content and the gauge couplings discussed in this chapter:\footnote{The normalisation choice for $g_1$ may seem a bit strange, however, this is the correct numerical factor when for example breaking a unified group such as SU(5) or SO(10) down to the Standard Model gauge group. This factor might be different with a different unified group.} 
+\[g_1 = \sqrt{\frac{5}{3}}g', \indent g_2 = g, \indent g_3=g_s,\]
+we arrive at
+\begin{equation}
+\beta_{g_i}\left|_{\rm 1-loop}\right. = \frac{1}{16\pi^2}\,b_ig_i^3,
+\end{equation}
+with in the MSSM
+\[b_i^\text{MSSM} = \left(\frac{33}{5}, 1, -3\right).\]
+For comparison, the same result in the Standard Model is
+\[b_i^\text{SM} = \left(\frac{41}{10}, -\frac{19}{6}, -7\right).\]
+
+The values of $b_i$ for the MSSM are found from the Casimir invariant and the Dynkin index of the gauge group representations
+\[C(A)_{SU(3)} = 3, \quad C(A)_{SU(2)} = 2, \quad C(A)_{U(1)} = 0,\]
+and
+\[T(R)_{SU(3)} = \frac{1}{2}, \indent T(R)_{SU(2)} = \frac{1}{2}, \indent T(R)_{U(1)} = \frac{3}{5}Y^2,\]
+where for example $b_3 = \frac{1}{2}\cdot 12 - 3\cdot 3 = -3$ in the MSSM, because, after careful counting, we have twelve quark/squark scalar superfields transforming under $SU(3)_C$.
+
+At one-loop order we can do a neat rewrite using $\alpha_i\equiv\frac{g_i^2}{4\pi}$. Since \[\frac{d}{dt}\alpha^{-1}_i = -2\frac{4\pi}{g_i^3}\frac{d}{dt}g_i,\] we have:
+\[\beta_{\alpha_i^{-1}} \equiv \frac{d}{dt}\alpha^{-1}_i = -\frac{8\pi}{g_i^3}\frac{1}{16\pi^2}g_i^3b_i = -\frac{b_i}{2\pi}.\]
+Thus $\alpha^{-1}$ runs linearly with $t$ at one loop. 
+
+By running the couplings $\alpha_i^{-1}$ from their values measured at the electroweak scale to high energies it is observed that in the MSSM the coupling constants intersect at a single point, which they do not naturally do in the Standard Model. See Fig.~\ref{fig:unification}, taken from Martin~\cite{Martin:1997ns}. The common assumption made is then that a unified gauge group, {\it e.g.}\ $SU(5)$ or $SO(10)$, is broken at that scale, called the {\bf grand unification theory} scale or GUT-scale, down to the Standard Model gauge group. This scale is $\mu_\text{GUT} \approx 2\cdot 10^{16}$\,GeV, about two orders of magnitude below the Planck scale. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/unification.eps} 
+\caption{The RGE evolution of the inverse gauge couplings $\alpha^{-1}_i(Q)$ in the Standard Model (dashed lines) and the MSSM (solid lines). In the MSSM case, the sparticle mass thresholds are varied between 250 GeV and 1 TeV and $\alpha_3(m_Z)$ between 0.113 and 0.123 to create the bands shown by the red and blue lines. Two-loop effects are included.}
+\label{fig:unification}
+\end{figure}
+
+Something funny happens to the gaugino soft-mass parameters $M_i$ if we look at their running. From (\ref{eq:Mi_beta}) the one-loop $\beta$-functions for the $M_i$ in the MSSM are
+\begin{equation}
+\beta_{M_i}|_{\rm 1-loop} \equiv \frac{d}{dt}M_i = \frac{1}{8\pi^2}g_i^2M_ib_i.
+\end{equation}
+As a consequence all three ratios $M_i/g_i^2$ are scale independent at one loop. To see this let $R=M_i/g_i^2$, then
+\begin{equation}
+\beta_R \equiv \frac{dR}{dt}= \frac{\frac{d}{dt}M_i g_i^2 - M_i \frac{d}{dt} g_i^2}{g_i^4} = \frac{\frac{1}{8\pi^2}g_i^2M_ib_i\cdot g_i^2 - M_i\cdot 2g_i\cdot\frac{1}{16\pi} g_i^3 b_i}{g_i^4} = 0.
+\end{equation}
+In other words, $R$ does not change with scale $t$.
+
+If we now use that the coupling constants unify at the GUT scale to the coupling $g_u$, and assume that the soft-masses are the same at that scale $m_{1/2} = M_1(\mu_\text{GUT}) = M_2(\mu_\text{GUT}) = M_3(\mu_\text{GUT})$,\footnote{Again, not unreasonable if the spontaneous symmetry breaking mechanism acts uniformly for all the gauginos.} it follows that
+\begin{equation}
+\frac{M_1}{g_1^2} = \frac{M_2}{g_2^2} = \frac{M_3}{g_3^2} = \frac{m_{1/2}}{g_u^2},
+\end{equation}
+at all scales!\footnote{At one-loop level.} This is a very powerful and predictive assumption. Because of the relationship between the electroweak couplings and the electric charge, $e=g'\cos\theta_W=g\sin\theta_W$, it leads to the following relation
+\begin{equation}
+M_3 = \frac{\alpha_s}{\alpha}\sin^2\theta_WM_2 = \frac{3}{5}\frac{\alpha_s}{\alpha}\cos^2\theta_W M_1,
+\end{equation}
+which, inserting values for the fine structure constant, the strong coupling, and the Weinberg angle, numerically predicts
+\[M_3:M_2:M_1 \simeq 6:2:1\]
+at the electroweak scale. We will return to the implications of this when discussing the gauginos in Sec.~\ref{sec:electroweakinos}.
+
+In Fig.~\ref{fig:MSSMrun}, again taken from Martin~\cite{Martin:1997ns}, we show the running of the gaugino mass parameters $M_i$ (solid black), the Higgs mass parameters $m_{H_{d/u}}^2$ (dot-dashed green), the third generation sfermion soft terms $m_{d_3}$, $m_{Q_3}$, $m_{u_3}$, $m_{L_3}$ and $m_{e_3}$ (dashed red and blue, listed from top to bottom), and the corresponding first and second generation terms (solid lines). Here we assume unified soft-mass parameters $m_{1/2}$ for the gauginos and $m_0$ for the Higgs and sfermions at the GUT scale.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/MSSMrun.eps} 
+\caption{The RGE evolution of soft-mass parameters in the MSSM with typical minimal supergravity-inspired boundary conditions imposed at $2\cdot10^{16}$\,GeV. The parameter values
+used for this illustration were $m_0 = 200$\,GeV, $m_{1/2 }= -A_0 =600$\,GeV, $\tan\beta = 10$, and ${\rm sgn}(\mu)=+$.}
+\label{fig:MSSMrun}
+\end{figure}
+
+
+
+
+%%%%%%%%%%%%%
+\section{Radiative Electroweak Symmetry Breaking}
+\label{sec:rewsb}
+%%%%%%%%%%%%%
+In the Standard Model both the vector bosons and the fermions are given mass spontaneously by electroweak symmetry breaking (EWSB), which is induced by the shape of the scalar potential for the Higgs field $H$, which is an $SU(2)_L$ doublet of scalar fields:
+\begin{equation}
+V(H) = \mu^2 |H|^2+ \lambda |H|^4,
+\label{eq:SMscalarpot}
+\end{equation}
+with $|H|^2=H^\dagger H$. 
+
+Here, the requirement for successful EWSB is that $\lambda > 0$ and $\mu^2 < 0$.\footnote{This is called the {\bf Mexican hat} or {\bf wine bottle potential}, depending on preferences.} The first of these requirements ensures that the potential is {\bf bounded from below}, {\it i.e.}\ that in the limit of large field values the potential does not turn to negative infinity. The second ensures that the minimum of the potential, the vacuum, is not given by zero field values, {\it i.e.}\ that the fields have {\bf vacuum expectation values} (vevs).
+
+In supersymmetry we found the following general scalar potential in Eq.~(\ref{eq:scalarpotglobal}) for unbroken supersymmetry,
+\begin{equation}
+V(A, A^*) = \sum_i \left|\frac{\partial W}{\partial A_i}\right|^2 + \frac{1}{2}\sum_a g^2(A^*T^aA)^2 >0,
+\end{equation}
+where the first part is due to the elimination of the auxiliary $F$-fields in the scalar superfields, while the second part is due to the elimination of the auxiliary $D$-fields in the vector superfields. In addition we have to add all terms containing only relevant scalar fields from the soft breaking terms in Eq.~\ref{eq:soft_terms_component_fields}.
+
+For the scalar Higgs component fields in the MSSM this gives the potential
+\begin{eqnarray}\label{eq:scaH}
+V(H_u,H_d) &=& |\mu|^2 (|H_u^0|^2 + |H_u^+|^2 + |H_d^0|^2 + |H_d^-|^2)  \text{\indent \indent\indent \indent\indent\indent\indent}\text{(from $F$-terms)} \nonumber\\
+&&+\frac{1}{8} (g^2 + g'{}^2)(|H^0_u|^2 + |H_u^+|^2 - |H^0_d|^2 - |H_d^-|^2)^2  \text{\indent\indent\indent\indent(from $D$-terms)} \nonumber\\
+&&+ \frac{1}{2}g^2|H^+_uH_d^0{}^* + H^0_u H^-_d{}^*|^2 \nonumber\\
+&&+ m_{H_u}^2(|H_u^0|^2 + |H_u^+|^2) + m_{H_d}^2(|H_d^0|^2 + |H_d^-|^2) \text{\indent}\text{(from soft breaking terms)}\nonumber\\
+&& + [b(H_u^+H_d^- - H_u^0H_d^0) + \text{c.c}]
+\label{eq:MSSMscalarpot}
+\end{eqnarray}
+This potential has 8 d.o.f.\ from 4 complex scalar fields $H_u^+$, $H_u^0$, $H_d^0$ and $H_d^-$. At the same time it has 6 parameters: the two Standard Model couplings $g$ and $g'$, the magnitude of the supersymmetric parameter $\mu$, and the three soft-breaking parameters $b$, $m_{H_u}^2$ and $m_{H_d}^2$.
+
+We now want to do as in the Standard Model and break $SU(2)_L\times U(1)_Y \to U(1)_{\rm em}$ in order to give masses to gauge bosons and SM fermions.\footnote{You may ask why we can not use the soft-terms from the spontaneous breaking of {\it supersymmetry} to do this. However, the soft-terms are unable to effectively provide masses to vector bosons and fermions because they deal (mostly) with scalar fields.} To do this we need to show that (\ref{eq:MSSMscalarpot}) has: i) a minimum for finite, {\it i.e.}\ non-zero, field values, ii) that this minimum has a remaining $U(1)_{\rm em}$ symmetry and iii) that the potential is bounded from below. We will here restrict our analysis to tree level, ignoring loop effects on the potential.
+
+We start by using our $SU(2)_L$ gauge freedom, picking a gauge so that we rotate away any field value for $H_u^+$ at the minimum of the potential. So without loss of generality we can use that $H_u^+ = 0$ at the minimum in what follows. At the minimum we must have $\partial V/\partial H_u^+= 0$, and by explicit differentiation of the potential one can show that $H_u^+ = 0$ then also leads to $H^-_d = 0$. This is good and proper since it guarantees our item ii), that $U(1)_{\rm em}$ is a symmetry for the minimum of the potential, since the charged fields then have no vevs. 
+
+We are now left with the following potential only in terms of the uncharged Higgs fields $H_u^0$ and $H_d^0$ (after gauge choice and at the minimum):
+\begin{eqnarray}
+V(H_u^0,H_d^0) &=& (|\mu|^2 + m_{H_u}^2)|H^0_u|^2 + (|\mu|^2 + m_{H_d}^2)|H^0_d|^2 \nonumber\\
+&&+ \frac{1}{8}(g^2 + g'{}^2)(|H_u^0|^2 - |H_d^0|^2)^2 - (bH_u^0H_d^0 + \text{c.c.})
+\label{eq:higgspot_gauged}
+\end{eqnarray}
+We can now absorb a complex phase in $H^0_u$ or $H_d^0$, in order to take $b$ to be real and positive. This does not affect other terms because they are protected by absolute values. The minimum must also have the total phase of $H_u^0H_d^0$ real and positive, to get an as large as possible negative contribution from the $b$ term. Thus the vevs $v_u = \langle H_u^0\rangle$ and $v_d = \langle H_d^0\rangle$ must have opposite phases. By the remaining $U(1)_Y$ gauge symmetry of the potential, which is effectively a phase rotation, and the fact that $H^0_u$ and $H_d^0$ have opposite hypercharge, we can transform $v_u$ and $v_d$ so that they are real and have the same sign. For the potential to have a negative mass term, and thus fulfill point i) above, we must then have
+\begin{equation}\label{eq:higgsbound2}
+b^2 > (|\mu|^2 + m_{H_u}^2)(|\mu|^2 + m_{H_d}^2).
+\end{equation}
+
+Since we have broken supersymmetry we must also check that the potential is actually bounded from below, our point iii), which was guaranteed for a supersymmetric vacuum. For large $|H_u^0|$ or $|H_d^0|$ the quartic gauge terms in (\ref{eq:higgspot_gauged}) blows up to save the potential, except for $|H^0_u| = |H^0_d|$, the so-called $D$-flat directions. This means that we must also require
+\begin{equation}\label{eq:higgsbound1}
+2b < 2|\mu|^2 + m_{H_u}^2 + m_{H_d}^2.
+\end{equation}
+
+To summarise what we have learnt so far: at the minimum of the Higgs potential we know that the expectation values of the charged Higgs component fields are zero, $\langle H_u^+\rangle =0$ and $\langle H_d^-\rangle =0$, and we fulfil the condition for the existence of an extremal point in the neutral Higgs component fields
+\begin{equation}
+\frac{\partial V}{\partial H_u^0}=\frac{\partial V}{\partial H_d^0}= 0.
+\label{eq:EWSB_condition}
+\end{equation}
+In addition, for the minimum to have non-zero field values that break EWSB, and for the potential to be bounded from below, the parameters of the potential must simultaneously fulfil the inequalities
+\begin{eqnarray}
+b^2 &>& (|\mu|^2 + m_{H_u}^2)(|\mu|^2 + m_{H_d}^2), \nonumber\\
+2b &<& 2|\mu|^2 + m_{H_u}^2 + m_{H_d}^2. \nonumber
+\end{eqnarray}
+The resulting non-zero expectation values at the minimum for the neutral Higgs component fields are denoted $v_u$ and $v_d$.
+
+To satisfy (\ref{eq:higgsbound2}) and (\ref{eq:higgsbound1}),  a negative value for $m_{H_u}^2$ (or $m_{H_d}^2$) can help, in particular if $|\mu|^2+m_{H_u}^2<0$, as that automatically fulfils (\ref{eq:higgsbound2}). Such a negative value is indeed perfectly allowed as a parameter in the Lagrangian. No negative particle masses will result. 
+
+In fact, if we assume that $m_{H_d} = m_{H_u}$ at some scale  $\mu$, for example the supersymmetry breaking scale, then \eqref{eq:higgsbound2} and \eqref{eq:higgsbound1} cannot be simultaneously be satisfied {\it at that scale}. However, to 1-loop the RGE running of these mass parameters is:
+\[16\pi^2 \beta_{m_{H_u}^2} \equiv 16\pi^2 \frac{dm_{H_u}^2}{dt} = 6|y_t|^2(m_{H_u}^2 + m_{Q_3}^2 + m_{u_3}^2) + ...\]
+\[16\pi^2 \beta_{m_{H_d}^2} \equiv 16\pi^2 \frac{dm_{H_d}^2}{dt} = 6|y_b|^2(m_{H_d}^2 + m_{Q_3}^2 + m_{d_3}^2) + ...,\]
+where $y_t$ and $y_b$ are the top and bottom quark Yukawa couplings, and $m_{Q_3} = m_{33}^Q$, $m_{u_3}  = m_{33}^u$, and $m_{d_3} = m_{33}^d$, in a simplification of our previous notation for the soft-masses in Sec.~\ref{sec:MSSM_soft_terms}. Because $y_t\gg y_b$, $m_{H_u}^2$ runs much faster with scale than $m_{H_d}^2$. If the parameters start out the same at some high scale, say from some universal supersymmetry breaking effect,  as we go down to the electroweak scale  $m_{H_u}^2$ becomes significantly smaller than  $m_{H_d}^2$, and may become negative, fulfilling the EWSB criteria. For an illustration, see Fig.~\ref{fig:MSSMrun}, where the running of  $\mu^2+m_{H_u}^2$ and  $\mu^2+m_{H_u}^2$ is shown.
+It is this property of starting our from some universal Higgs parameters at a high scale, which then by RGE effects break electroweak symmetry at lower scales, that is termed {\bf radiative EWSB} (REWSB). Thus, in the MSSM with universal soft terms at a high scale there is an explanation why EWSB happens, it is not put in by hand in the potential as it is in the Standard Model.
+
+%\begin{figure}[h]
+%\centering
+%\includegraphics[width=0.7\textwidth]{figures/REWSB.eps} 
+%\caption{Sketch of the RGE running for the two soft Higgs mass parameters $m_{H_u}^2$ and $m_{H_d}^2$ as a function of the energy scale. The parameter start out identical at $\mu=10^{16}$ GeV. Shown are the actual parameters of the EWSB criteria $\mu^2+m_{H_u}^2$ and  $\mu^2+m_{H_u}^2$.}
+%\label{fig:REWSB}
+%\end{figure}
+
+Following EWSB, to get the familiar vector boson masses measured by experiment, the vevs need to satisfy the constraint from the electroweak parameters:
+\begin{equation}
+v_u^2 + v_d^2 \equiv v^2 = \frac{2m_{Z}^2}{g^2 + g'{}^2} \approx (174~\text{GeV})^2.
+\label{eq:Zmass_vev_condition}
+\end{equation}
+Thus we have one free parameter coming from the two Higgs vevs in the MSSM. We can write this as 
+\[\tan\beta \equiv \frac{v_u}{v_d},\]
+where by convention $0<\beta<\pi/2$, so that $0<\tan\beta<\infty$. 
+
+Using the condition for the existence of an extremal point in (\ref{eq:EWSB_condition}), the two non-SM parameters $b$ and $|\mu|$ can be eliminated as free parameters from the model, however, not the sign of $\mu$. Alternatively, we can choose to eliminate $m_{H_u}^2$ and $m_{H_d}^2$. You can look at this as giving away the freedom of these parameters to the vevs, and then fixing one vev by the electroweak constraint, and using $\tan\beta$ for the other.
+
+Let us make a little remark here on the parameter $\mu$. We have what is called the {\bf $\mu$ problem}. The soft terms all get their scale from some common mechanism at some common high energy scale, it is assumed, however, $\mu$ is a mass term in the superpotential (the only one in fact) and could {\it a priori} take {\it any} value, even $M_P$. Why is $\mu$ then of the order of the soft terms, which is what allows us to achieve REWSB?\footnote{This problem can be solved in extensions of the MSSM such as the Next-to-Minimal Supersymmetric Standard Model (NMSSM).}
+
+
+%%%%%%%%%%%%%%%%%
+\section{Higgs boson properties}
+%%%%%%%%%%%%%%%%%
+Of the eight d.o.f.\ in the scalar potential for the Higgs component fields three are Goldstone bosons that get eaten by $Z$ and $W^\pm$ to give them masses. The remaining five d.o.f.\ form two neutral scalars $h$, $H$, two charged scalars $H^\pm$ and one neutral pseudo-scalar (CP-odd) $A$.\footnote{In addition to the scalars, we know that the Higgs supermultiplets contain four fermions, $\tilde{H}^0_u$, $\tilde{H}^0_d$, $\tilde{H}^+_u$ and $\tilde{H}^-_d$ (higgsinos). We will see later that these mix with the fermion partners of the gauge bosons (gauginos).} At tree level one can show that these have the masses:
+\begin{eqnarray}
+m_A^2 &=& \frac{2b}{\sin2\beta} = 2|\mu|^2 + m_{H_u}^2 + m_{H_d}^2,\\
+m_{h, H}^2 &=& \frac{1}{2}\left(m_A^2 + m_Z^2 \mp \sqrt{(m_A^2- m_Z^2)^2 + 4m_Z^2m_A^2\sin^22\beta}\right),\\
+m_{H^\pm}^2 &=& m_A^2 + m_W^2.
+\end{eqnarray}
+As a consequence $m_A$ and $\tan\beta$ can be used to parametrise the masses of the Higgs sector (at tree level), and
+$H$, $H^\pm$ and $A$ are in principle unbounded in mass since they grow as $b/\sin2\beta$. However, at tree level the lightest Higgs boson is restricted to
+\begin{equation}
+m_h < m_Z|\cos 2\beta| < 91.2~\text{GeV}.
+\end{equation}
+In contrast we have the current best measurement of the Higgs boson mass of $m_h=125.10\pm 0.14$\,GeV, combining results from the LHC~\cite{ParticleDataGroup:2020ssz}.
+
+Fortunately, there are large loop-corrections or the MSSM would have been excluded already.\footnote{It is worth pointing out here that the MSSM, despite its many parameters, is a falsifiable theory. For example, had the Higgs boson mass been $\sim15$\,GeV higher, which is perfectly allowed in the Standard Model, the MSSM would have been excluded.} Because of the size of the Yukawa couplings the largest corrections to the mass of the lightest Higgs comes from loops with top quarks and its supersymmetric partners, the scalar top quarks, or stops, $\tilde t_L$ and $\tilde t_R$. See Fig.~\ref{fig:hierarchy} for the relevant Feynman diagrams. In the limit where the mass of the stop quarks are larger than the top, $m_{\tilde{t}_R},m_{\tilde{t}_L}\gg m_t $, and with stop mass eigenstates close to the chiral eigenstates (more on this later), we get the dominant loop correction
+\begin{equation}
+\Delta m_h^2 = \frac{3}{4\pi^2} \cos^2\alpha\, y_t^2 m_t^2 \ln\left(\frac{m_{\tilde{t}_L}m_{\tilde{t}_R}}{m_t^2}\right),\label{eq:mhchiralstop}
+\end{equation}
+where $\alpha$ is a mixing angle for $h$ and $H$ with respect to the superfield component fields $H_u^0$ and $H_d^0$, given by
+\begin{equation}
+\frac{\sin\alpha}{\sin\beta}=-\frac{m_H^2+m_h^2}{m_H^2-m_h^2},
+\end{equation}
+at tree level.
+
+With this and other corrections the upper bound on the lightest Higgs boson mass is weaker:
+\[m_h \leq 135~{\rm GeV},\]
+assuming a common sparticle mass scale of around $m_{\rm SUSY} \leq 1$\,TeV. Higher values for the sparticle masses give large fine-tuning and weaken the bound very little because of the logarithm in Eq.~(\ref{eq:mhchiralstop}). The bound can be further weakened by adding extra field content to the MSSM, {\it e.g.}\ as in the NMSSM, but there is an upper perturbative limit of $m_h \approx 150$\,GeV.
+
+It is very interesting to discuss what the Higgs discovery actually implies for low-energy supersymmetry. As can be seen from the above numbers it requires rather large squark masses even in the favourable scenario with $\tan\beta\gg 1$ where the tree level mass is $m_h\sim 90$ GeV. A naive estimate from Eq.~(\ref{eq:mhchiralstop}) gives $m_{\tilde t}> 1$\, TeV. However, this does not take into account possible negative contributions to the Higgs mass from heavy gauginos (fermions in the vector superfields), and possible increases in the stop contribution due to tuning of the mixing of the chiral eigenstates $\tilde t_L$ and $\tilde t_R$, in the mass eigenstates $\tilde t_1$ and $\tilde t_2$.
+
+Since the lightest stop quark is expected to be the lightest squark in scenarios with universal soft masses at some high scale -- the reasoning here is the large downward RGE running of $m_{33}^Q$ from a common squark soft mass at some high scale due to the large top Yukawa coupling -- the expected sparticle spectrum lies mostly above 1 TeV, with the possible exception of gauginos/higgsinos. This points to so-called {\bf Split-SUSY} scenarios with heavy scalars and light gauginos, and a relatively large degree of fine-tuning. If one can live with this little hierarchy problem, it will explain why no signs of supersymemtry have been seen yet at the LHC. 
+%With squark masses above 1 TeV any hints of SUSY are not likely to come before the machine has been upgraded to 14 TeV in 2014. 
+
+If you are willing to accept fine-tuning of the stop mixing instead, or come up with a good reason for why the mixing should be just-so to give a maximal Higgs mass, you can keep fairly light stop quarks. With the addition of light higgsinos and a light gluino the model is then technically natural, these scenarios are called {\bf Natural SUSY} and could be within the current or near future reach of the LHC. The problem with these models, as we shall see, is that the higgsinos are degenerate, and thus difficult to detect.
+
+%In Split-SUSY scenarios with a neutralino dark matter candidate (see below) the lightest neutralino typically has a significant higgsino component. This means that its should be relatively accessible in direct detection experiments due to its large coupling to normal matter, and in the indirect search for neutrinos from captured dark matter annihilation in the Sun. Both types of experiments may very soon see first indications of a signal if this scenario is indeed realised in nature.
+
+To do calculations with the Higgs bosons in the MSSM we need the Feynman rules that result from the relevant Lagrangian terms. Since these have been listed elsewhere we will not repeat them here, but recommend in particular the PhD-thesis of Peter Richardson~\cite{Richardson:2000nt}, where they can be found in Appendix A.6, including all interactions with fermions and sfermions. These can also be found, together with all gauge and self-interactions, in the classic paper by Gunion and Haber~\cite{Gunion:1984yn}. Note that in this paper a complex Higgs singlet appears which can safely be ignored.
+
+
+%%%%%%%%%%%%%%%
+\section{The gluino}
+%%%%%%%%%%%%%%%
+The fermion partner of the Standard Model gluon $g$ is called the {\bf gluino} $\tilde g$, and as the gluon it is a colour octet Majorana fermion. We usually talk about the gluino as being one particle, however, as an adjoint representation of $SU(3)$ there are actually eight  (thus octet) distinct gluons, and we write $\tilde g^a$ when we want to make the distinction. As a colour octet it has nothing to mix with in the MSSM -- this is still true even if we add R-parity violation -- and at tree level the mass is given by the soft term $M_3$. Since it lives in the same superfield as the massless gluon it would otherwise had zero mass. 
+
+The one complication for the gluino is that it is strongly interacting so $M_3(\mu)$ runs quickly with energy. It is useful to instead talk about the scale-independent {\bf pole-mass}, {\it i.e.}\ the pole of the renormalised propagator, $m_{\tilde{g}}$. Including one loop effects due to gluon exchange and squark loops, see Fig.~\ref{fig:cogluion}, in the $\overline{DR}$ renormalisation scheme we get:\footnote{Note that the right-hand side here {\it is} $\mu$ dependent since the expression is only to finite order.} 
+\[m_{\tilde{g}} \simeq M_3(\mu)\left[1 + \frac{\alpha_s}{4\pi}\left(15 + 6\ln\frac{\mu}{M_3}+ \sum_{{\rm all}\,\tilde q} A_{\tilde{q}}\right) \right],\]
+where the squark loop contributions are
+\[A_{\tilde{q}} = \int_0^1dx\,x \ln\left(x \frac{m_{\tilde{q}}^2}{M_3^2} +(1-x)\frac{m_q^2}{M_3^2} - x(1-x) -i\epsilon\right).\]
+Due to the $15$-factor the correction can be significant (colour factor).
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.8]{figures/gluino.eps} 
+   \caption{One loop contributions to the gluino mass. \label{fig:cogluion}}
+\end{center}
+\end{figure}
+
+Complete Feynman rules for gluinos can be found in Appendix C of the classic MSSM reference paper of Haber \& Kane~\cite{Haber:1984rc}. A more comprehensible alternative may be Appendix A.3 from the PhD-thesis of Bolz~\cite{Bolz:2000xi}. This thesis also provides a diagramatic prescription of how to handle clashing fermion lines that can appear with Majorana fermions. 
+
+
+
+%%%%%%%%%%%%%%%%%
+\section{Neutralinos \& Charginos}
+\label{sec:electroweakinos}
+%%%%%%%%%%%%%%%%%
+In the MSSM we have a bunch of fermion fields that can mix when electroweak symmetry is broken and we do not have to care about the $SU(2)_L\times U(1)_Y$ charges of the fields, only the charges under the remaining $U(1)_{\rm em}$ symmetry matter. The candidates for mixing are the (Majorana) fermions from the $U(1)$ and $SU(2)$ vector superfields $B^0$ and $W^a$ called the {\bf gauginos}:
+\[\tilde{B}^0~\text{({\bf bino})}, \quad\tilde{W}^0~\text{(neutral {\bf wino})}, \quad \tilde{W}^\pm~\text{(charged {\bf wino})},\]
+and the fermions from the Higgs superfields $H_u$ and $H_d$, called {\bf higgsinos}:
+\[\tilde{H}^+_u, \quad \tilde{H}^0_u, \quad \tilde{H}^-_d \quad \text{and} \quad \tilde{H}^0_d.\]
+Together these are called the {\bf electroweakinos}.
+
+In the Standard Model the neutral gauge field components  $B^0_\mu$ and $W^0_\mu$ mix into the photon and the $Z$-boson. The neutral gauginos can mix the same way into the states 
+\begin{eqnarray}
+\tilde{\gamma} &=& N'_{11}\tilde{B}^0 + N'_{12}\tilde{W}^0 \indent \text{({\bf photino})},\\
+\tilde{Z} &=& N'_{21}\tilde{B}^0 + N'_{22}\tilde{W}^0 \indent \text{({\bf zino})}.
+\end{eqnarray}
+However, more generally, they also mix with the neutral higgsinos to form the four {\bf neutralinos}:\footnote{The neutral higgsinos are also Majorana fermions despite coming from scalar superfields. Unlike the (s)fermion superfields the Higgs superfields have no $\bar H$ chiral partners to supply the left--right Weyl spinor combinations required for Dirac fermions. Thus the neutralinos are Majorana fermions.}
+\begin{equation}
+\tilde{\chi}^0_i = N_{i1}\tilde{B}^0 + N_{i2}\tilde{W}^0 + N_{i3}\tilde{H}^0_d + N_{i4}\tilde{H}_u^0,\quad i=1,2,3,4,
+\label{eq:neutralino}
+\end{equation}
+where $N_{ij}$ indicates size of the component of each of the fields in the {\bf gauge eigenstate basis}
+\begin{equation}
+\tilde{\psi}^{0T} = \begin{pmatrix} \tilde{B}^0,\,\tilde{W}^0,\,\tilde{H}^0_d,\, \tilde{H}_u^0\end{pmatrix}.
+\label{eq:n_gauge_eigen}
+\end{equation}
+
+In the gauge eigenstate basis the neutralino mass term can be written as
+\[\mathcal{L}_{\chi-{\rm mass}} = -\frac{1}{2}\tilde{\psi}^{0T}M_{\tilde\chi}\tilde{\psi}^0 + \text{c.c.},\]
+where the mass matrix $M_{\tilde\chi}$ is found from the bilinear terms in the Lagrangian with gauge eigenstates to be
+\begin{equation}
+M_{\tilde\chi} =\begin{bmatrix}M_1 & 0 & -\frac{1}{\sqrt{2}}g'v_d & \frac{1}{\sqrt{2}}g'v_u\\ 0 & M_2 & \frac{1}{\sqrt{2}}gv_d & -\frac{1}{\sqrt{2}}gv_u\\ -\frac{1}{\sqrt{2}}g'v_d & \frac{1}{\sqrt{2}}gv_d & 0 & -\mu\\ \frac{1}{\sqrt{2}}g'v_u & -\frac{1}{\sqrt{2}}gv_u &-\mu & 0\end{bmatrix}.
+\end{equation}
+In this matrix, the upper left diagonal part comes from the soft terms for the $\tilde{B}^0$ and the $\tilde{W}^0$, the lower right off diagonal matrix comes from the superpotential term $\mu H_u H_d$, while the remaining entries come from Higgs-higgsino-gaugino terms from the kinetic part of the Lagrangian, {\it e.g.}\ $H_u^\dagger e^{\frac{1}{2}g\sigma W + g'B}H_u$, which become mass terms when one of the neutral Higgs component fields acquires a vev.
+With the $Z$-mass condition on the vevs (\ref{eq:Zmass_vev_condition}) we can also write
+\begin{eqnarray}
+\frac{1}{\sqrt{2}}g'v_d &=& \cos\beta \sin\theta_W m_Z, \label{eq:gprime_vd} \\
+\frac{1}{\sqrt{2}}g'v_u &=& \sin\beta \sin\theta_W m_Z, \\
+\frac{1}{\sqrt{2}}gv_d &=& \cos\beta \cos\theta_W m_Z, \\
+\frac{1}{\sqrt{2}}gv_u &=& \sin\beta \cos\theta_W m_Z .\label{eq:g_vu}
+\end{eqnarray}
+
+The mass matrix can now be diagonalised to find the $\tilde\chi^0_i$ masses. If $N$ is a unitary diagonalisation matrix for $M_{\tilde\chi}$, we can write
+\[\mathcal{L}_{\chi-{\rm mass}} = -\frac{1}{2}\tilde{\psi}^{0T}N^TN^*M_{\tilde\chi} N^\dagger N \tilde{\psi}^0 + \text{c.c.},
+= -\frac{1}{2}\tilde{\chi}^{0T} D\tilde{\chi}^0 + \text{c.c.},\]
+where $D=N^*M_{\tilde{\chi}}N^\dagger$ is diagonal and contains the neutralino masses $m_{\tilde\chi_i^0}$, and we see that $N$ gives the mixing of the gauge eigenstates  $\tilde{\psi}^0$ into the mass eigenstates $\tilde\chi^0$. We number the neutralino eigenstates in (\ref{eq:neutralino}), or, equivalently, sort the mass eigenvalues after diagonalisation, so that the neutralinos are numbered from lightest to heaviest.
+
+The mass parameters of the neutralino mass matrix may in general be complex, leading to complex mass eigenvalues. Redefinition of fields can rotate away either the $M_1$ or $M_2$ phase, to make the parameter real and positive, but not both and not the $\mu$-phase. This gives rise to problematic CP-violation that can easily be in contradiction with experiments. Therefore, these are often just assumed to be real in order not to violate experimental bounds. However, we are in principle perfectly happy with negative or even complex mass eigenvalues here, as this is just a phase for the corresponding mass eigenstate in (\ref{eq:neutralino}). 
+
+One particularly interesting solution to the diagonalisation is in the limit where EWSB is a small effect, $m_Z\ll |\mu \pm M_1|$, $|\mu \pm M_2|$, and when $M_1<M_2\ll |\mu|$. Then the lightest neutralino is bino-like, $\tilde{\chi}_1^0\approx \tilde{B}^0$, the next-to-lightest is wino like, $\tilde{\chi}_2^0\approx \tilde{W}^0$, and $\tilde{\chi}^0_{3,4} \approx \frac{1}{\sqrt{2}}(\tilde{H}^0_d \pm \tilde{H}^0_u)$, and the masses are to first order in $1/\mu$:
+\begin{eqnarray}
+m_{\tilde{\chi}^0_1} &=& M_1 +\frac{m_Z^2\sin^2\theta_W\sin2\beta}{\mu} +\ldots\\
+m_{\tilde{\chi}^0_2} &=& M_2 -\frac{m_W^2\sin2\beta}{\mu} +\ldots\\
+m_{\tilde{\chi}^0_{3,4}} &=& |\mu| +\frac{m_Z^2}{2\mu}({\rm sgn}\,\mu \mp \sin2\beta) + \ldots
+\end{eqnarray}
+
+Since the LSP is stable in R-parity conserving theories the lightest neutralino is an excellent candidate for dark matter. In particular since a neutralino with mass around 100 GeV has a natural relic density close to the measured dark matter density of the Universe. We will return to this issue in Chapter~\ref{chap:dm}.
+
+From the charged electroweakinos we can make {\bf charginos} $\tilde{\chi}^{\pm}_i$  that are Dirac fermions with mass term
+\[\mathcal{L}_{\chi^\pm-{\rm mass}} = -\frac{1}{2}\tilde{\psi}^\pm{}^TM_{\chi^\pm}\tilde{\psi}^{\pm} + \text{c.c.},\]
+where the gauge eigenstate basis is $\tilde{\psi}^{\pm T} = (\tilde{W}^+,\, \tilde{H}^+_u ,\,\tilde{W}^-,\, \tilde{H}^-_d)$, and the mass matrix is given by
+\[M_{\tilde{\chi}^\pm} =\begin{bmatrix}0 & 0 & M_2 & gv_d\\ 0 &0 & gv_u & \mu\\ M_2 & gv_u & 0 & 0 \\ gv_d &\mu & 0&0\end{bmatrix}.\]
+Here the $M_2$ terms come from the soft terms for the charged winos $\tilde W^\pm$, the $\mu$ terms come from the superpotential as above, while the remaining terms come from the kinetic terms. We can here re-write
+\begin{eqnarray}
+gv_d &=& \sqrt{2}\cos\beta\, m_W,\\
+gv_u &=& \sqrt{2}\sin\beta\, m_W.
+\end{eqnarray}
+
+Diagonalising this mass matrix gives the mass eigenstates $\tilde\chi_i^\pm$, $i=1,2$. The eigenvalues are doubly degenerate, giving the same masses to the $\tilde\chi_i^+$ and $\tilde\chi_i^-$ particle and anti-particle pairs, and are explicitly given as:
+\[m_{\tilde{\chi}^\pm_{1,2}} = \frac{1}{2}\left(|M_2|^2 + |\mu|^2 + 2m_W^2 \mp \sqrt{(|M_2|^2 + |\mu|^2 + 2m_W^2)^2 - 4|\mu M_2-m_W^2\sin^2\beta|^2}\right).\]
+
+In the same limit of small EWSB effects discussed above we have $\tilde{\chi}^\pm_1 \approx \tilde{W}^\pm$ and $\tilde{\chi}^\pm_2 \approx \tilde{H}^+_u/\tilde{H}^-_d$ with 
+\begin{eqnarray}
+m_{\tilde{\chi}^\pm_1} &=& M_2 - \frac{m_W^2}{\mu}\sin2\beta+\ldots,\\
+m_{\tilde{\chi}^\pm_2} &=& |\mu| + \frac{m_W^2}{\mu}{\rm sgn}\,\mu+\ldots.
+\end{eqnarray}
+Note that in this limit $m_{\tilde{\chi}^0_2} \simeq m_{\tilde{\chi}^\pm_1}$.
+
+We saw earlier that the soft-mass ratio
+\[M_3:M_2:M_1 \simeq 6:2:1,\]
+appears at a scale of around 1\,TeV if the same soft-masses unify at the GUT-scale. From our above discussion, as long as $|\mu|\gg M_1,M_2$, this gives the very predictive mass relationships $m_{\tilde{g}} \simeq 6m_{\tilde{\chi}^0_1}$, $m_{\tilde{\chi}^0_2} \simeq m_{\tilde{\chi}^\pm_1} \simeq 2m_{\tilde{\chi}^0_1}$. However, it is important to remember that this often used relationship is based on the {\it conjecture} of gauge coupling unification, and the unification of gaugino soft masses!
+
+
+We should mention that some authors prefer other symbols for the neutralinos and charginos. Common examples are $\tilde N_i$ or $\tilde Z_i$ for neutralinos, and $\tilde C_i$ or $\tilde W_i$ (again!) for the charginos. 
+
+Feynman rules for charginos \& neutralinos can again be found in Haber \& Kane~\cite{Haber:1984rc}.
+
+
+
+
+%%%%%%%%%%%%%%%
+\section{Sleptons \& Squarks}
+%%%%%%%%%%%%%%%
+The {\bf sfermions}, the scalar partners of the Standard Model fermions, consists of the {\bf squarks} and the {\bf sleptons}. Reading of from the MSSM Lagrangian there  are multiple tree-level contributions to the sfermion masses. In the following $\tilde{F}_i$ represents a $SU(2)_L$ doublet of sfermions with generation index $i$, for example $\tilde Q_i=(\tilde u_{iL},\tilde d_{iL})$, while $\tilde{f}_{iR}$ represents a singlet.
+We make the following list: 
+\begin{enumerate}[i)]
+\item Under the reasonable assumption that soft masses are (close to) diagonal\footnote{This assumption is of course made to avoid flavour changing neutral currents (FCNCs). However, it is also reasonable in that if the soft masses are diagonal, or even all the same, at a high scale, the RGE running will not create large off-diagonal terms. } the sfermions get contributions $-m_F^2\tilde{F}_i^\dagger \tilde{F}_i$ and $-m_{f}^2\tilde{f}^*_{iR}\tilde{f}_{iR}$ from the soft terms.
+\item There are $F$-term contributions that come from Yukawa terms in the superpotential of the form $y_fFH\bar K$. From the contribution $\sum |W_i|^2$ to the scalar potential
+these give Lagrangian terms $y_f^2H^0{}^*H^0\tilde{f}^*_{iL}\tilde{f}_{iL}$ and $y_f^2 H^{0*}H^0\tilde{f}^*_{iR}\tilde{f}_{iR}$. After EWSB we then get the mass terms $m_f^2 \tilde{f}^*_{iL}\tilde{f}_{iL}$ and $m_f^2\tilde{f}^*_{iR}\tilde{f}_{iR}$, where $m_f = v_{u/d}\,y_f$. These are only significant for large Yukawa coupling $y_f$, and give the same mass as their Standard Model fermion partner gets from the same Yukawa terms.
+\item There are also so-called {\bf hyperfine} terms that come from $D$-terms $\sum g^2(A^*T^aA)^2$ in the scalar potential that give Lagrangian terms of the form (sfermion)$^2$(Higgs)$^2$ when one of the scalar fields $A$ is a neutral Higgs field, and the other is a sfermion. Under EWSB, when the Higgs field gets a vev these become mass terms. They contribute with a mass \[\Delta_F = (T_{3F}g^2 - Y_Fg'{}^2)(v_d^2-v_u^2) = (T_{3F} - Q_F\sin^2\theta_W)\cos2\beta\, m_Z^2,\] where the weak isospin, $T_3$, hypercharge, $Y$, and electric charge, $Q$, are for the left-handed supermultiplet $F$ to which the sfermion belongs. However, these contributions are usually quite small.
+\item Furthermore, there are also $F$-terms that combine scalars from the $\mu H_uH_d$ term and Yukawa terms $y_fFH\bar K$ in the superpotential. These give Lagrangian terms $-\mu^*H^0{}^* y_f \tilde{f}_L \tilde{f}_R^*$. With a Higgs vev this gives mass terms $-\mu^* v_{u/d}\,y_f\tilde{f}^*_R\tilde{f}{}_L + {\rm c.c.}$
+\item Finally, the soft Yukawa terms of the form $a_f \tilde{F}H\tilde{f}^*_R$ with a Higgs vev give mass terms $a_f v_{u/d} \tilde{f}_L\tilde{f}^*_R + {\rm c.c.}$\footnote{We often assume that $a_f = A_0 y_f$ in order to further reduce the FCNC, meaning that there is a global constant $A_0$ with unit mass relating the Yukawa couplings and the trilinear A-term couplings.} 
+\end{enumerate}
+
+For the first two generations of sfermions, terms of type ii), iv) and v) are small due to small Yukawa couplings. Then the sfermion masses are for example
+\begin{eqnarray}
+m_{\tilde{u}_L}^2 &=& m^2_{Q_1} + \Delta \tilde{u}_L,\\
+m_{\tilde{d}_L}^2 &=& m^2_{Q_1} + \Delta \tilde{d}_L,\\
+m_{\tilde{u}_R}^2 &=& m_{u_1}^2 + \Delta \tilde{u}_R.
+\end{eqnarray}
+Mass splitting between same generation slepton/squark is then given by the hyperfine splitting  \[m_{\tilde{e}_L}^2 - m_{\tilde{\nu}_{eL}}^2 = m_{\tilde{d}_L}^2-m_{\tilde{u}_L}^2  = -\frac{1}{2}g^2 (v_d^2 - v_u^2) = -\cos 2\beta\, m_W^2,\] since they have the same hypercharge, see Table~\ref{tab:hyper}. For $\tan\beta >1$ this gives the definite prediction $m_{\tilde{e}_L}^2 > m_{\tilde{\nu}_{eL}}^2$ and $ m_{\tilde{d}_L}^2 > m_{\tilde{u}_L}^2$.
+
+The {\bf third generation sfermions} $\tilde{t}$, $\tilde{b}$ and $\tilde{\tau}$ have a more complicated mass matrix structure, {\it e.g.}\ in the gauge eigenstate basis $(\tilde{t}_L,\, \tilde{t}_R)$ for stop quarks the mass term is
+\[\mathcal{L}_{\rm stop} = -\begin{pmatrix}\tilde{t}_L& \tilde{t}_R\end{pmatrix}m^2_{\tilde{t}}\begin{pmatrix}\tilde{t}_L\\ \tilde{t}_R\end{pmatrix},\]
+where the mass matrix is given by
+\begin{equation}
+m_{\tilde{t}}^2 = \begin{bmatrix}m_{Q_3}^2 + m_t^2 + \Delta \tilde{u}_L & v(a_t^*\sin\beta - \mu y_t \cos\beta)\\ v(a_t\sin\beta - \mu^* y_t \cos\beta) & m_{u_3}^2 + m_t^2 + \Delta \tilde{u}_R \end{bmatrix}.
+\label{eq:stopmassmatrix}
+\end{equation}
+Here the diagonal elements come from i), ii) and iii), while the off-diagonal elements come from iv) and v). 
+
+To find the particle masses, we must diagonalise this matrix, writing it in terms of the mass eigenstates $\tilde{t}_1$ and $\tilde{t}_2$,  acquiring also here  a unitary mixing matrix for the mass eigenstates in terms of the gauge eigenstates $\tilde{t}_L$ and $\tilde{t}_R$:
+\begin{equation}
+\begin{pmatrix}\tilde{t}_1\\ \tilde{t}_2\end{pmatrix} 
+=\begin{bmatrix}c_{\tilde t} & -s_{\tilde t}^* \\ s_{\tilde t} & c_{\tilde t} \end{bmatrix}
+\begin{pmatrix}\tilde{t}_L\\ \tilde{t}_R\end{pmatrix},
+\end{equation}
+where the matrix entries are related by $|c_{\tilde t} |^2+|s_{\tilde t} |^2=1$ and  $m_{\tilde t_1}^2<m_{\tilde t_2}^2$ are the eigenvalues of (\ref{eq:stopmassmatrix}). The suggestive form of the mixing matrix indicates that if the off-diagonal elements of the original mass matrix has only real elements, this mixing matrix can be written as an element in $SO(2)$, using sine and cosine of a mixing angle $0\le\theta_{\tilde t}<\pi$,  $c_{\tilde t}=\cos\theta_{\tilde t}$ and $s_{\tilde t}=\sin\theta_{\tilde t}$.
+The matrices for $\tilde{b}$ and $\tilde{t}$ have the same structure. 
+
+Since the third generation sneutrino $\tilde\nu_{eL}$ does not have a corresponding right-handed state in the MSSM, there is no mixing, and it has the same mass term as the first and second generation sneutrinos.
+
+A good source for sfermion interaction Feynman rules is the PhD-thesis of Richardson~\cite{Richardson:2000nt}.
+
+
+
+%%%%%%%%%%%%%
+\section{Excercises}
+%%%%%%%%%%%%%
+
+\begin{Exercise}[]
+Using the explicit form of the $SU(3)_C$ transformations with the Gell-Mann matrices, show that with our definition of the superpotential term $\bar{U}_i\bar{D}_j\bar{D}_k$ this is invariant under $SU(3)_C$.
+\end{Exercise}
+
+
+\begin{Exercise}[]
+Show how you can eliminate the parameters $|\mu|$ and $b$ by using the properties of the minimum of the potential in Eq.~(\ref{eq:higgspot_gauged}).
+\end{Exercise}
+
+\begin{Exercise}[]
+Show Eqs.~(\ref{eq:gprime_vd})--(\ref{eq:g_vu}).
+\end{Exercise}
+
+\end{document}
+
+

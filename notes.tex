@@ -1,0 +1,258 @@
+\documentclass[11pt,a4paper]{book}
+
+% Packages
+\usepackage{subfiles}    % Allows compiling chapters as standalone documents
+\usepackage{slashed}
+\usepackage{amsmath}  % For pmatrix, boldsymbol and eqref
+\usepackage{amssymb}  % For fractur
+\usepackage{textcomp} 
+\usepackage[utf8]{inputenc}  % Taken out when using LuLaTeX
+%\usepackage{unicode-math}  % Would like to use this in particular to get blackboard bold numbers, but collides with greek letters in headers
+\usepackage[bb=dsserif]{mathalpha} % Makes blackboard bold numbers work
+\usepackage{a4wide}
+\usepackage{caption}
+\usepackage{color, enumerate, graphicx}
+\usepackage{hyperref}
+\usepackage{ulem}
+\usepackage[answerdelayed]{exercise} % Package for exercises, set to delay answers to end
+
+\usepackage[compat=1.1.0]{tikz-feynman}
+
+% Use package feynMF to draw Feynman diagrams -- TO BE REMOVED
+\usepackage[force]{feynmp-auto} 
+
+
+% Own definitions
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\tr}[1]{\operatorname{Tr}[#1]}
+\newcommand{\Tr}[1]{\operatorname{Tr}#1}
+\newcommand{\str}[1]{\operatorname{STr}\left(#1\right)}
+\renewcommand{\Im}[1]{\operatorname{Im}\left(#1\right)}
+
+
+\definecolor{grey}{RGB}{205,205,205}
+\definecolor{wgrey}{RGB}{255,180,170}
+
+\newcommand{\df}[1]{\textbf{ }\vspace{2 mm}\\ \indent \fcolorbox{black}{grey}{\textbf{  } \begin{minipage}{140mm} \textbf{ }\\ \textbf{Definition}:  #1 \textbf{ }
+\end{minipage}\textbf{ }}\vspace{2 mm}\\}
+
+\newcommand{\post}[1]{\textbf{ }\vspace{2 mm}\\ \indent \fcolorbox{black}{grey}{\textbf{  } \begin{minipage}{140mm} \textbf{ }\\ \textbf{Postulate}:  #1 \textbf{ }
+\end{minipage}\textbf{ }}\vspace{2 mm}\\}
+
+\newcommand{\pf}[1]{\textbf{ }\\\vspace{5 mm}\\ \indent \fcolorbox{black}{grey}{\textbf{  } \begin{minipage}{150 mm} \textbf{ }\\ \underline{\textbf{Proof}}:  #1 \textbf{ }\\\textbf{Q.E.D.}\\ \end{minipage}\textbf{ }}\\ \vspace{5 mm}\\}
+
+\newcommand{\theo}[1]{\textbf{ }\vspace{4 mm}\\ \indent \frame{\text{  }\\ \begin{minipage}{140 mm}\text{ }\\ \textbf{Theorem}:  #1\text{   }\\  \end{minipage}\indent} \vspace{4 mm}\\}
+
+
+\newcounter{excount}[chapter]
+%\newenvironment{exercise}[1][]{\addtocounter{excount}{1} \noindent {\bf Exercise
+%    \thechapter.\theexcount #1}\hspace{2mm}}{\vspace{4mm}}
+
+
+% Make exercise headers a bit better
+\renewcounter{Exercise}[chapter]
+\renewcommand{\ExerciseHeader}{\centerline{\textbf{\large
+\ExerciseName\,\thechapter.\ExerciseHeaderNB\ExerciseHeaderTitle
+\ExerciseHeaderOrigin\medskip}}}
+\renewcommand{\AnswerHeader}{\medskip\noindent\textbf{
+\ExerciseName\ \thechapter.\ExerciseHeaderNB}\newline\smallskip}
+
+
+% Front page
+\title{{\Huge Supersymmetry} \\ 
+\vspace{5mm} Lecture notes for FYS5190/FYS9190 Supersymmetry}
+\author{Are Raklev}
+
+
+
+%%%%%%%%%%%%
+\begin{document}
+
+\pagenumbering{roman}  % Roman numerals for preamble
+
+\maketitle
+
+
+%%%%%%%%%%%%
+% Preface
+%%%%%%%%%%%%
+\chapter*{Preface}
+%%%%%%%%%%%%
+
+
+The goal of these lecture notes is to introduce the basics of low-energy models of supersymmetry (SUSY) using the Minimal Supersymmetric Standard Model (MSSM) as our main example. The notes are based on lectures given at the University of Oslo in 2011, 2013, 2015, 2017, and 2019, and lectures at the NORDITA Winter School on Theoretical Particle Physics in 2012. This document owes a particular gratitude to Paul Batzing, who took notes during the 2011 lectures, forming the start of this document.
+
+
+\vspace{5mm}
+Oslo, May 2021
+
+Are Raklev
+
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% ToC   %
+%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% Introduction %
+%%%%%%%%%%%%%%%%%%%
+\chapter*{Introduction}
+\pagenumbering{arabic}                                  % Reset to arabic numbering from here
+\addcontentsline{toc}{chapter}{Introduction}   % Needs to be manually added to ToC since it is unnumbered
+%%%%%%%%%%%%%%%%%%%
+Rather than the traditional approach of starting with the current problems of the Standard Model of particle physics, and how supersymmetry can solve these, in these notes we will focus on the algebraic origin of supersymmetry in the sense of an extension of the symmetries of Einstein's special relativity (SR). This was the original motivation for work on what we today call supersymmetry. 
+
+We first need to introduce some basic mathematical concepts used in physics for exploring symmetries, mainly groups and Lie algebras, which we will take care of in Chapter~\ref{chap:groups}. 
+In Chapter~\ref{chap:poincare} we will then study the symmetries of special relativity, through the Poincaré group, and look at how these symmetries can be extended into the super-Poincaré group by adding so-called supercharges to the Poincaré Lie algebra.
+We will then introduce superspace, a coordinate system where supersymmetry is manifest, and use this to derive differential representations for the supercharges in Chapter~\ref{chap:superspace}. Here, we also define superfields, which function as representations of the super-Poincaré group, and are the building blocks of the supersymmetric Largrangians we construct in Chapter~\ref{chap:lagrangian}. In Chapter \ref{chap:breaking} we discuss how to break supersymmetry using spontaneous symmetry breaking.
+
+From Chapter \ref{chap:mssm} and onwards we turn more towards phenomenology, constructing the minimal realisation of a supersymmetric Standard Model, before we discuss its phenomenology inChapter \ref{chap:pheno}, before ending with a discussion of supersymmetric Dark Matter candidates in Chapter \ref{chap:dm}.
+
+Note that sections marked with an asterisk are somewhat tangential to the main argument of the text and can be read for light entertainment only. Solutions to some of the exercises can be found in Appendix \ref{chap:solutions}.
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% Groups and algebras %
+%%%%%%%%%%%%%%%%%%%
+\subfile{groups}
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% Poincare algebra %
+%%%%%%%%%%%%%%%%%%%
+\subfile{poincare}
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% Superspace %
+%%%%%%%%%%%%%%%%%%%
+\subfile{superspace}
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% SUSY Lagrangian %
+%%%%%%%%%%%%%%%%%%%
+\subfile{lagrangian}
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% SUSY breaking %
+%%%%%%%%%%%%%%%%%%%
+\subfile{breaking}
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% MSSM %
+%%%%%%%%%%%%%%%%%%%
+\subfile{mssm}
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% Phenomenology %
+%%%%%%%%%%%%%%%%%%%
+\subfile{pheno}
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% Dark Matter %
+%%%%%%%%%%%%%%%%%%%
+\subfile{dm}
+%%%%%%%%%%%%%%%%%%%
+
+
+%\section{Tools}
+%We list a selection of tools and their functions for hadron collider research:
+%\begin{itemize}
+%\item Pythia 8 - Modern C++ based MC tool for simulating pp and p$\overline{p}$ collisions
+%\item Pythia 6 - Fortran 77 version of Pythia
+%\item Herwig++ - C++ based MC simulation of proton collisions
+%\item Herwig 6.5 - Fortran 77 version of Herwig
+%\item Prospino 2 - Tool to calculate NLO cross sections for SUSY
+%\item IsaJet - RGE code to run parameters from GUT to EW scale
+%\item Soft SUSY - Another RGE code
+%\item Suspect - Yet another RGE code
+%\item MadGraph - Calculator for tree-level matrix elements
+%\item AcerDet - Fast LHC detector simulation in Fortran 77
+%\item PGS - Fast LHC detector simulation in C++
+%\item Fastjet - Collection of jet algorithms in C++
+%\end{itemize}
+
+
+\appendix
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
+% Solutions
+%%%%%%%%%%%%%%%%%%%%%
+\chapter{Solutions to exercises}
+\label{chap:solutions}
+\shipoutAnswer
+
+
+
+%%%%%%%%%%%%%%%%%%
+% References
+%%%%%%%%%%%%%%%%%%
+\bibliography{notes}{}
+\bibliographystyle{JHEP}
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
