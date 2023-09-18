@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from cycler import cycler
 
 n = 20
 p0 = 5
@@ -9,6 +10,10 @@ dp = np.linspace(1e-2, 1e-1, 3)[None,:]
 
 def Psi(z, dp):
     return dp * np.sqrt(2/np.pi) * np.exp(1j*p0*z) * np.exp(-2*dp**2 * z**2)
+
+# plt.style.use('ggplot')
+
+plt.rcParams['axes.prop_cycle'] = cycler(color=['tab:red', 'tab:green', 'tab:blue'])
 
 plt.plot(z, np.real(Psi(z,dp)), alpha=0.8)
 plt.grid(True)
