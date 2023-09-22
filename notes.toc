@@ -1,0 +1,128 @@
+\contentsline {chapter}{Introduction}{1}{chapter*.3}%
+\contentsline {chapter}{\numberline {1}Groups and algebras}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Group definition}{3}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Matrix groups}{5}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}General and special linear groups}{5}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Unitary and special unitary groups}{5}{subsection.1.2.2}%
+\contentsline {subsubsection}{$SU(2)$}{7}{section*.4}%
+\contentsline {subsection}{\numberline {1.2.3}Orthogonal and special orthogonal groups}{7}{subsection.1.2.3}%
+\contentsline {subsubsection}{$SO(2)$}{8}{section*.5}%
+\contentsline {subsubsection}{$SO(3)$}{8}{section*.6}%
+\contentsline {subsection}{\numberline {1.2.4}Symplectic and compact symplectic groups$^*$}{9}{subsection.1.2.4}%
+\contentsline {section}{\numberline {1.3}Group properties}{9}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Subgroups}{9}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Quotient groups}{10}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Product groups}{11}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Isomorphic groups}{11}{subsection.1.3.4}%
+\contentsline {section}{\numberline {1.4}Representations}{12}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Definition}{12}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Representation examples}{13}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Irreducible representations}{14}{subsection.1.4.3}%
+\contentsline {section}{\numberline {1.5}Lie groups}{16}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Definitions}{16}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Generators}{17}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Structure constants}{20}{subsection.1.5.3}%
+\contentsline {section}{\numberline {1.6}Algebras}{20}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}Normed division algebras$^*$}{21}{subsection.1.6.1}%
+\contentsline {section}{\numberline {1.7}Lie algebras}{22}{section.1.7}%
+\contentsline {subsection}{\numberline {1.7.1}Representations of a Lie algebra}{23}{subsection.1.7.1}%
+\contentsline {subsection}{\numberline {1.7.2}Exponential map}{24}{subsection.1.7.2}%
+\contentsline {subsection}{\numberline {1.7.3}Adjoint representations}{26}{subsection.1.7.3}%
+\contentsline {subsection}{\numberline {1.7.4}Dual representations}{27}{subsection.1.7.4}%
+\contentsline {section}{\numberline {1.8}Exercises}{28}{section.1.8}%
+\contentsline {chapter}{\numberline {2}The Poincaré group and its extensions}{31}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Representations of $SU(2)$}{31}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Ladder operators}{32}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}The Casimir invariant}{33}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}The lowest-dimensional representations}{34}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}The Lorentz Group}{35}{section.2.2}%
+\contentsline {section}{\numberline {2.3}The Poincaré group}{38}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Irreducible representations of the Poincaré group}{39}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Weyl spinors}{41}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Useful relationships for Weyl spinors}{43}{subsection.2.5.1}%
+\contentsline {section}{\numberline {2.6}The no-go theorem and graded Lie algebras}{44}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Conformal symmetry$^*$}{46}{section.2.7}%
+\contentsline {section}{\numberline {2.8}The Casimir operators of the super-Poincaré algebra}{46}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Short interlude on $\gamma $-matrices}{48}{section.2.9}%
+\contentsline {section}{\numberline {2.10}Irreducible representations of the super-Poincaré group}{48}{section.2.10}%
+\contentsline {subsection}{\numberline {2.10.1}Examples of irreducible representations}{50}{subsection.2.10.1}%
+\contentsline {subsubsection}{$j=0$}{50}{section*.7}%
+\contentsline {subsubsection}{$j=\frac {1}{2}$}{51}{section*.8}%
+\contentsline {section}{\numberline {2.11}Exercises}{51}{section.2.11}%
+\contentsline {chapter}{\numberline {3}Superspace}{55}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Superspace calculus}{55}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Superspace definition}{57}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Covariant derivatives}{60}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Superfields}{60}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Scalar superfields}{62}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Vector superfields}{63}{subsection.3.4.2}%
+\contentsline {section}{\numberline {3.5}Supergauge}{63}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Exercises}{65}{section.3.6}%
+\contentsline {chapter}{\numberline {4}Construction of a low-energy SUSY Lagrangian}{67}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Supersymmetry invariant Lagrangians}{67}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Albanian gauge theories}{69}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Non-Abelian gauge theories}{70}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Supersymmetric field strength}{71}{section.4.4}%
+\contentsline {section}{\numberline {4.5}The (almost) complete supersymmetric Lagrangian}{72}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Finding the equations of motion}{73}{section.4.6}%
+\contentsline {section}{\numberline {4.7}The hierarchy problem}{74}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Vacuum energy}{75}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Excercises}{77}{section.4.9}%
+\contentsline {chapter}{\numberline {5}Breaking supersymmetry}{79}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Spontaneous supersymmetry breaking}{79}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Supertrace}{81}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Soft breaking}{82}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Excercises}{83}{section.5.4}%
+\contentsline {chapter}{\numberline {6}The Minimal Supersymmetric Standard Model}{85}{chapter.6}%
+\contentsline {section}{\numberline {6.1}MSSM field content}{85}{section.6.1}%
+\contentsline {section}{\numberline {6.2}The kinetic terms}{87}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Gauge terms}{88}{section.6.3}%
+\contentsline {section}{\numberline {6.4}The MSSM superpotential}{88}{section.6.4}%
+\contentsline {section}{\numberline {6.5}R-parity}{90}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Supersymmetry breaking terms in the MSSM}{92}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Renormalisation group equations}{93}{section.6.7}%
+\contentsline {section}{\numberline {6.8}Gauge coupling unification}{95}{section.6.8}%
+\contentsline {section}{\numberline {6.9}Radiative Electroweak Symmetry Breaking}{98}{section.6.9}%
+\contentsline {section}{\numberline {6.10}Higgs boson properties}{100}{section.6.10}%
+\contentsline {section}{\numberline {6.11}The gluino}{102}{section.6.11}%
+\contentsline {section}{\numberline {6.12}Neutralinos \& Charginos}{103}{section.6.12}%
+\contentsline {section}{\numberline {6.13}Sleptons \& Squarks}{106}{section.6.13}%
+\contentsline {section}{\numberline {6.14}Excercises}{108}{section.6.14}%
+\contentsline {chapter}{\numberline {7}Sparticle phenomenology}{109}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Models for supersymmetry breaking}{109}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Planck-scale Mediated Supersymmetry Breaking (PMSB)}{110}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}Gauge Mediated Supersymmetry Breaking (GMSB)}{111}{subsection.7.1.2}%
+\contentsline {section}{\numberline {7.2}Supersymmetry at lepton colliders}{112}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Sfermions}{113}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}Neutralinos \& charginos}{115}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}Higgs bosons}{117}{subsection.7.2.3}%
+\contentsline {subsection}{\numberline {7.2.4}Current bounds at lepton colliders}{117}{subsection.7.2.4}%
+\contentsline {section}{\numberline {7.3}Supersymmetry at hadron colliders}{118}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Current bounds on sparticle masses}{123}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Squarks and gluinos}{123}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Stop}{124}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Sleptons}{125}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.4}Charginos and neutralinos}{126}{subsection.7.4.4}%
+\contentsline {section}{\numberline {7.5}Precision observables}{128}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Electroweak precision observables}{128}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}$(g-2)_\mu $}{130}{subsection.7.5.2}%
+\contentsline {subsection}{\numberline {7.5.3}$b \to s\gamma $}{132}{subsection.7.5.3}%
+\contentsline {subsection}{\numberline {7.5.4}$B_s \to \mu ^+\mu ^-$}{133}{subsection.7.5.4}%
+\contentsline {section}{\numberline {7.6}Excercises}{135}{section.7.6}%
+\contentsline {chapter}{\numberline {8}Supersymmetric dark matter}{137}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Evidence for dark matter}{137}{section.8.1}%
+\contentsline {section}{\numberline {8.2}WIMP magic}{139}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Dark matter candidates in supersymmetry}{141}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Neutralino}{141}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Sneutrinos}{142}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}Gravitino}{143}{subsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.3.4}Others}{143}{subsection.8.3.4}%
+\contentsline {section}{\numberline {8.4}Direct detection}{144}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Indirect detection}{145}{section.8.5}%
+\contentsline {subsubsection}{Photons}{145}{section*.46}%
+\contentsline {subsubsection}{Neutrinos}{146}{section*.48}%
+\contentsline {subsubsection}{Positrons}{147}{section*.49}%
+\contentsline {subsubsection}{Antiprotons}{147}{section*.50}%
+\contentsline {subsubsection}{Antideuterons}{148}{section*.51}%
+\contentsline {section}{\numberline {8.6}Excercises}{148}{section.8.6}%
+\contentsline {chapter}{\numberline {A}Solutions to exercises}{149}{appendix.A}%
