@@ -82,3 +82,4 @@ plot_wave(2, 300)
 
 fig.tight_layout()
 plt.show()
+
