@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2023)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: notes.aux
+The style file: JHEP.bst
+Database file #1: notes.bib
+Warning--empty author in ATLAS-CONF-2013-047
+Warning--empty author in ATL-PHYS-PUB-2021-019
+Warning--empty booktitle in Shifman:1995hc
+Warning--empty journal in Shifman:1995hc
+Warning--empty author in LHCb:2020zud
+You've used 57 entries,
+            2307 wiz_defined-function locations,
+            948 strings with 13269 characters,
+and the built_in function-call counts, 17218 in all, are:
+= -- 2079
+> -- 534
+< -- 1
++ -- 247
+- -- 122
+* -- 1185
+:= -- 2265
+add.period$ -- 67
+call.type$ -- 57
+change.case$ -- 58
+chr.to.int$ -- 0
+cite$ -- 62
+duplicate$ -- 881
+empty$ -- 1467
+format.name$ -- 122
+if$ -- 4598
+int.to.chr$ -- 0
+int.to.str$ -- 57
+missing$ -- 203
+newline$ -- 179
+num.names$ -- 54
+pop$ -- 240
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 725
+stack$ -- 0
+substring$ -- 855
+swap$ -- 399
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 5
+while$ -- 120
+width$ -- 59
+write$ -- 575
+(There were 5 warnings)
