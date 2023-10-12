@@ -195,6 +195,7 @@ We will not immediately use this information to study the representations of the
 
 %%%%%%%%%%%%%%%%%
 \section{The Poincaré group}
+\label{sec:Poincare_group}
 %%%%%%%%%%%%%%%%%
 We can now extend $O(1,3)$ by adding translation by a constant four-vector $a^\mu$ to the transformation of the Lorentz group:  $x^\mu \to x'{}^\mu = \Lambda^\mu{}_\nu x^\nu + a^\mu$. This transformation leaves lengths $(x-y)^2$ invariant in $\mathbb{M}_4$, and invariance under this group add symmetry of time and space translation to the symmetries of the Lorentz group.
 \df{The {\bf Poincaré group} $P$ is the group of all transformations of the form
@@ -219,6 +220,7 @@ Using the differential representation of $M_{\mu\nu}$ one can also show the foll
 Equations (\ref{eq:poco1}), (\ref{eq:poco2}) and (\ref{eq:poco3}) together form the {\bf Poincaré algebra}, a Lie algebra for the Poincaré group. This allows us to write a general member $g$ of the restricted Poincaré group by using the exponential map 
 \begin{equation}
 g=\exp\left(\frac{i}{2}\omega^{\rho \sigma}M_{\rho \sigma}+ia^\mu P_\mu\right),
+\label{eq:Poincare_exp_map}
 \end{equation}
 where $a^\mu$ are the additional parameters of the translation. 
 
@@ -629,7 +631,7 @@ the eigenvalue of $S^2$ is $s(s+1)=j(j+1)$ for the Clifford vacuum.
 We can construct three more states from the Clifford vacuum using the $Q$s:\footnote{All other possible combinations of $Q$s and $|\Omega\rangle$ give either one of the other four states, or zero.}
 \[\bar{Q}^{\dot{1}}|\Omega\rangle,\quad\bar{Q}^{\dot{2}}|\Omega\rangle,\quad\bar{Q}^{\dot{1}}\bar{Q}^{\dot{2}}|\Omega\rangle.\]
 This means that there are four possible states that can be constructed out of any state with the labels $m$, $j$, $j_3$. Taking a look at:
-\[J_k \bar{Q}^{\dot{A}}|\Omega\rangle = \bar{Q}^{\dot{A}}J_k |\Omega\rangle = j_k\bar{Q}^{\dot{A}}|\Omega\rangle,\]
+\[J_3 \bar{Q}^{\dot{A}}|\Omega\rangle = \bar{Q}^{\dot{A}}J_3 |\Omega\rangle = j_3\bar{Q}^{\dot{A}}|\Omega\rangle,\]
 this means that all these states have the same $j_3$ (and $j$) quantum numbers.\footnote{The same can easily be shown for $\bar{Q}^{\dot{1}}\bar{Q}^{\dot{2}}|\Omega\rangle$.} 
 We can now find their eigenvalues for $S_3$. From the superalgebra (\ref{eq:QMweyl}) we have:
 \[[M^{ij}, \bar{Q}^{\dot{A}}] = -(\sigma^{ij})^{\dot{A}}{}_{\dot{B}}\bar{Q}^{\dot{B}},\quad\text{or}\quad [S_k, \bar{Q}^{\dot{A}}] = -\half\epsilon_{kij}(\sigma^{ij})^{\dot{A}}{}_{\dot{B}}\bar{Q}^{\dot{B}}, \]
@@ -666,7 +668,7 @@ For a Majorana fermion the situation is simpler, since we only need one self-rep
 \subsubsection{$j=\frac{1}{2}$}
 For $j=\frac{1}{2}$ we have two Clifford vacua $|\Omega\rangle $ with $j_3=\pm\frac{1}{2}$, and with $s=\frac{1}{2}$ and $s_3 = \pm\frac{1}{2}$, thus they are fermionic states. For the moment we label them as  $|\Omega; \frac{1}{2}\rangle$ and $|\Omega; -\frac{1}{2}\rangle$. From each of these we can construct two further fermion states $\bar{Q}^{\dot{1}}\bar{Q}^{\dot{2}}|\Omega;\pm \frac{1}{2}\rangle$ where we know $s=\frac{1}{2}$ and $s_3 = \mp\frac{1}{2}$.  Together these four states can form two fermions with $s = \frac{1}{2}$ and $s_3=\pm\frac{1}{2}$.
 
-In addition to this we have the two states $\bar{Q}^{\dot{1}}|\Omega;\frac{1}{2}\rangle$ and $\bar{Q}^{\dot{2}}|\Omega; -\frac{1}{2}\rangle$ with $s_3 = 0$, the state $\bar{Q}^{\dot{2}}|\Omega;\frac{1}{2}\rangle$ with $s_3 = 1$, and the state $\bar{Q}^{\dot{1}}|\Omega;-\frac{1}{2}\rangle$which has $s_3 = -1$. From these we can create three states with $s=1$, and $s_3 = 1, 0, -1$, and one state with $s=0$ and $s_3=0$, representing one massive vector particle and one scalar.
+In addition to this we have the two states $\bar{Q}^{\dot{1}}|\Omega;\frac{1}{2}\rangle$ and $\bar{Q}^{\dot{2}}|\Omega; -\frac{1}{2}\rangle$ with $s_3 = 0$, the state $\bar{Q}^{\dot{2}}|\Omega;\frac{1}{2}\rangle$ with $s_3 = 1$, and the state $\bar{Q}^{\dot{1}}|\Omega;-\frac{1}{2}\rangle$which has $s_3 = -1$. By linear combinations of these we can create three states with $s=1$, and $s_3 = 1, 0, -1$, and one state with $s=0$ and $s_3=0$, representing one massive vector particle and one scalar. Carefull consideration of the transformation properties of these particles will show that the scalar is a pseudo-scalar (a particle that changes sign under a parity transformation).
 
 In total this representation then has one (massive) spin-1 vector with three spin-states, two spin-$\half$ fermions and one spin-0 scalar. We will later refer to this set of states as the {\bf vector superfield}.
 
@@ -772,7 +774,7 @@ Thus we are left with the standard matrix for Lorentz transformations in the $x$
 \begin{Exercise}[]
 Show that a general boost in the direction of the unit vector $\mathbf n$ with rapidity $\eta$ can be written as
 \begin{equation*}
-B(\eta,\mathbf n)=I+(\cosh\eta-1)(\mathbf n \cdot \mathbf K)^2-\sinh\eta (\mathbf n \cdot \mathbf K).
+B(\eta,\mathbf n)=I+(\cosh\eta-1)(\mathbf n \cdot \mathbf K)^2-i\sinh\eta (\mathbf n \cdot \mathbf K).
 \end{equation*}
 \end{Exercise}
 
