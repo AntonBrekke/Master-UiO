@@ -45,13 +45,14 @@ These highest power $\theta$-components can be isolated by using the projection 
 \[S=\int_R d^4x \int d^4\theta\, \mathcal{L},\]
 where the Lagrangian density $\mathcal{L}$, which is a function of superfields, is guaranteed to give a supersymmetry invariant action. Note that this constitutes a redefinition of what we mean by the Lagrangian $\mathcal{L}$ when working with superfields. We should in particular be careful when counting the dimension of terms. We have, see Section \ref{sec:superspace}, $[\theta] = M^{-1/2}$, which, since $\int d\theta \theta=1$, leads to $[\int d\theta]=M^{1/2}$. We then have $[\int d^4\theta] = M^2$. Since we must have $[\int d^4\theta\, \mathcal{L}] = M^4$ for the action to be dimensionless, we need $[\mathcal{L}]=M^2$, which is different from the standard field theory Lagrangian with dimension $M^4$.
 
-We can now write down the generic form for a supersymmetric Lagrangian consisting of scalar superfields, where the indices indicate the highest power of $\theta$ in the term:
-\[\mathcal{L} = \mathcal{L}_{\theta \theta \bar{\theta} \bar{\theta}} + \theta\theta \mathcal{L}_{\bar{\theta}\bar{\theta}} + \bar{\theta}\bar{\theta}\mathcal{L}_{\theta\theta}.\]
-Here $\mathcal{L}_{\theta\theta}$ ($\mathcal{L}_{\bar{\theta}\bar{\theta}}$)  is a function of {\it only}  left-handed (right-handed) scalar superfields where we project out the $F$-field by multiplying by $\bar{\theta}\bar{\theta}$ ($\theta\theta$) and integrating over all the $\theta$. These terms form what we call the {\bf superpotential}.
-Meanwhile, the $\mathcal{L}_{\theta \theta \bar{\theta} \bar{\theta}}$ term is a real valued function of the superfields where we project out the $d$-field, called the {\bf Kähler potential}.
+We can now write down the generic form for a supersymmetric Lagrangian consisting of scalar superfields $\Phi_i$, where the indices indicate the highest power of $\theta$ in the term:
+\[\mathcal{L} = \mathcal{L}_{\theta \theta \bar{\theta} \bar{\theta}}(\Phi_i,\Phi_i^\dagger) + \bar{\theta}\bar{\theta}\mathcal{L}_{\theta\theta}(\Phi_i)+ \theta\theta \mathcal{L}_{\bar{\theta}\bar{\theta}}(\Phi_i^\dagger) .\]
+Here $\mathcal{L}_{\theta\theta}$ ($\mathcal{L}_{\bar{\theta}\bar{\theta}}$)  is a function of {\it only}  left-handed (right-handed) scalar superfields where we project out the $F$-field by multiplying by $\bar{\theta}\bar{\theta}$ ($\theta\theta$) and integrating over all the $\theta$. The function form is limited to {\bf holonomic functions} which means that the term is itself a scalar superfield. These two terms form what we call the {\bf superpotential}.
+Meanwhile, the $\mathcal{L}_{\theta \theta \bar{\theta} \bar{\theta}}$ term is a real valued function of the scalar superfields where we project out the $d$-field, called the {\bf Kähler potential}. Possible terms include $\Phi_i^\dagger\Phi_i$, but not $\Phi_i+\Phi_i^\dagger$, since this would belong in the superpotential.
 
-The requirement of renormalisability puts further restrictions on the fields in $\mathcal{L}$. We can at most have three factors of scalar superfields in each term of the superpotential, for details see {\it e.g.}\ Wess \& Bagger \cite{Bagger:1983mv}.\footnote{The argument is similar to ordinary quantum field theory, terms with couplings with negative mass dimension is forbidden.}  Since the action must be real, the (almost) most general supersymmetry Lagrangian that can be written in terms of scalar superfields is:
-\[\mathcal{L} = \Phi^\dagger_i\Phi_i + \bar{\theta}\bar{\theta}W[\Phi] + \theta\theta W[\Phi^\dagger].\]
+The requirement of renormalisability of the resulting quantum field theory puts further restrictions on the fields in $\mathcal{L}$. We can at most have three factors of scalar superfields in each term of the superpotential, and two factors of scalar superfields in the Kähler potentia,  for details see {\it e.g.}\ Wess \& Bagger \cite{Bagger:1983mv}.\footnote{The argument is similar to ordinary quantum field theory, terms with couplings with negative mass dimension is forbidden.} 
+Since the total action must be real, the (almost) most general supersymmetry Lagrangian that can be written in terms of scalar superfields is:
+\[\mathcal{L} = \Phi^\dagger_i\Phi_i + \bar{\theta}\bar{\theta}W[\Phi_i] + \theta\theta W[\Phi^\dagger_i].\]
 Here the first term is called the {\bf kinetic term},\footnote{The constant in front of this term can always be chosen to be one because we can rescale the whole Lagrangian. It is possible to start from more general Kähler potentials, but this is mostly beyond the scope of these notes, although we will return to modify this term to account for gauge invariance.} and $W$ is the symbol for the {\bf superpotential}, which by renormalisability is restricted to
 \begin{equation}
 W[\Phi] = g_i \Phi_i + m_{ij}\Phi_i \Phi_j + \lambda_{ijk} \Phi_i \Phi_j \Phi_k.
@@ -68,19 +69,19 @@ Dimension counting, starting from $[\mathcal{L}]=M^2$ and $[\Phi]=1$, means that
 We will of course require not only a supersymmetry invariant Lagrangian, but also a gauge invariant Lagrangian, and we start with the requirements for an abelian gauge group. 
 
 Let us first look at the transformation of the superpotential $W$ under the gauge transformation of the scalar superfields in (\ref{eq:scalar_supergauge}):
-\[W[\Phi] \to W[\Phi'] = g_ie^{-iq_i\Lambda }\Phi_i + m_{ij}e^{-i(q_i+q_j)\Lambda}\Phi_i\Phi_j + \lambda_{ijk}e^{-i(q_i+q_j+q_k)\Lambda}\Phi_i\Phi_j\Phi_k.\]
+\[W[\Phi] \to W[\Phi'] = t_ie^{iq_i\Lambda }\Phi_i + m_{ij}e^{i(q_i+q_j)\Lambda}\Phi_i\Phi_j + \lambda_{ijk}e^{i(q_i+q_j+q_k)\Lambda}\Phi_i\Phi_j\Phi_k.\]
 Requiring gauge invariance, $W[\Phi] = W[\Phi']$, we must have:
 \begin{eqnarray}
-q_i &=& 0 ~~\text{or}~g_i = 0, \\
+q_i &=& 0 ~~\text{or}~t_i = 0, \\
 q_i+q_j &=& 0 ~~\text{or}~~m_{ij} = 0,  \\
 q_i+q_j+q_k &=& 0  ~~\text{or}~~ \lambda_{ijk}=0.
 \end{eqnarray}
 This puts great restrictions on the form of the superpotential and the charge assignments of the superfields, as in ordinary gauge theories. 
 
 What then about the kinetic term? This transforms as
-\[\Phi^\dagger_i\Phi_i \to \Phi^\dagger_i e^{iq_i\Lambda^\dagger }e^{-iq_i\Lambda }\Phi_i = e^{iq_i(\Lambda^\dagger - \Lambda)}\Phi^\dagger_i\Phi_i.\]
-As in  ordinary gauge theories we can introduce a {\bf gauge compensating vector (super)field} $V$ with the appropriate gauge transformation to make the kinetic term invariant under supersymmetry transformations. We write the kinetic term instead as $\Phi^\dagger_i e^{q_iV}\Phi_i$, which gives us an invariant term:\footnote{In case you were worried: we can use the WZ gauge to show that the new kinetic term $ \Phi^\dagger_ie^{q_iV}\Phi_i$ has no term with dimension higher then four, and is thus renormalizable.}
-\[\Phi^\dagger_ie^{q_iV}\Phi_i \to \Phi^\dagger_i e^{iq_i\Lambda^\dagger }e^{q_i(V + i\Lambda - i\Lambda^\dagger)}e^{-iq_i\Lambda}\Phi_i = \Phi^\dagger_ie^{q_iV}\Phi_i.\]
+\[\Phi^\dagger_i\Phi_i \to \Phi^\dagger_i e^{-iq_i\Lambda^\dagger }e^{iq_i\Lambda }\Phi_i = e^{iq_i(\Lambda - \Lambda^\dagger)}\Phi^\dagger_i\Phi_i.\]
+As in  ordinary gauge theories we can introduce a {\bf gauge compensating vector (super)field} $V$ with the appropriate gauge transformation to make the kinetic term invariant under supersymmetry transformations. We write the kinetic term instead as $\Phi^\dagger_i e^{q_iV}\Phi_i$, which gives us an invariant term:\footnote{In case you were worried: we can use the WZ gauge to show that the new kinetic term $ \Phi^\dagger_ie^{q_iV}\Phi_i$ has no term with dimension higher then four, and is thus renormalisable.}
+\[\Phi^\dagger_ie^{q_iV}\Phi_i \to \Phi^\dagger_i e^{-iq_i\Lambda^\dagger }e^{q_i(V - i\Lambda + i\Lambda^\dagger)}e^{iq_i\Lambda}\Phi_i = \Phi^\dagger_ie^{q_iV}\Phi_i.\]
 
 This definition of gauge transformation can be shown to recover the Standard  Model {\bf minimal coupling} for the component fields through the covariant derivative
 \[D_\mu^i = \partial_\mu -\frac{i}{2}q_iV_\mu,\]
@@ -91,43 +92,50 @@ where $V_\mu$ is the vector component field of the vector superfield.
 %%%%%%%%%%%%%%%%%%%
 \section{Non-Abelian gauge theories}
 %%%%%%%%%%%%%%%%%%%
-How do we extend the above to deal with the much more complicated non-abelian gauge theories? Let us take a gauge group $G$ with the Lie algebra of group generators $t_a$ in the fundamental representation 
+How do we extend the above to deal with the much more complicated non-abelian gauge theories? Let us take a gauge group $G$ with the Lie algebra of group generators $t_a$ 
 \begin{equation}
 [t_a, t_b] = if_{ab}{}^c t_c,\label{eq:Liealgebrawta}
 \end{equation} 
-where $f_{ab}{}^{c}$ are the structure constants. We recap that for an element $g$ in the group $G$ we want to write down a unitary\footnote{By unitary we mean, as usual, that $U^\dagger = U^{-1}$ so that $U^\dagger U=1$.} representation $U(g)$ that transforms a vector $\Psi$  in the representation by $\Psi \to \Psi' = U(g)\Psi$.\footnote{Of, course, you may ask, how do we even know that we can find a unitary representation for a particular Lie group? For the unitary group this is by definition, but is it possible in general? It turns out that this is always true for a subset of Lie groups, called {\bf compact Lie groups}. These are the Lie groups where the parameters vary over a closed interval.}  
-With an exponential map we can write this representation as $U(g) = e^{i\lambda^a t_a}$, where $\lambda^a$ are the parameters, as you may perhaps have expected.
+where $f_{ab}{}^{c}$ are the structure constants. We recap that for an element $g$ in the group $G$ we want to write down a unitary representation $U(g)$ that transforms a vector $\Psi$  in the representation by $\Psi \to \Psi' = U(g)\Psi$.\footnote{Of, course, you may ask, how do we even know that we can find a unitary representation for a particular Lie group? For the unitary group this is by definition, but is it possible in general? It turns out that this is always true for {\bf compact Lie groups} which includes many of the matrix groups $U(n)$, $SU(n)$, $O(n)$, $SO(n)$, $Sp(2n)$, and $Sp(n)$.}  
+With an exponential map we can write this representation as $U(g) = e^{i\lambda^a t_a}$, where $\lambda^a$ are the parameters and $t_a$ are hermitian operators, as you may perhaps have expected.
 
-As in ordinary gauge theories, we simply copy the structure of the abelian supergauge transformation, and transform (a vector of) scalar superfields $\Phi$ as
-\[\Phi \to \Phi'=e^{-iq \Lambda^aT_a}\Phi,\]
-in a non-abelian supergauge transformation. Here $q$ is the charge of $\Phi$ under $G$. At this point we can choose a representation different from the fundamental, reflected in a different choice for the generators which we write as $T_a$. Since for gauge groups we are almost exclusively interested in groups defined by a matrix representation $U(g)$ will be a matrix with dimension fixed by the dimension chosen for the representation. Again we can easily show that we must require that the $\Lambda^a$ are left-handed scalar superfields for $\Phi$ to transform to a left-handed scalar superfield.
+As in ordinary gauge theories, we simply copy the structure of the abelian (super)gauge transformation, and transform (a vector of) scalar superfields $\Phi$ under a non-abelian group as
+\[\Phi \to \Phi'=e^{iq \Lambda^aT_a}\Phi,\]
+in a non-abelian supergauge transformation. Here $q$ is the charge of $\Phi$ under $G$. At this point we need to choose a particular representation, reflected in a particular choice for the generators which we write as $T_a$. Since for gauge groups we are almost exclusively interested in groups defined by a matrix representation, $U(g)$ will be a matrix with dimension fixed by the dimension chosen for the representation. Again we can easily show that we must require that the $\Lambda^a$ has the defining property of a left-handed scalar superfield for $\Phi$ to transform to a left-handed scalar superfield.
 
-For the superpotential to be invariant we must now have:
+For the superpotential to be gauge invariant we must now have:
 \begin{eqnarray}
-g_iU_{ir} &=& g_r ~~\text{or}~~ g_i = 0, \\
+t_iU_{ir} &=& t_r ~~\text{or}~~ t_i = 0, \\
 m_{ij}U_{ir} U_{js} &=& m_{rs} ~~\text{or}~~m_{ij}=0, \\
  \lambda_{ijk}U_{ir} U_{js}U_{kt}&=& \lambda_{rst} ~~\text{or}~~\lambda_{ijk}=0,
 \end{eqnarray}
 where the indices on $U$ are its matrix indices. 
 
-We also want a similar construction for the kinetic terms as for abelian gauge theories, $\Phi^\dagger e^{qV^aT_a}\Phi$, to be invariant under non-abelian gauge transformations. Now, using that we write the generators $t_a$ as hermitian operators, 
-\[\Phi^\dagger e^{qV^aT_a}\Phi \to \Phi'{}^\dagger e^{qV'{}^aT_a}\Phi' = \Phi{}^\dagger e^{iq\Lambda^a{}^\dagger T_a} e^{qV'{}^aT_a}e^{-iq\Lambda^aT_a}\Phi,\]
-so we have to require that the vector superfield $V$ transforms as:\footnote{This is independent of our choice of representation for the gauge group for the supergauge transformation.}
+We also want a similar construction for the kinetic terms as for abelian gauge theories, $\Phi^\dagger e^{qV^aT_a}\Phi$, to be invariant under non-abelian gauge transformations. Now, using that the generators $T_a$ are hermitian, 
+\[\Phi^\dagger e^{qV^aT_a}\Phi \to \Phi'^\dagger e^{qV'^aT_a}\Phi' = \Phi^\dagger e^{-iq\Lambda^{a\dagger} T_a} e^{qV'^aT_a}e^{iq\Lambda^aT_a}\Phi,\]
+so, in order to have gauge invariance, we have to require that the vector superfield $V$ transforms as:\footnote{This is independent of our choice of representation for the gauge group for the supergauge transformation.}
 \begin{equation}
-e^{qV'{}^aT_a} = e^{-iq\Lambda^a{}^\dagger T_a}e^{qV^aT_a} e^{iq\Lambda^a T_a}.
+e^{qV'{}^aT_a} = e^{iq\Lambda^a{}^\dagger T_a}e^{qV^aT_a} e^{-iq\Lambda^a T_a}.
 \end{equation}
 
-When we look at this as an infinitesimal transformation in $\Lambda$ we can show that
-\[V'{}^a = V^a + i(\Lambda^a-\Lambda^{a}{}^\dagger) - \frac{1}{2}\,q f_{bc}^a V^b(\Lambda^c{}^\dagger + \Lambda^c) +{\mathcal O}(\Lambda^2),\]
-which reduces to the definition for abelian groups in (\ref{eq:abelian_supergauge_vector_superfield}) since all the higher order terms contain the structure constant $f_{bc}^a$, which is zero for abelian groups. If we look at the component vector fields, $V^a_\mu$, these transform just like in a standard non-abelian  gauge theory:
-\[V^a_\mu \to V'^{a}_\mu = V^{a}_\mu + i\partial_\mu(A^a - A^a{}^*) - qf_{bc}^{a}V^b_\mu(A^c - A^c{}^*),\]
+Using the Baker-Campbell-Hausdorff formula in (\ref{eq:BKH_matrices}) we can write this as
+\[V'^aT_a = V^aT_a - i(\Lambda^a-\Lambda^{a\dagger})T_a - \frac{i}{2}q[V^aT_a,(\Lambda^b + \Lambda^{b\dagger})T_b] +{\mathcal O}(\Lambda^2),\]
+where the higher order terms all contain the commutator
+\[ [V^aT_a,(\Lambda^b + \Lambda^{b\dagger})T_b] = V^a(\Lambda^b + \Lambda^{b\dagger}) [T_a,T_b]=  V^a(\Lambda^b + \Lambda^{b\dagger})if_{ab}^{~~c}T_c ,\]
+so that the vector superfield transforms as 
+\begin{equation}
+V'^a = V^a - i(\Lambda^a-\Lambda^{a\dagger}) - \frac{1}{2}\,q f_{bc}^{~~a} V^b(\Lambda^{c\dagger} + \Lambda^c) +{\mathcal O}(\Lambda^2).
+\label{eq:vector_superfield_nonabelian_supergauge_trans}
+\end{equation}
+This sensibly reduces to the definition for abelian groups in (\ref{eq:abelian_supergauge_vector_superfield}) since all the higher order terms contain the structure constant $f_{bc}^{~~a}$, which is zero for abelian groups. If we look at the component vector fields of $V^a$, $V^a_\mu$, these transform just like in a standard non-abelian  gauge theory:
+\[V^a_\mu \to V'^a_\mu = V^a_\mu + i\partial_\mu(A^a - A^{a*}) - qf_{bc}^{~~a}V^b_\mu(A^c - A^{c*}),\]
 in the adjoint representation of the gauge group.
 
 The supergauge transformations of vector superfields can be written more efficiently in a representation independent way as
-\[e^{V'} = e^{-i\Lambda^\dagger}e^V e^{i\Lambda},\]
-and the inverse transformation is then given by
-\[e^{-V'} = e^{-i\Lambda}e^{-V} e^{i\Lambda^\dagger},\]
-where $\Lambda \equiv q \Lambda^aT_a$ and $V \equiv q V^aT_a$, such that $e^Ve^{-V} = e^{V'}e^{-V'} = 1$.\footnote{Notice that despite the non-commutative nature of the matrices involved, the identity $e^{A}e^{-A}=1$ holds. See Exercise~\ref{chap:groups}.\ref{ex:expmapprop}.}
+\[e^{V'} = e^{i\Lambda^\dagger}e^V e^{-i\Lambda},\]
+where we have defined matrix superfields $\Lambda \equiv q \Lambda^aT_a$ and $V \equiv q V^aT_a$, and the inverse transformation is then given by
+\[e^{-V'} = e^{i\Lambda}e^{-V} e^{-i\Lambda^\dagger},\]
+such that $e^Ve^{-V} = e^{V'}e^{-V'} = 1$.\footnote{Notice that despite the non-commutative nature of the matrices involved, the identity $e^{A}e^{-A}=1$ holds. See Exercise~\ref{chap:groups}.\ref{ex:expmapprop}.}
 
 
 
@@ -135,13 +143,14 @@ where $\Lambda \equiv q \Lambda^aT_a$ and $V \equiv q V^aT_a$, such that $e^Ve^{
 \section{Supersymmetric field strength}
 \label{sec:fieldstrength}
 %%%%%%%%%%%%%%%%%%%
-There is one type of term missing from the supersymmetric Lagrangian we are constructing, namely field strength terms that make the gauge fields dynamical, {\it e.g.}\ terms to describe the electromagnetic field strength $-\frac{1}{4}F^{\mu\nu}F_{\mu\nu}$ in QED.
+There is one type of term missing from the supersymmetric Lagrangian we are constructing, namely field strength terms that make the gauge fields dynamical, {\it e.g.}\ terms to describe the electromagnetic field strength term $\mathcal{L}\sim-\frac{1}{4}F^{\mu\nu}F_{\mu\nu}$ in QED.
 
-\df{The {\bf supersymmetric field strength} for a vector superfield $V$ is defined by the spinor (matrix) scalar superfields $W_A$ and $\bar W_{\dot{A}}$ given by
-\[W_A \equiv -\frac{1}{4}\bar{D}\bar{D}e^{-V}D_A e^V,\]
-and
-\[\bar{W}_{\dot{A}} \equiv -\frac{1}{4}{D}{D}e^{-V}\bar{D}_{\dot{A}} e^V,\]
-where $V=V^aT_a$.}
+\df{The {\bf supersymmetric field strength} for a vector superfield $V$ is defined by the spinor matrix scalar superfields $W_A$ and $\bar W_{\dot{A}}$ given by
+\begin{eqnarray}
+W_A  &\equiv& -\frac{1}{4}\bar{D}\bar{D}e^{-V}D_A e^V,\\
+\bar{W}_{\dot{A}} &\equiv& -\frac{1}{4}{D}{D}e^{-V}\bar{D}_{\dot{A}} e^V,
+\end{eqnarray}
+where again $V\equiv qV^aT_a$.}
 For an abelian gauge field this definition reduces to
 \begin{eqnarray*}
 W_A &=& -\frac{1}{4}\bar{D}\bar{D}D_A V,\\
@@ -149,27 +158,27 @@ W_A &=& -\frac{1}{4}\bar{D}\bar{D}D_A V,\\
 \end{eqnarray*}
 where $V$ is simply the vector superfield of the gauge group.
 
-We can show that the components of $W_A$ ($\bar{W}_{\dot{A}}$) are left-handed (right-handed) scalar superfields, and that both ${\rm Tr}[W^AW_A]$ and ${\rm Tr}[\bar{W}_{\dot{A}}\bar{W}^{\dot{A}}]$ are supergauge invariant constructions, and thus potential terms in the supersymmetry Lagrangian. Firstly
-\[\bar{D}_{\dot{A}}W_A = -\frac{1}{4}\bar{D}_{\dot{A}}\bar{D}\bar{D}e^{-V}D_A e^V = 0,\] because from Eq.~(\ref{eq:D3}), $\bar{D}^3 = 0$, and similarly for $\bar{W}_{\dot{A}}$, showing that they are both superfields, and as such can be used to form a supersymmetric Lagrangian. 
+We can show that the components of $W_A$ ($\bar{W}_{\dot{A}}$) are left-handed (right-handed) scalar superfields, and that both ${\rm Tr}[W^AW_A]$ and ${\rm Tr}[\bar{W}_{\dot{A}}\bar{W}^{\dot{A}}]$ are supergauge invariant constructions, and thus potential terms in the supersymmetry Lagrangian. Firstly,
+\[\bar{D}_{\dot{A}}W_A = -\frac{1}{4}\bar{D}_{\dot{A}}\bar{D}\bar{D}e^{-V}D_A e^V = 0,\] because from Eq.~(\ref{eq:D3}), $\bar{D}^3 = 0$, and similarly for $\bar{W}_{\dot{A}}$, showing that they are both scalar superfields of their particular type, and as such can be used to form a supersymmetric Lagrangian. 
 
 Under a supergauge transformation we have:
 \begin{eqnarray}
-W_A \to W_A' &=& -\frac{1}{4}\bar{D}\bar{D}e^{-i\Lambda}e^{-V}e^{i\Lambda^\dagger}D_Ae^{-i\Lambda^\dagger}e^{V}e^{i\Lambda } \nonumber\\
- \text{ $(\bar{D}_{\dot{A}} \Lambda = 0)$\indent \indent}&=& -\frac{1}{4}e^{-i\Lambda}\bar{D}\bar{D}e^{-V}e^{i\Lambda^\dagger}D_Ae^{-i\Lambda^\dagger}e^{V}e^{i\Lambda } \nonumber\\
-  \text{ $(D_{{A}} \Lambda^\dagger = 0)$\indent \indent}&=& -\frac{1}{4}e^{-i\Lambda}\bar{D}\bar{D}e^{-V}D_Ae^{V}e^{i\Lambda } \nonumber\\
-&=& -\frac{1}{4}e^{-i\Lambda}\bar{D}\bar{D}e^{-V}[(D_Ae^{V})e^{i\Lambda } + e^V(D_Ae^{i\Lambda})] \nonumber\\
-&=& e^{-i\Lambda}W_A e^{i\Lambda}-\frac{1}{4}e^{-i\Lambda}\bar{D}\bar{D}D_Ae^{i\Lambda}.\label{eq:fieldstrengthtrans1}
+W_A \to W_A' &=& -\frac{1}{4}\bar{D}\bar{D}e^{i\Lambda}e^{-V}e^{-i\Lambda^\dagger}D_Ae^{i\Lambda^\dagger}e^{V}e^{-i\Lambda } \nonumber\\
+ \text{ $(\bar{D}_{\dot{A}} \Lambda = 0)$\indent \indent}&=& -\frac{1}{4}e^{i\Lambda}\bar{D}\bar{D}e^{-V}e^{-i\Lambda^\dagger}D_Ae^{i\Lambda^\dagger}e^{V}e^{-i\Lambda } \nonumber\\
+  \text{ $(D_{{A}} \Lambda^\dagger = 0)$\indent \indent}&=& -\frac{1}{4}e^{i\Lambda}\bar{D}\bar{D}e^{-V}D_Ae^{V}e^{-i\Lambda } \nonumber\\
+&=& -\frac{1}{4}e^{i\Lambda}\bar{D}\bar{D}e^{-V}[(D_Ae^{V})e^{-i\Lambda } + e^V(D_Ae^{-i\Lambda})] \nonumber\\
+&=& e^{i\Lambda}W_A e^{-i\Lambda}-\frac{1}{4}e^{i\Lambda}\bar{D}\bar{D}D_Ae^{-i\Lambda}.\label{eq:fieldstrengthtrans1}
 \end{eqnarray}
-We are free to add zero to (\ref{eq:fieldstrengthtrans1}) in the form of $-\frac{1}{4}e^{-i\Lambda}\bar{D}D_A\bar{D}e^{i\Lambda}=0$,\footnote{Which is zero because $\Lambda$ is a left-handed scalar superfield, $\bar{D}_{\dot{A}} \Lambda = 0$.} giving
+We are free to add zero to (\ref{eq:fieldstrengthtrans1}) in the form of $-\frac{1}{4}e^{i\Lambda}\bar{D}D_A\bar{D}e^{-i\Lambda}=0$,\footnote{Which is zero because again $\Lambda$ is a left-handed scalar superfield, so $\bar{D}_{\dot{A}} \Lambda = 0$.} giving
 \begin{eqnarray*}
-W_A' &=& e^{-i\Lambda}W_A e^{i\Lambda}-\frac{1}{4}e^{-i\Lambda}\bar{D}\{\bar{D},D_A\}e^{i\Lambda}\\
-&=& e^{-i\Lambda}W_A e^{i\Lambda}+\frac{1}{2}e^{-i\Lambda}\bar{D}_{\dot{A}}\sigma^\mu{}_{A\dot{B}}\epsilon^{\dot{A}\dot{B}}P_\mu e^{i\Lambda}\\
-&=& e^{-i\Lambda}W_A e^{i\Lambda},
+W_A' &=& e^{i\Lambda}W_A e^{-i\Lambda}-\frac{1}{4}e^{i\Lambda}\bar{D}\{\bar{D},D_A\}e^{-i\Lambda}\\
+&=& e^{i\Lambda}W_A e^{-i\Lambda}+\frac{1}{2}e^{i\Lambda}\bar{D}_{\dot{A}}\sigma^\mu{}_{A\dot{B}}\epsilon^{\dot{A}\dot{B}}P_\mu e^{-i\Lambda}\\
+&=& e^{i\Lambda}W_A e^{-i\Lambda},
 \end{eqnarray*}
 where we have used Eq.~(\ref{eq:D2}) to replace the anti-commutator. This means that the following trace is gauge invariant:
 \begin{eqnarray*}
-{\rm Tr}[W'^AW'_A] &=& {\rm Tr}[e^{-i\Lambda}W^A e^{i\Lambda}e^{-i\Lambda}W_A e^{i\Lambda}]\\
-&=& {\rm Tr}[e^{i\Lambda}e^{-i\Lambda}W^A W_A ] = {\rm Tr}[W^AW_A],
+\Tr[W'^AW'_A] &=& \Tr[e^{i\Lambda}W^A e^{-i\Lambda}e^{i\Lambda}W_A e^{-i\Lambda}]\\
+&=& {\rm Tr}[e^{-i\Lambda}e^{i\Lambda}W^A W_A ] = {\rm Tr}[W^AW_A],
 \end{eqnarray*}
 and can be used in the Lagrangian.
 
@@ -182,19 +191,19 @@ and that the trace indeed contains terms with $F_{\mu\nu}^{a}F^{\mu\nu a}$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The (almost) complete supersymmetric Lagrangian}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We can now compile all our results up to now to write down the complete Lagrangian for a supersymmetric theory with (possibly) non-abelian gauge symmetries:\footnote{There is no hermitian conjugate of the field strength term, and a slightly odd normalisation using 1/2 instead of 1/4. This is because the term can be proven to be real, although this is sometimes overlooked in the literature when authors instead use \[\mathcal{L}\sim\frac{1}{4T(R)}\delta^2(\bar{\theta}){\rm Tr}[W^AW_A]+\frac{1}{4T(R)}\delta^2(\theta){\rm Tr}[\bar W^A\bar W_A],\] which looks more symmetric with respect to the superpotential part.}
+We can compile all our results up to now to write down the complete Lagrangian for a supersymmetric theory with (possibly) non-abelian gauge symmetries:\footnote{There is no hermitian conjugate of the field strength term, and a slightly odd normalisation using 1/2 instead of 1/4. This is because the term can be proven to be real, although this is sometimes overlooked in the literature when authors instead use \[\mathcal{L}\sim\frac{1}{4T(R)q^2}\delta^2(\bar{\theta}){\rm Tr}[W^AW_A]+\frac{1}{4T(R)q^2}\delta^2(\theta){\rm Tr}[\bar W_{\dot A}\bar W^{\dot A}],\] which admittedly looks more symmetric with respect to the superpotential part.}
 \begin{equation}
-\mathcal{L}=\Phi^\dagger e^V \Phi + \delta^2(\bar{\theta}) W[\Phi] + \delta^2(\theta) W[\Phi^\dagger]+\frac{1}{2T(R)}\delta^2(\bar{\theta}){\rm Tr}[W^AW_A].
+\mathcal{L}=\Phi^\dagger e^V \Phi + \delta^2(\bar{\theta}) W[\Phi] + \delta^2(\theta) W[\Phi^\dagger]+\frac{1}{2T(R)q^2}\delta^2(\bar{\theta})\Tr[W^AW_A].
 \label{eq:SUSY_Lagrangian}
 \end{equation}
-Here, $T(R)$ given by $T(R)\delta_{ab}={\rm Tr}[T_aT_b] $ is called the {\bf Dynkin index} of the representation $R$ of the gauge group using the generators $T_a$.
+Here, $T(R)$ given by $T(R)\delta_{ab}=\Tr[T_aT_b] $ is called the {\bf Dynkin index} of the representation $R$ of the gauge group using the generators $T_a$. This number is representation dependent, and deeply connected to the corresponding eigenvalues of the Casimir operators belonging to the irrep, but independent of which generator we choose to calculate it from.
 
-The Dynkin index appears in the field strength term to correctly normalise the energy density for the chosen representation $R$ of the gauge group. To see that this factor cancels in a natural way, note that since $W_A$ is spanned by $T_a$ for a given representation, we can write $W_A=W_A^a T_a$, where $W_A^a$ are some coefficients. Then
+The Dynkin index appears in the field strength term to correctly normalise the energy density for the chosen representation $R$ of the gauge group. To see that this factor cancels in a natural way, note that since the matrix structure of $W_A$ is spanned by $T_a$ for a given representation, we can write $W_A=qW_A^a T_a$, where $W_A^a$ are spinor superfields, and where we have taken out a common factor of the charge $q$ that appears in all terms of $W_A$. Then
 \begin{equation}
-{\rm Tr}[W^AW_A] = W^{aA}W_A^b{\rm Tr}[T_aT_b] = W^{Aa}W_A^b\delta_{ab}T(R) = T(R)W^{aA}W_A^a.
+{\rm Tr}[W^AW_A] = q^2W^{aA}W_A^b{\rm Tr}[T_aT_b] = q^2W^{Aa}W_A^b\delta_{ab}T(R) = q^2T(R)W^{aA}W_A^a.
 \end{equation}
 
-In addition to the above, it is also possible to add a pure vector superfield term as part of the Kähler potential, which is not constructed from scalar superfields, of the form $\mathcal{L}_{FI} \sim -kV$ where $V$ is the vector superfield and $k$ some constant. This kind of term is called a {\bf Fayet--Iliopoulos term}. However, this is only possible for non-abelian gauge groups since a term $-kV^a$ could not be supergauge invariant.\footnote{Why is the abelian case supergauge invariant then? Well, the superspace integration in the action will isolate the $D$-term from $V$, and this term is itself invariant under abelian supergauge transformations, see Eq.~(\ref{eq:supergaugetrans_Dterm}). For non-abelian supergauge transformations the various $V^a$ fields mix. }
+In addition to the above, it is also possible to add a pure vector superfield term as part of the Kähler potential, which is not constructed from scalar superfields, of the form $\mathcal{L}_{FI} \sim -kV$ where $V$ is the vector superfield and $k$ some constant. This kind of term is called a {\bf Fayet--Iliopoulos term}. However, this is not possible for non-abelian gauge groups since a term $-kV^a$ could not be supergauge invariant.\footnote{Why is the abelian case supergauge invariant then? Well, the superspace integration in the action will isolate the $D$-term from $V$, and this term is itself invariant under abelian supergauge transformations, see Eq.~(\ref{eq:supergaugetrans_Dterm}). For non-abelian supergauge transformations the various $V^a$ fields mix as seen in (\ref{eq:vector_superfield_nonabelian_supergauge_trans}). }
 
 
 
@@ -203,22 +212,22 @@ In addition to the above, it is also possible to add a pure vector superfield te
 \label{sec:eom}
 %%%%%%%%%%%%%%%%
 
-To find the equations of motion from our supersymmetric Lagrangian construction we can now perform the integration over superspace coordinates $\theta$  and $\bar\theta$ in the action and then apply the standard Euler--Lagrange field equations that minimise the action for the component fields $\phi_i$:
+To find the equations of motion from our supersymmetric Lagrangian construction we can now perform the integration over superspace coordinates $\theta$  and $\bar\theta$ in the action and then apply the standard Euler--Lagrange field equations that minimise the action for the generic component fields $\phi_i$ of the Lagrangian $\mathcal L$ after the superspace integration:
 \begin{equation}
 \frac{\partial\mathcal{L}}{\partial\phi_i}-\partial_\mu\left(\frac{\partial\mathcal{L}}{\partial(\partial_\mu\phi_i)}\right)=0.
 \end{equation}
-We will now discuss some of the generic properties of this solution without specifying field content or gauge groups. 
+We will now discuss some of the general properties of this solution without specifying field content or gauge groups for the Lagrangian. 
 
 As already intimated the auxiliary component fields with unusual mass dimension, $F_i$ and $D^a$, from scalar $\Phi_i$ and vector $V^a$ superfields, respectively, will be eliminated.\footnote{In the following we use the notation in Eqs.~(\ref{eq:leftscalarsuperfield}) and (\ref{eq:vectorsuperfieldWZ}).} 
-Starting with the $F_i$-fields these occur only in the kinetic term and the superpotential. From the kinetic term the contribution is $|F_i|^2$ as this is the only term with $F_i$ that can survive the $\theta$-integration. In the superpotential only the terms where a number of scalar fields $A_j$ with no $\theta$-coordinate multiply $F_i$ can survive the integration. Their derivatives with respect to $F_i$ can be expressed in terms of the superpotential functional as 
+Starting with the $F_i$-fields these occur only in the kinetic terms and the superpotential. From the kinetic term $\Phi^\dagger_i e^V \Phi_i$ the contribution is $|F_i|^2$ as this is the only term with $F_i$ that can survive the $\theta$-integration if we write the vector superfields in the Wess-Zumino gauge. In the superpotential $W[\Phi_i]$ only the terms where a number of scalar fields $A_j$ with no $\theta$-coordinate multiply $F_i$ can survive the integration. The derivatives of these terms with respect to $F_i$ can be expressed in terms of the superpotential functional as 
 \begin{equation}
 W_i \equiv \frac{\partial W[A_1, ... , A_n]}{\partial A_i},
 \end{equation}
-where the scalar superfields have been replaced by their scalar component fields. This means that the Euler--Lagrange equation for $F_i$ is
+where the scalar superfields have been replaced by their scalar component fields. This means that the Euler--Lagrange equation for $F_i^*$ is
 \[\frac{\partial \mathcal{L}}{\partial F_i^*} = F_i + W_i^* = 0,\]
 which is used to eliminate $F_i$. 
 
-For a concrete example of how this can be worked out, see Exercise~\ref{chap:lagrangian}.\ref{ex:simpleL}. Generalising this also leads to an expression for the action for any number of scalar superfields $\Phi_i$, ignoring gauge interactions, which is:
+For a concrete example of how this can be worked out to arrive at a complete action integral for a single scalar superfield, see Exercise~\ref{chap:lagrangian}.\ref{ex:simpleL}. Generalising this to an expression for the action for any number of scalar superfields $\Phi_i$ in terms of their component fields, ignoring gauge interactions, gives:
 \[S = \int d^4x\{i\partial_\mu \bar{\psi}_i\sigma^\mu \psi_i - A^*_i\Box A_i -\frac{1}{2}W_{ij}\psi_i\psi_j - \frac{1}{2}W^*_{ij}\bar{\psi}_i\bar{\psi}_j - |W_i|^2\}\]
 where $W_{ij}$, given by
 \begin{equation}
@@ -238,6 +247,38 @@ V(A_i, A_i^*) = \sum_i |F_i|^2+\sum_a D^aD^a = \sum_i\left|\frac{\partial W[A_1,
 \label{eq:scalarpotglobal}
 \end{equation}
 
+
+
+%%%%%%%%%%%%%%%%
+\section{$R$-symmetry}
+\label{sec:R_symmetry}
+%%%%%%%%%%%%%%%%
+The Lagrangian we have constructed is invariant under both internal gauge transformations and external (coordinate) super-Poincaré transformations, where the latter has been built in through the superspace coordinates. The Minkowski part of superspace, the four-vector coordinates, transform under the Lorentz group, and since all our Lagrangian ingredients are Lorentz scalars they are invariant. We can now ask the question if there is any transformation of the superspace coordinates $\theta$ and $\bar\theta$ that the Lagrangian is also invariant under. 
+
+In Sec.~\ref{sec:superalgebra} we claimed there there is no nontrivial interaction between a gauge group and the supersymmetry generators for $N=1$ supersymmetry. This is not entirely true as we may have non-trivial commutators for the generator $R$ of an abelian group, {\it i.e.}
+\begin{equation}
+[Q_A, R] = Q_A, \quad  [\bar Q_{\dot A}, R ] = -\bar Q_{\dot A}.
+\end{equation}
+Using this we define a $U(1)_R$ transformation called {\bf $\mathbf R$-symmetry} as
+\begin{equation}
+\theta_A \to \theta_A' = e^{i\alpha} \theta_A, \quad \bar\theta_{\dot A} \to  \bar\theta'_{\dot A}= e^{-i\alpha} \bar\theta_{\dot A},
+\end{equation}
+where $\alpha$ is the parameter of the transformation and the charge of $\theta$ and $\bar\theta$ under the transformation is 1 and $-1$, respectively.
+If a Lagrangian is to be invariant under such a transformation then a superfield $\Phi$ must transform as
+\begin{equation}
+\Phi(x,\theta,\bar\theta)\to \Phi'(x,\theta,\bar\theta)= e^{ir_\Phi\alpha}\Phi(x,e^{-i\alpha} \theta,e^{i\alpha} \bar\theta),
+\end{equation}
+where $r_\Phi$ is the charge of that superfield under the transformation. The charge of a product of two superfields is then just the sum of the charges of the fields. This is required so that the kinetic term in the Lagrangian is invariant under the transformation.
+
+This means that for a scalar (left- or right-handed) superfield the component fields $A$, $\psi$, and $F$ must transform as
+\begin{equation}
+A\to e^{ir_\Phi\alpha}A,\quad \psi\to e^{i(r_\Phi-1)\alpha} \psi,\quad F\to e^{i(r_\Phi-2)\alpha} F,
+\end{equation}
+while vector superfields must have zero $R$-charge since they are real, and their component fields, in the Wess-Zumino gauge must thus transform as
+\begin{equation}
+V_\mu \to V_\mu ,\quad \lambda \to e^{i\alpha} \lambda,\quad D\to D.
+\end{equation}
+We can check that all the terms in the Lagrangian (\ref{eq:SUSY_Lagrangian}) are invariant under this transformation, with the exception of the superpotential $W$, which must have total $R$-charge 2. This will exclude most allowed charge assignments for the the scalar superfields, and in the minimal supersymmetruc models we shall look at there will be no viable continuous $R$-symmetry. However, $R$-symmetry has importance in building models of supersymmetry breaking, and could remain as a broken symmetry in the model.
 
 
 

@@ -92,6 +92,8 @@ This series can be shown to always converge, so the series is well defined. Sinc
 \item[iv)] If $[A,B]=0$ then $\exp(A)\exp(B)=\exp(A+B)$
 \item[v)] $\det e^A = e^{\Tr A}$. 
 \end{itemize}
+% TODO: Discuss the use of Jordan canonical form in calculations here? Uses iii) to rewrite on Jordan canonical form $J=MAM^{-1}$ where $e^J$ is easy to evaluate because of the Jordan canonical form properties.
+% Used in proofs?
 
 Given a Hermitian matrix $M$, $M^\dagger=M$, the matrix $U=e^{iM}$ is then automatically unitary since $U^\dagger=e^{-iM^\dagger}=e^{-iM}$ so that $U^\dagger U=e^{-iM}e^{iM}=I$, where the last equality is due to $M$ commuting with itself. We shall later in this chapter show that in fact all unitary matrices can be written in terms of Hermitian matrices like this. This is the physics construction that we will mostly use in these notes because of our quantum fondness for Hermitian operators. For an anti-Hermitian matrix $M$, $M^\dagger=-M$, we could instead use that $U=e^M$ is automatically unitary since $U^\dagger=e^{-M}$ so that $U^\dagger U=e^{-M}e^{M}=I$. This is the mathematical construction found in a lot of mathematical literature.
 
@@ -260,8 +262,8 @@ Writing this definition in terms of a generic vector space $V$ and field $K$ may
 
 From a physics point of view, the underlying point here is that (the members of) our groups will be used on quantum mechanical states, or fields in field theory, which can be just complex numbers or functions, or multi-component vectors of such. They are thus members of a vector space, and the definition of representations allows the transformation properties of the group to be written in terms of matrices for finite dimensional representation spaces. Furthermore, the mapping from the group, or, if you like, the concrete way of writing the abstract group elements, must be homomorphic (structure preserving), meaning that if we can write a group element as the product of two others, the matrix for that element must be the product of the two matrices for the individual group elements it can be written in terms of.
 
-%% TODO: Separate section here on unitary representations? Existence of finite-dimensional
-%% TODO: Discuss  the difference between active and passive view of transformation, e.g. Williams Sec. 1.2
+%% TODO: Separate section here on unitary representations? Relate to compact. Existence of finite-dimensional
+%% TODO: Discuss the difference between active and passive view of transformation, e.g. Williams Sec. 1.2
 % TODO: Linear representations as a special category
 
 In physics an important category of representations are the {\bf unitary representations}, which are representations $\rho$ of a group $G$ on a complex Hilbert space $V$ where $\rho(g)$ is a unitary operator for every $g\in G$, {\it i.e.}\ an operator that preserves the length of vectors in $V$. This generalises the unitary (matrix) group, which are examples of unitary representations, beyond finite dimensional vector spaces.
@@ -575,17 +577,16 @@ Since $SU(2)$ and  $SO(3)$ have the same algebra for $X_i$ and $Y_i$, but the gr
 U(0,0,\alpha_3)=\left[\begin{matrix} e^{i\frac{\alpha_3}{2}} & 0 \\ 0 & -e^{i\frac{\alpha_3}{2}} \end{matrix}\right] \quad \text{and}\quad U(0,0,\alpha_3+2\pi)=\left[\begin{matrix} e^{i\frac{\alpha_3}{2}+i\pi} & 0 \\ 0 & -e^{i\frac{\alpha_3}{2}+i\pi} \end{matrix}\right]=-U(0,0,\alpha_3)
 \]
 Thus the $SU(2)$ matrices has a period $4\pi$ versus the period $2\pi$ for $SO(3)$.\footnote{The argument can be made more formal and independent of the parameterisation, but is to extensive to repeat here.} Notice that this means that the three-dimensional representation of the Lie algebra coming from the generators of $SO(3)$ does not generate all the elements of $SU(2)$, while the two-dimensional one does.
-% Better description of double cover in 3.2 https://www.weizmann.ac.il/particle/perez/Courses/QMII18/TA7.pdf
+% TODO: Better description of double cover in 3.2 https://www.weizmann.ac.il/particle/perez/Courses/QMII18/TA7.pdf
 
 Beyond the fundamental representation $SU(2)$ has irreducible representations in all dimensions $\mathbf 3$, $\mathbf 4$, $\mathbf 5$, \ldots. This is not true in general, for example $SU(3)$ has irreducible representations only in some dimensions, starting with $\mathbf 3$, $\mathbf 6$, $\mathbf 8$, and $\mathbf{10}$, \ldots.
 
 From the exponential map and the properties of matrix exponentiation it immediately follows that the generators $T^a$ for all groups $SU(n)$ are matrices with zero trace. To see this write an element in $SU(n)$ as $U=\exp{(i\alpha_aT^a)}$, then by the defining group property $\det U=1$, we have $\det U=\exp{(\Tr[{i\alpha_aT^a}}])=\exp{(i\alpha_a\Tr{T^a}})$ which is only one if $\Tr T^a=0$ for all $a$.  
 
 We saw in Sec.~\ref{sec:unitary_groups} that we could construct unitary matrices from Hermitian ones by matrix exponentiation, but in fact for unitary groups the generators need to be Hermitian. To see this let a group member be $U=\exp(ia_iM^i)$. Then $U^\dagger = \exp(ia_iM^i)^\dagger=\exp(-ia_iM^{i\dagger})$,  but for a unitary matrix $U^\dagger = U^{-1}=\exp(-ia_iM^i)$, thus $M^{i\dagger}=M^i$ and the generators $M_i$ are Hermitian.
-
+%TODO: Add tracelessness for $SU$. If $U=\exp(ia_iM^i)$ then $\det U = \exp{ia_i\Tr[M^i]}$ and if $\det U =1$ then we must have $\Tr M_i =0$ for all $i$.
 
 %{\bf MOVE DISCUSSION OF DYNKIN INDEX AND CASIMIR QUADRATIC HERE. SEE MASTER THESIS}
-%Finally, we need two more calculation focused definitions for representations of Lie groups.
 %Representations have some numerical properties that we are often interested in. 
 %\df{For the representation $R$ the {\bf Casimir invariant} $C(R)$ is given by $C(R)\delta_{ij} = (T^a T^a)_{ij}$.}
 

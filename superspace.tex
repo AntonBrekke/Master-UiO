@@ -259,12 +259,14 @@ One can show that under supersymmetry transformations these component fields tra
 %We often write the supersymmetry transformation as
 %\[ \delta_S=(i\theta Q+i\bar\theta \bar Q), \] 
 %as the translation part is `trivial' and its generators in any case commutes with the $Q$s. 
-For example, the scalar field $f$ and the Weyl-spinor $\phi$ transform as\footnote{A word of warning is in order here. Considering $\Phi$ as a {\it quantum} field with operator value it transforms under the supersymmetry transformations in the {\it passive sense}  
-\[ \Phi(x)\to \exp{(i\alpha Q+i\bar\alpha \bar Q)}\Phi(x)\exp{(-i\alpha Q-i\bar\alpha \bar Q)}. \]}
-\begin{eqnarray*}
+For example, the scalar fields $f$ and $m$, and the Weyl-spinor $\phi$ transform as\footnote{A word of warning is in order here. Considering $\Phi$ as a {\it quantum} field with operator value it transforms under the supersymmetry transformations in the {\it passive sense}  
+\[ \Phi(x)\to \exp{(-i\alpha Q-i\bar\alpha \bar Q)}\Phi(x)\exp{(i\alpha Q+i\bar\alpha \bar Q)}. \]}
+\begin{eqnarray}
 \delta_S f &=& \alpha\phi +\bar\alpha\bar\chi, \\
-\delta_S\phi_A &=& 2 \alpha_A m + (\sigma^\mu \bar\alpha)_A (i\partial_\mu f + V_\mu).
-\end{eqnarray*}
+\delta_S\phi_A &=& 2 \alpha_A m + (\sigma^\mu \bar\alpha)_A (i\partial_\mu f + V_\mu), \\
+\delta_S m &=& \bar\alpha\bar\lambda-\frac{i}{2}\partial_\mu\phi\sigma^\mu\bar\alpha .
+\label{eq:general_superfield_transform}
+\end{eqnarray}
 % TODO: Add some more examples of the actual transforms here
 
 We can recover the known irreducible representations, see Section~\ref{sec:superalgebrarep}, by imposing some restrictions on the fields. To do this we define the following three types of superfields that we will discuss below:
@@ -282,6 +284,7 @@ and similarly for a right-handed scalar superfields, and for vector superfields 
 The product of a left-handed scalar superfield $\Phi$ and its hermitian conjugate $\Phi^\dagger$, $V=\Phi \Phi^\dagger$, is a vector superfield since
 \[V^\dagger=(\Phi \Phi^\dagger)^\dagger=\Phi \Phi^\dagger=V.\]
 The same is true for sums of superfields of the same type. These properties will be important when creating a superfield version of a Lagrangian.
+% TODO: Extend this to the idea of holonomic functions
 
 Note that the projection operators that we defined in Section~\ref{sec:covder}, $\pi_\pm$, project out left-/right-handed superfields, respectively,  from the general superfield, because:
 \[\bar{D}_{\dot{A}}\pi_+\Phi = D_A \pi_- \Phi^\dagger = 0, \]
