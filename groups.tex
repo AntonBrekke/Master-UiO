@@ -586,9 +586,6 @@ From the exponential map and the properties of matrix exponentiation it immediat
 We saw in Sec.~\ref{sec:unitary_groups} that we could construct unitary matrices from Hermitian ones by matrix exponentiation, but in fact for unitary groups the generators need to be Hermitian. To see this let a group member be $U=\exp(ia_iM^i)$. Then $U^\dagger = \exp(ia_iM^i)^\dagger=\exp(-ia_iM^{i\dagger})$,  but for a unitary matrix $U^\dagger = U^{-1}=\exp(-ia_iM^i)$, thus $M^{i\dagger}=M^i$ and the generators $M_i$ are Hermitian.
 %TODO: Add tracelessness for $SU$. If $U=\exp(ia_iM^i)$ then $\det U = \exp{ia_i\Tr[M^i]}$ and if $\det U =1$ then we must have $\Tr M_i =0$ for all $i$.
 
-%{\bf MOVE DISCUSSION OF DYNKIN INDEX AND CASIMIR QUADRATIC HERE. SEE MASTER THESIS}
-%Representations have some numerical properties that we are often interested in. 
-%\df{For the representation $R$ the {\bf Casimir invariant} $C(R)$ is given by $C(R)\delta_{ij} = (T^a T^a)_{ij}$.}
 
 %%%
 \subsection{Adjoint representations}
@@ -596,6 +593,7 @@ We saw in Sec.~\ref{sec:unitary_groups} that we could construct unitary matrices
 The definition of the structure constants in Sec.~\ref{sec:structure_constants} allows us to introduce another representation, the {\bf adjoint representation} of the algebra -- and by the exponential map the adjoint representation of the group -- where the representation of the algebra consists of the matrices $M_i$ with elements:
 \[(M_i)_j^{~k} = -iC_{ij}^{~~k},\]
 where $C_{ij}^{~~k},$ are the structure constants. If the dimension of the Lie algebra is $n$, then this is the number of generators, and it also means that the dimension of the matrices $M_i$ is $n\times n$. 
+% TODO: Comment on when index position is important (not for semi-simple compact groups). Source?
 To prove that this is actually a representation, we need to check that the mapping from the elements of the algebra $X_i$ to the matrices $M_i$ satisfies the homomorphism criteria of the Lie algebra representations. From the Jacobi identity of the algebra it follows that
 \begin{equation}
 [M_i, M_j] = iC^{~~k}_{ij}M_k,

@@ -85,8 +85,8 @@ As in  ordinary gauge theories we can introduce a {\bf gauge compensating vector
 
 This definition of gauge transformation can be shown to recover the Standard  Model {\bf minimal coupling} for the component fields through the covariant derivative
 \[D_\mu^i = \partial_\mu -\frac{i}{2}q_iV_\mu,\]
-where $V_\mu$ is the vector component field of the vector superfield.
-
+where $V_\mu$ is the vector component field of the vector superfield. The factor of a half here is admittedly a little odd, but is in fact related to how we (in these notes) defined the supergauge transformations. We can now simply redefine the charge, or go back and fiddle with the numerical factor in front of the vector superfields in the kinetic terms. Your choice!
+% TODO: Change conventions to $\Phi e^{2V}$ to avoid this problem?
 
 
 %%%%%%%%%%%%%%%%%%%
@@ -285,15 +285,12 @@ We can check that all the terms in the Lagrangian (\ref{eq:SUSY_Lagrangian}) are
 %%%%%%%%%%%%%%%%
 \section{The hierarchy problem}
 %%%%%%%%%%%%%%%%
-There is a fundamental problem with having scalar particles in a quantum field theory. Let us take the Standard Model Higgs boson $h$ as an example, however, the following would be true for any scalar particle. If we naively calculate loop-corrections to its mass in self-energy diagrams like the ones shown in Fig.~\ref{fig:hierarchy}, where $f$ is a fermion and $s$ some other scalar, they both diverge due to their loop momenta integrals, meaning they are infinite. This then needs what is called {\bf regularisation} in order to yield a finite answer. 
-
-There are different ways of achieving regularisation. Since we know that the Standard Model is an incomplete theory, at least when we go up to Planck scale energies where we need an unknown quantum theory of gravity, we can introduce a {\bf cut-off regularisation} where we limit the integral in the loop-correction to momenta below a scale $\Lambda_{UV}$. Then the loop-correction to the Higgs mass is, at leading order in $\Lambda_{UV}$,
+There is a fundamental problem with having scalar particles in a quantum field theory. Let us take the Standard Model Higgs boson $h$ as an example, however, the following would be true for any scalar particle. At tree level its behaviour is controlled by the Standard Model scalar potential
 \begin{equation}
-\Delta m_h^2 = -\frac{|\lambda_f|^2}{8\pi^2}\Lambda_{UV}^2 + \frac{\lambda_s}{16\pi^2}\Lambda_{UV}^2+\ldots \label{eq:higgsqdiv}
+V(h)=-\mu^2|h|^2+\lambda |h|^4,
+\label{eq:SM_Higgs_potential}
 \end{equation}
-where $\lambda_f$ and $\lambda_s$ are the couplings of $f$ and $s$ to the Higgs, respectively. Picking $\Lambda_{UV}$  suggestively as the Planck scale, $\Lambda_{UV} =M_P = 2.44\times 10^{18}$ GeV, meaning that the quantum corrections to the Higgs mass are some 15 orders of magnitude greater than its measured value. 
-
-We observe that the difference in sign between the fermions and bosons in (\ref{eq:higgsqdiv}) means that it could {\it in principle} be possible that these huge contributions cancel to keep $m_h \sim 125$\,GeV as measured, however, as physicists we should worry why the Universe seems to be organised in such a strange way without any specific cause. This is known as the {\bf Higgs fine tuning problem}, or the {\bf hierarchy problem} because it is fundamentally a problem of why the electroweak scale at around 100 GeV where the Higgs lives, is so much lighter than the Planck scale of $10^{18}$ GeV, when the former should in principle be pulled up to the latter by the sensitivity of scalars to loop corrections.\footnote{With some background in renormalisation you may ask: What about choosing dimensional regularisation instead where there is no cut-off scale? That would in principle work, however, as soon as you introduce {\it any} new particle (significantly) heavier than the Higgs there is still a quadratic correction of the form of (\ref{eq:higgsqdiv}) with the new particle masses as the scale, meaning that we cannot complete the Standard Model at a higher scale without reintroducing the problem.}
+where $\mu$ is the tree-level mass. and $\lambda$ is its self-coupling. If we naively calculate loop-corrections to its mass in self-energy diagrams like the ones shown in Fig.~\ref{fig:hierarchy}, where $f$ is a fermion and $s$ some other scalar, they both diverge due to their loop momenta integrals, meaning they are infinite. This then needs what is called {\bf regularisation} in order to yield a finite answer. 
 
 \begin{figure}
 \centering
@@ -325,16 +322,28 @@ a [particle=$h$] -- [scalar] b [dot, black,  label=$\lambda_s$]
 %
 \end{feynman}
 \end{tikzpicture}
-\caption{Higgs self-energy diagrams with fermions $f$ (left) and scalars $s$ (right).}  
+\caption{Higgs self-energy diagrams with fermions $f$ (left) and scalars $s$ (right). The dots indicate vertices with the given coupling strength.}  
 \label{fig:hierarchy}
 \end{figure}
 
-Enter supersymmetry to the rescue: with unbroken supersymmetry we find that we automatically have $|\lambda_f|^2 = \lambda_s$ and exactly twice as many scalar as fermion degrees of freedom running around in loops. This provides a magic cancellation of the quadratic divergence in Eq.~(\ref{eq:higgsqdiv}). To see that this relation between the couplings holds, notice that it is the superpotential term $W \sim \lambda_{ijk}\Phi_i\Phi_j \Phi_k$ which is responsible for generating Lagrangian Yukawa terms of the form $\lambda_{ijk} \psi_i\psi_j A_k$ that couple two fermions to a scalar.
- At the same time, in the scalar potential, that same superpotential term is responsible for the terms
+There are different ways of achieving regularisation. Since we know that the Standard Model is an incomplete theory, at least when we go up to Planck scale energies where we need an unknown quantum theory of gravity, we can introduce a {\bf cut-off regularisation} where we limit the integral in the loop-correction to momenta below a scale $\Lambda_{UV}$. Then the loop-correction to the Higgs mass is, at leading order in $\Lambda_{UV}$,
+\begin{equation}
+\Delta m_h^2 = -\frac{|\lambda_f|^2}{8\pi^2}\Lambda_{UV}^2 + \frac{\lambda_s}{16\pi^2}\Lambda_{UV}^2+\ldots \label{eq:higgsqdiv}
+\end{equation}
+where $\lambda_f$ and $\lambda_s$ are the couplings of $f$ and $s$ to the Higgs, respectively, from the Lagrangian interaction terms $\mathcal L \sim \lambda_f \bar\psi\psi h+\lambda_s |s|^2 |h|^2$. The dots represents terms that are less than quadratically divergent in terms of the cut-off scale, the first missing terms being logarithmically divergent.
+Picking $\Lambda_{UV}$  suggestively as the Planck scale, $\Lambda_{UV} =M_P = 2.44\times 10^{18}$ GeV, meaning that the quantum corrections to the Higgs mass are some 15 orders of magnitude greater than its measured value. 
+
+We observe that the difference in sign between the fermions and bosons in (\ref{eq:higgsqdiv}) means that it could {\it in principle} be possible that these huge contributions cancel to keep $m_h \sim 125$\,GeV as measured,\footnote{Could we not fix this by introducing a very large Lagrangian Higgs mass $\mu$? Not really, in that the tree-level Higgs mass is constrained by the properties of the other electroweak masses, {\it i.e.}\ the $Z$ and $W$-bosons.} however, as physicists we should worry why the Universe seems to be organised in such a strange way without any specific cause. This is known as the {\bf Higgs fine tuning problem}, or the scale {\bf hierarchy problem} because it is fundamentally a problem of why the electroweak scale at around 100 GeV where the Higgs lives, is so much lighter than the Planck scale of $10^{18}$ GeV, when the former should in principle be pulled up to the latter by the sensitivity of scalars to loop corrections.\footnote{With some background in renormalisation you may ask: What about choosing dimensional regularisation instead where there is no cut-off scale? That would in principle work, however, as soon as you introduce {\it any} new particle (significantly) heavier than the Higgs there is still a quadratic correction of the form of (\ref{eq:higgsqdiv}) with the new particle masses as the scale, meaning that we cannot complete the Standard Model at a higher scale without reintroducing the problem.}
+
+Enter supersymmetry to the rescue: with unbroken supersymmetry we find that we automatically have $|\lambda_f|^2 = \lambda_s$ and exactly twice as many scalar as fermion degrees of freedom running around in loops. This provides a magical exact cancellation of the quadratic divergence in Eq.~(\ref{eq:higgsqdiv}). To see that this relation between the couplings holds, notice that it is the superpotential term $W \sim \lambda_{ijk}\Phi_i\Phi_j \Phi_k$ which is responsible for generating Lagrangian Yukawa terms of the form $\lambda_{ijk} \psi_i\psi_j A_k$ that couple two fermions to a scalar $A_k$. If the superfield $\Phi_k$ is the one that contains the Higgs boson this means that $A_k$ is the Higgs boson field $h$, and it couples to the right-handed Weyl-spinors $\psi_i$ and $\psi_j$  in the superfields $\Phi_i$ and $\Phi_j$  as $\lambda_{ijk}\psi_i\psi_j h$, with the coupling $\lambda_{ijk}$. From the superpotential with right-handed scalar superfields the same term appears with right-handed Weyl-spinors $\lambda_{ijk}\bar\psi_i\bar\psi_j h^*$. These two terms can be combined to the same interaction term with a single Dirac fermion $\psi$,  $\lambda_{ijk}\bar\psi\psi h$, as in the Standard Model, giving $\lambda_f = \lambda_{ijk}$. There are no other such terms coupling two fermions to a scalar in the whole Lagrangian.
+
+At the same time, in the scalar potential (\ref{eq:scalarpotglobal}), that same superpotential term is responsible for the terms
 \begin{equation}
 V(A,A^*) \sim \left|\frac{\partial W}{\partial A_i}\right|^2 = |\lambda_{ijk}|^2A^*_jA^*_kA_jA_k.
 \end{equation}
-When the scalar field $A_k$ is the Higgs field, the loop fermion is represented by $\psi_i=\psi_j$ and the second scalar by $A_j$, these two terms are responsible for the two types of vertices in Fig.~\ref{fig:hierarchy} with $\lambda_f=\lambda_{ijk}$ and $\lambda_s=|\lambda_{ijk}|^2$. The fact that there are loop contributions from two scalars for each fermion due to the same number of states (two scalar states per fermion state), means that unbroken supersymmetry predicts an exact cancellation in Eq.~(\ref{eq:higgsqdiv}).\footnote{To keep the argument simple we have avoided the contributions from vector bosons, however, we can show that these also cancel exactly against the contributions from their fermionic partners.}
+If $A_j$ is the second scalar $s$ in Fig.~\ref{fig:hierarchy}, then this term becomes $|\lambda_{ijk}|^2|s|^2|h|^2$ and we have $\lambda_s=|\lambda_{ijk}|^2$. As a result $\lambda_f^2=\lambda_s$.
+
+The fact that there are loop contributions from two scalars for each fermion due to the same number of states (two scalar states per fermion state), means that unbroken supersymmetry predicts an exact cancellation in Eq.~(\ref{eq:higgsqdiv}).\footnote{To keep the argument simple we have avoided the contributions from vector bosons, however, we can show that these also cancel exactly against the contributions from their fermionic partners.} Notice that there is nothing here that is special about the Higgs boson, this mechanism will in fact protect all scalar particles from quadratic corrections to their mass in supersymmetric models.
 
 
 
@@ -384,27 +393,34 @@ When the scalar field $A_k$ is the Higgs field, the loop fermion is represented 
 \section{Vacuum energy}
 \label{sec:vacuum_energy}
 %%%%%%%%%%%%%
-This measured value of the dark energy in terms of an energy scale is $\Lambda_{DE} \simeq 2.4\times 10^{-3}$\,eV. This can be interpreted as vacuum energy, {\it i.e.}\ the energy predicted from the contribution of Feynman diagrams with {\it no} external particles. However, the predicted value of the vacuum energy in the Standard Model is $\Lambda_{VE} \sim M_P$.\footnote{The origin of this is just the same as the quadratic divergence for the Higgs mass. It is the same type of diagrams contributing, only without external legs.} If we want to compare energy densities, we should compare $\Lambda_{DE}^4$ to $\Lambda_{VE}^4$,\footnote{In natural units the unit of energy density is $[\rho]=[E/V]=M/L^3=M^4$.} which means that the prediction is off from the measurement by some 120 orders of magnitude, which is said to be a record for the greatest ever discrepancy between theory and experiment. This problem is the {\bf hierarchy problem for vacuum energy}.
+To explain the measured accelerated expansion of the universe one can introduce a constant term $\Lambda$ in Einstein's field equation, 
+\begin{equation}
+R_{\mu\nu}-\half R g_{\mu\nu}-g_{\mu\nu}\Lambda = \frac{1}{M_P^2}T_{\mu\nu}
+\end{equation}
+and this contribution has been coined {\bf dark energy}. 
+The measured value of dark energy in terms of an energy scale is $\Lambda_{DE} \simeq 2.4\times 10^{-3}$\,eV. To get some sense of this energy scale the rest mass of the lightest charged particle, the electron, is around 0.511 MeV, while the energy of a photon in visible light is of the order of 1 eV.
 
-Can supersymmetry save us here as well? Sort of. For an unbroken global supersymmetry we can use the {\bf non-renormalisation theorem}\footnote{The name of this theorem is a bit funny. Why? Well, mainly because the result is not about not being able to renormalise the theory, but about about not {\it needing} to renormalise certain parts of it. Another consequence of the theorem, which gives it its name, is that the couplings of the superpotential do not need separate renormalisation. The renormalisation of the superfields suffices.}
+This energy can be interpreted as vacuum energy, {\it i.e.}\ the energy predicted from the contribution of Feynman diagrams with {\it no} external particles. However, the predicted value of the vacuum energy in the Standard Model is $\Lambda_{VE} \sim M_P$.\footnote{The origin of this is just the same as the quadratic divergence for the Higgs mass. It is the same type of diagrams contributing, only without external legs.} If we want to compare energy densities, we should compare $\Lambda_{DE}^4$ to $\Lambda_{VE}^4$,\footnote{In natural units the unit of energy density is $[\rho]=[E/V]=M/L^3=M^4$.} which means that the prediction is off from the measurement by some 120 orders of magnitude, which is said to be a record for the greatest ever discrepancy between theory and experiment. This problem is the {\bf hierarchy problem for vacuum energy}.
+
+Can supersymmetry save us here as well? Sort of. For an unbroken global supersymmetry we can use the supersymmetry {\bf non-renormalisation theorem}\footnote{The name of this theorem is a bit funny. Why? Well, mainly because the result is not about not being able to renormalise the theory, but about about not {\it needing} to renormalise certain parts of it. Another consequence of the theorem, which gives it its name, is that the couplings of the superpotential do not need separate renormalisation. The renormalisation of the superfields suffices.}
 of Grisaru, Roach and Siegel (1979)~\cite{Grisaru:1979wc} to show that the prediction in supersymmetry is exactly $\Lambda_{VE} = 0$.
 
 \theo{{\bf Non-renormalisation theorem}\\
-All higher order contributions to the effective supersymmetric action for a process $S_{\rm eff}$ can be written:
+All higher order contributions to the effective supersymmetric action $S_{\rm eff}$  for a process can be written:
 \begin{equation}
-S_{\rm eff} = \sum_n \int d^4x_i...d^4x_nd^4\theta \,F_1(x_1,\bar{\theta},\theta)\times...\times F_n(x_1,\bar{\theta},\theta)\times G(x_1, ..., x_n),
+S_{\rm eff} = \sum_n \int d^4x_i...d^4x_nd^4\theta \,F_1(x_1,\theta,\bar{\theta})\times...\times F_n(x_1,\theta,\bar{\theta})\times G(x_1, ..., x_n),
 \end{equation}
-where $F_i$ are products of the $n$ external superfields and their covariant derivatives, and $G$ is a supersymmetry invariant function.}
+where $F_i$ are products of the $n$ external superfields in the process and their covariant derivatives, and $G$ is a supersymmetry invariant function.}
 
 While this is a rather technical statement, that fact that vacuum diagrams do not have external superfields means that the higher order contributions are all zero, and since there are no tree-level contributions for vacuum diagrams -- you must have loops to not have external legs -- there can be no contribution at all. 
 
-This was a victory for supersymmetry before the discovery of dark energy, when the problem was instead to prove that $\Lambda=0$, modulo the fact that the breaking supersymmetry, as we will be doing in Chapter \ref{chap:breaking}, changes this prediction. As we shall see there, the scale of this contribution has to be the mass scale of the supersymmetric particles, so with for example $m_{SUSY} \simeq 2$\,TeV, we have $m_{SUSY}/\Lambda_{DE} \simeq 10^{15}$, some 15 orders of magnitude too large, which is better than the Standard Model prediction of $M_P/\Lambda_{DE} = 10^{30}$, but still a bit off the measured value.\footnote{So, one would be tempted to say that supersymmetry has solved half the problem. On a more serious note, there is a significant difference in that the Standard Model prediction requires a cut-off to be finite, while supersymmetry predicts a finite but too large value.}
+This was a victory for supersymmetry before the discovery of dark energy, when the problem was instead to prove that $\Lambda=0$, modulo the fact that the breaking of supersymmetry, as we will be doing in Chapter \ref{chap:breaking}, changes this prediction. As we shall see there, the scale of the contribution to the vacuum energy in broken supersymmetry has to be the mass scale of the supersymmetric particles, so with for example $m_{SUSY} \simeq 2$\,TeV as this scale, we have $m_{SUSY}/\Lambda_{DE} \simeq 10^{15}$, some 15 orders of magnitude too large, which is better than the Standard Model prediction of $M_P/\Lambda_{DE} = 10^{30}$, but still a bit off the measured value.\footnote{So, one would be tempted to say that supersymmetry has solved half the problem. On a more serious note, there is a significant difference in that the Standard Model prediction requires a cut-off to be finite, while supersymmetry predicts a finite but too large value.}
 
 
 So now we are left with showing that the contribution is very small but non-zero, which is in general thought to be a much harder problem than finding models where it  is exactly zero.
 However, in supergravity something interesting happens. Introducing a local supersymmetry the scalar potential is not simply given by the superpotential derivatives in (\ref{eq:scalarpotglobal}), but instead is (ignoring the effects of gauge fields)
 \begin{equation}
-V(A,A^*) = e^{K/M_P}\left[K_{ij}(D_iW)(D_jW^*)-\frac{3}{M_P^2}|W|^2\right],
+V(A,A^*) = e^{K/M_P^2}\left[K^{-1}_{ij}(D_iW)(D_jW^*)-\frac{3}{M_P^2}|W|^2\right],
 \end{equation}
 where $K_{ij}=\partial_i\partial_jK[A,A^*]$ is the {\bf Kähler metric},  $D_i$ the {\bf Kähler derivative} $D_i = \partial_i +\frac{1}{M_P^2}(\partial_iK)$, and all the derivatives are with respect to the scalar fields in the Kähler potential $K$ and superpotential $W$. In the $M_P\to \infty$ limit, the low energy limit, we see that we recover the flat space result of Eq.~(\ref{eq:scalarpotglobal}). What is important to notice is that  there is now a second {\it negative} term in the potential that can in principle cancel the positive supersymetry breaking contribution, however, given the large size of the breaking contribution this will come at the price of fantastic fine-tuning unless some mechanism can be found where this is natural.
 
