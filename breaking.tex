@@ -101,34 +101,36 @@ However, we cannot simply add arbitrary terms to the Lagrangian. The terms we ca
 
 The allowed terms are in superfield notation as follows:
 \begin{eqnarray}
-\mathcal{L}_{\rm soft} &=& -\frac{1}{4 T(R)} M \theta\theta\bar{\theta}\bar{\theta} {\rm Tr}\{W^AW_A\} - \frac{1}{6}a_{ijk}\theta\theta\bar{\theta}\bar{\theta} \Phi_i\Phi_j\Phi_k \nonumber\\
-&&-\frac{1}{2}b_{ij}\theta\theta\bar{\theta}\bar{\theta} \Phi_i \Phi_j - t_i \theta\theta\bar{\theta}\bar{\theta} \Phi_i +\text{h.c.} \nonumber \\
+\mathcal{L}_{\rm soft} &=& -\frac{1}{4 T(R)q^2} M_i \theta\theta\bar{\theta}\bar{\theta} {\rm Tr}\{W_i^AW_{iA} \} \nonumber\\
+&&- \frac{1}{6}a_{ijk}\theta\theta\bar{\theta}\bar{\theta} \Phi_i\Phi_j\Phi_k -\frac{1}{2}b_{ij}\theta\theta\bar{\theta}\bar{\theta} \Phi_i \Phi_j - s_i \theta\theta\bar{\theta}\bar{\theta} \Phi_i +\text{h.c.} \nonumber \\
 && - m_{ij}^2 \theta\theta\bar{\theta}\bar{\theta} \Phi_i^\dagger \Phi_j, \label{eq:gensoftterms}
 \end{eqnarray}
-where $M,a_{ijk},b_{ij},t_i\in\mathbb C$ and $m_{ij}^2\in\mathbb R$ are the couplings.
+where $M_i, a_{ijk}, b_{ij}, s_i\in\mathbb C$, and $m_{ij}^2\in\mathbb R$ are the couplings.
 Note that these terms are explicitly {\it not} supersymmetric. From the $\theta\theta\bar{\theta}\bar{\theta}$-factors we see that only the lowest order in $\theta$ component fields of the superfields contribute. 
 
-There are also some terms that are called "maybe-soft" terms:
+There are also some terms that are called ``maybe-soft'' terms:
 \begin{equation}
-\mathcal{L}_{\rm maybe} = -\frac{1}{2} \theta\theta\bar{\theta}\bar{\theta}c_{ijk} \Phi_i^\dagger \Phi_j \Phi_k + {\rm h.c.}
+\mathcal{L}_{\rm maybe} = -\frac{1}{2} \theta\theta\bar{\theta}\bar{\theta}c_{ijk} \Phi_i^\dagger \Phi_j \Phi_k + {\rm h.c.},
 \label{eq:maybesoft}
 \end{equation}
-with $c_{ijk}\in\mathbb C$. This last -- oft ignored -- type of term is soft as long as none of the scalar superfields is a singlet under all gauge symmetries. It is, however, quite difficult to get large values for $c_{ijk}$ with spontaneous supersymmetry breaking. In the above terms we have not specified any gauge symmetry, which will, in the same way as it did for the superpotential, severely restrict the allowed terms. However, it turns out that soft-terms are responsible for most of the parameters in supersymmetric theories!
+with $c_{ijk}\in\mathbb C$. This last -- oft ignored -- type of term is soft as long as none of the scalar superfields is a singlet under all gauge symmetries. It is, however, quite difficult to get large values for $c_{ijk}$ with spontaneous supersymmetry breaking. 
+
+In the above terms we have not specified any gauge symmetry, which will, in the same way as it did for the superpotential, severely restrict the allowed terms. However, it still turns out that soft-terms are responsible for most of the parameters in supersymmetric theories!
 
 We can instead write the soft terms in terms of their component fields as
 \begin{eqnarray}
-\mathcal{L}_{\rm soft} &=& -\frac{1}{2} M \lambda^A\lambda_A -(\frac{1}{6}a_{ijk}A_iA_jA_k + \frac{1}{2}b_{ij}A_iA_j + t_i A_i +\frac{1}{2}c_{ijk}A^*_iA_jA_k+\text{c.c.}) \nonumber\\
+\mathcal{L}_{\rm soft} &=& -\frac{1}{2} M_i \lambda_i^a\lambda_i^a -(\frac{1}{6}a_{ijk}A_iA_jA_k + \frac{1}{2}b_{ij}A_iA_j + s_i A_i +\frac{1}{2}c_{ijk}A^*_iA_jA_k+\text{c.c.}) \nonumber\\
 && - m_{ij}^2 A_i^*A_j.
 \label{eq:soft_terms_component_fields}
 \end{eqnarray}
-Here we clearly see that the $m_{ij}$ couplings provide extra mass terms to the scalar partners $A_i$ of the fermions in the scalar superfields, and $M$ to the fermion partners $\lambda_A$ of the vectors in the vector superfields. Thus, they split the masses of the partners as we wanted to achieve with breaking supersymmetry.
+Here we clearly see that the $m_{ij}$ couplings provide extra mass terms to the scalar partners $A_i$ of the fermions in the scalar superfields, and $M_i$ to the fermion partners $\lambda_{iA}^a$ of the vectors in the vector superfields, \footnote{We use the index $i$ in case there are multiple gauge groups. In addition the fermions from the vector superfield may carry an index $a$, $\lambda_{iA}^a$,  if there is more than one generator in the gauge group.} however, they provide no mass to the fermions $\psi_A$ in the scalar superfield, nor to the vectors $V_\mu$ in the vector superfield. Thus, they split the masses of the partners as we wanted to achieve with breaking supersymmetry.
 
 Now, what happens to the hierarchy problem? Restricting ourselves to soft supersymmetry breaking terms guarantees that we end up with contributions to the Higgs mass of at most
 \begin{equation}
 \Delta m_h^2 = -\frac{\lambda_s}{16\pi^2}m_s^2\ln\frac{\Lambda_{UV}^2}{m_s^2}+\ldots,
 \label{eq:higgs_soft_mass}
 \end{equation}
-at the leading order in $\Lambda_{UV}$, where $m_s$ is the mass scale of the soft term. The correction to the Higgs mass is thus proportional to the masses of the supersymmetric particles. 
+at the leading order in $\Lambda_{UV}$, where $m_s$ is the mass scale of the soft term -- or, in other words, the mass of the supersymmetric partners. The correction to the Higgs mass is thus proportional to the masses of the supersymmetric particles. 
 
 This is the most important argument in favour of supersymmetry existing at low energy scales where we can detect it, because $m_s$ can not be too large if we want the above corrections to be reasonably small. This is called the {\bf little hierarchy problem}, and numerically, given that $16\pi^2\sim 100$, and the couplings $\lambda_s$ are not expected to be above unity,  this means that we want $m_s \sim {\mathcal O}(1~{\rm TeV})$ in order to keep the cancellations reasonable and of the order of the measured Higgs mass, with little fine-tuning.
 
@@ -136,32 +138,39 @@ This is the most important argument in favour of supersymmetry existing at low e
 %%%%%%%%%%%%%%%%%%%%%%%
 \section{Models for supersymmetry breaking} 
 %%%%%%%%%%%%%%%%%%%%%%%
-Let us begin by taking a closer look at the models we use to motivate supersymmetry breaking, and what their phenomenological consequences are. This is important to keep in mind as most searches for supersymmetry are interpreted under certain assumptions on the supersymmetry  breaking mechanism.
+Let us take a closer look at the models we use to motivate supersymmetry breaking, and what their phenomenological consequences are. 
+%This is important to keep in mind as most searches for supersymmetry are interpreted under certain assumptions on the supersymmetry  breaking mechanism. 
+To be concrete, and to simplify the language used, we will relate this discussion to the Minimal Supersymmetric Standard Model (MSSM) that we will study in Chapter~\ref{chap:mssm}, however, the mechanisms for supersymmetry breaking will be the same for most relevant models, and you could read the MSSM below as a generic low-energy supersymmetric model.
 
-Generically such models can be illustrated as shown in Fig.~\ref{SSB}. There is one or more {\bf hidden sector} (HS) scalar superfield $X$ -- by hidden we mean that it has no or very small direct couplings to the MSSM fields -- that has an {\it effective (non-renormalizable) coupling} to the MSSM scalar fields $\Phi_i$ of the form
+Generically, breaking models can be illustrated as shown in Fig.~\ref{SSB}. There is one or more {\bf hidden sector} (HS) scalar superfield $X$ -- by hidden we mean that it has no or very small direct couplings to the  MSSM fields -- that has an {\it effective (non-renormalisable) supersymmetric coupling} to the MSSM scalar fields $\Phi_i$ of the form
 \begin{equation}
 \mathcal{L}_\text{HS} = -\frac{1}{M}(\bar\theta\bar\theta)X\Phi_i\Phi_j\Phi_k,
 \label{eq:HS_MSSM}
 \end{equation}
 where $M$ is some large scale, {\it e.g.}\ the Planck scale, that suppresses the interaction. Figure \ref{SUSYB} shows interactions that can lead to such terms, where $M$ is the mass scale of some {\bf mediator} particle $Y$. 
 
+%%%%%%%%
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=1.0]{figures/structure} 
-\caption{A generic illustration of how to generate soft breaking terms~\cite{Martin:1997ns}. \label{SSB}}
+\caption{A generic illustration of how to generate soft breaking terms. Taken from Ref.~\cite{Martin:1997ns}. \label{SSB}}
 \end{figure}
+%%%%%%%%
 
+%%%%%%%%
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.9]{figures/SUSYB} 
-\caption{Interactions leading to effective 4-particle couplings in our example. \label{SUSYB}}
+\caption{Interactions leading to effective 4-superfield couplings in our example. \label{SUSYB}}
 \end{center}
 \end{figure}
+%%%%%%%%
 
-If the hidden sector is constructed so that $X$ develops a vev for its auxillary $F$-component field, $F_X$,\begin{equation}
+If the hidden sector is constructed so that $X$ develops a non-zero vev for its auxiliary $F$-component field, $F_X$,
+\begin{equation}
 \langle X \rangle = \theta \theta \langle F_X \rangle,
 \end{equation}
-it breaks supersymmetry spontaneously, see the discussion leading up to Eq.~(\ref{eq:Fbreaking}). As a result, the interaction in  (\ref{eq:HS_MSSM}) will produce a soft-term of the form of the second term in Eq.~(\ref{eq:soft_terms_component_fields}),
+it breaks supersymmetry spontaneously, see the discussion leading up to Eq.~(\ref{eq:Fbreaking}). As a result, the interaction in  (\ref{eq:HS_MSSM}) will in the low-energy limit produce a soft-term of the form of the second term in Eq.~(\ref{eq:soft_terms_component_fields}),
 \begin{equation}
 \mathcal{L}_\text{soft}=-\frac{\langle F_X \rangle}{M}A_iA_jA_k,
 \end{equation}
@@ -182,38 +191,42 @@ The complete soft terms for such a mechanism can then be shown to be
 \mathcal{L}_\text{soft} &=& -\frac{\langle F_X \rangle}{M_P}\left(\frac{1}{2} f_i \lambda^a_i \lambda^a_i + \frac{1}{6} y'_{ijk}A_i A_j A_k + \frac{1}{2}\mu'_{ij}A_iA_j + \frac{\langle F_X \rangle^*}{M_P^2}x_{ijk}A_i^*A_jA_k + {\rm c.c.}\right)\nonumber\\
  &&- \frac{|\langle F_X \rangle |^2}{M_P^2}k_{ij}A_iA_j^*.
  \end{eqnarray}
-Incidentally, we can now see why we assumed the maybe-soft breaking terms to be unimportant, as  in this model they are suppressed by $|\langle F_X \rangle|/M_P^2$ compared to the other masses. 
+ Here $ f_i $,  $y'_{ijk}$, $\mu'_{ij}$, $x_{ijk}$, and $k_{ij}$ are breaking model dependent parameters.
+Incidentally, we can now see why we assumed the maybe-soft breaking terms to be unimportant, as  in this model they are suppressed by $|\langle F_X \rangle|/M_P^2$ compared to the other couplings. 
 
-If one assumes a minimal form for the parameters at the GUT scale, motivated by the wish for unification, {\it e.g.}\ $f_i=f$, $y'_{ijk} = \alpha y_{ijk}$, $\mu'_{ij} = \beta \mu$, and $k_{ij} = k\delta_{ij}$, then all the soft terms are fixed by just four parameters
+If one assumes a minimal form for the parameters at some high-scale, perhaps at the GUT scale motivated by the wish for unification, {\it e.g.}\ $f_i=f$, $y'_{ijk} = \alpha y_{ijk}$ where $y_{ijk}$ are the Standard Model Yukawa couplings, $\mu'_{ij} = \beta \mu$, and $k_{ij} = k\delta_{ij}$, then all the soft terms are fixed by just four parameters
 \[m_{1/2} = f\frac{\langle F_X \rangle}{M_P}, \indent m_0^2 = k \frac{|\langle F_X \rangle|^2}{M_P^2}, \indent A_0 = \alpha \frac{\langle F_X \rangle }{M_P}, \indent B_0 = \beta\frac{\langle F_X \rangle}{M_P}.\]
-The resulting phenomenology is called {\bf minimal supergravity}, or {\bf mSUGRA/CMSSM}. This is minimal in the sense of the form of the parameters, and is the most studied, but perhaps not best motivated, version of the MSSM. Usually, $B_0$ and $|\mu|$ are exchanged for $\tan\beta$ at low scales using the EWSB condition  in Eq.~(\ref{eq:EWSB_condition}), so it is common to say that there are four and a half parameters in the model: $m_{1/2}$, $m_0$, $A_0$, $\tan\beta$ and ${\rm sgn}\,\mu$.
+The resulting phenomenology is called {\bf minimal supergravity}, or {\bf mSUGRA/CMSSM}. This is minimal in the sense of the form of the parameters, and is the most studied, but perhaps not best motivated, version of the MSSM. Usually, $B_0$ and $|\mu|$ are exchanged for the parameter $\tan\beta$ at low scales using the conditions for electroweak symmetry breaking that we will see in Eq.~(\ref{eq:EWSB_condition}), so it is common to say that there are four and a half parameters in the CMSSM: $m_{1/2}$, $m_0$, $A_0$, $\tan\beta$ and ${\rm sgn}\,\mu$.
 
 
 %%%
 \subsection{Gauge Mediated Supersymmetry Breaking (GMSB)} 
 %%%
-An alternative to PMSB is gauge-mediated supersymmetry breaking where soft terms come from {\it loop diagrams} with {\bf messenger} superfields that get their own mass by coupling to the hidden sector supersymmetry breaking  vev, and that have Standard Model gauge interactions. By dimensional analysis we must have
+An alternative to PMSB is gauge-mediated supersymmetry breaking where soft terms come from {\it loop diagrams} with {\bf messenger} superfields that get their own mass $M$ by coupling to the hidden sector supersymmetry breaking vev $\langle F \rangle$, and that have Standard Model gauge interactions. By dimensional analysis we must have
 \[m_{\rm soft} = \frac{\alpha_i}{4\pi}\frac{\langle F \rangle}{M}.\]
-If now the supersymmetry breaking scale  $\sqrt{\langle F\rangle}$ and the messenger mass $M$ are roughly comparable in size, which is reasonable given where the messenger mass comes from, then $\sqrt{\langle F \rangle} \simeq 100$\,TeV can give a viable sparticle spectrum. Notice that there is now a lot less RGE running for the parameters in the GMSB compared to the PMSB since the soft masses are created at a rather low scale.
+If now the supersymmetry breaking scale  $\sqrt{\langle F\rangle}$ and the messenger mass $M$ are roughly comparable in size, which is reasonable given where the messenger mass comes from, then $\sqrt{\langle F \rangle} \simeq 100$\,TeV can give a viable sparticle spectrum. Notice that there is now a lot less difference in scale between the breaking scale and the mass scale of the supersymmetric partners, $m_{\rm soft}$, in the GMSB compared to the PMSB.
 
-One way of thinking about how these mass terms appear is that the messenger field(s) get masses from hidden sector vevs and contribute to for example gaugino mass terms through diagrams such as the one in Fig.~\ref{fig:GMSB}, where messenger scalars and fermions run in the loop, and their masses from the hidden sector vevs are symbolised by the mass insertions. Note that scalars can only get mass contributions like this at two-loop order since the messenger interaction is a gauge interaction, involving gauge bosons or gauginos in the MSSM. In order not to spoil GUT unification messengers are often assumed to have small mass splittings and come in $N_5$ complete $\mathbf{5} + \overline{\mathbf{5}}$ (fundamental) representations of $SU(5)$.
+One way of thinking about how these mass terms appear is that the messenger field(s) get masses from hidden sector vevs and contribute to mass terms from the fermions in the vector superfields -- called gauginos --  through diagrams such as the one in Fig.~\ref{fig:GMSB}, where messenger scalars and fermions run in the loop, and their masses from the hidden sector vevs are symbolised by the mass insertions. Note that scalars can only get mass contributions like this at two-loop order since the messenger interaction is a gauge interaction, involving gauge bosons or gauginos in the MSSM. In order not to spoil the unification of gauge couplings, see Sec.~\ref{sec:GUT}, messengers are often assumed to have small mass splittings and come in $N_5$ complete $\mathbf{5} + \overline{\mathbf{5}}$ (fundamental) representations of $SU(5)$.
 
+%%%%%%%%
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.8]{figures/GMSB} 
-\caption{Diagram for GMSB giving masses to the gauginos. The messenger scalars and fermions run in the loop.}
+\caption{Diagram for GMSB giving masses to the gauginos $\tilde g$, $\tilde B$, and $\tilde W$, in the MSSM. The messenger scalars and fermions run in the loop.}
 \label{fig:GMSB}
 \end{center}
 \end{figure}
+%%%%%%%%
 
-The minimal parametrisation of GMSB models is in terms of the scale $\Lambda = \frac{\langle F\rangle}{M}$, the messenger mass $M$, the number of representations $N_5$, and $\tan\beta$ for the EWSB criterion (instead of $\mu$ and $b$). This gives the soft masses
+The minimal parametrisation of GMSB models is in terms of the scale $\Lambda = \frac{\langle F\rangle}{M}$, the messenger mass $M$, the number of representations $N_5$, and $\tan\beta$ for the electroweak symmetry breaking criterion. This gives the soft masses
 \begin{eqnarray}
 M_i &=& \frac{\alpha_i}{4\pi}\Lambda N_5,\quad\text{(gaugino masses)}\label{eq:GMSBgauginomass}\\
 m_j^2 &=& 2\Lambda^2 N_5 \sum C(R)_i\left(\frac{\alpha_i}{4\pi}\right)^2,\quad\text{(scalar masses)}
 \end{eqnarray}
-where the sum is over the quadratic Casimir invariant for the scalar superfield $\Phi_j$ that the scalar field belongs to. We clearly see that the scalar soft-masses are a two-loop effect as discussed above. 
+where the sum is over the gauge groups, with $C(R)$ being quadratic Casimir invariant for the scalar superfield $\Phi_j$ that the scalar field belongs to. We clearly see that the scalar soft-masses are a two-loop effect as discussed above. 
 
-While this parameterisation looks independent of $M$, the messenger scale sets the starting point of the RGE running of the sparticle masses, and thus influences their magnitude. For example, the tri-linear soft-term couplings $a_{ijk}$ are expected to be very small at the messenger scale, and are effectively set to zero, however, due to RGE running they are small, but non-zero at the electroweak scale. Since the scalar masses $m_j$ scale as $\sqrt{N_5}$ compared to $N_5$ for the gauginos, we in general expect the scalars to be lighter in GMSB models. One should also notice that this parameterisation  gives the same hierarchy of gaugino masses as in mSUGRA, $M_3>M_2>M_1$, since (\ref{eq:GMSBgauginomass}) is ordered in terms of the strength of the gauge couplings $\alpha_i$. The origin of the hierarchy is different since in mSUGRA it comes from the running of the parameters down from the GUT scale.
+While this parameterisation looks independent of the messenger mass $M$, the messenger scale sets the starting point of the renormalisation running of the sparticle masses, see Sec.~\ref{sec:RGE}, and thus influences their magnitude. For example, the tri-linear soft-term couplings $a_{ijk}$ are expected to be very small at the messenger scale, and are effectively set to zero, however, due to the running they are small, but non-zero at the electroweak scale. Since the scalar masses $m_j$ scale as $\sqrt{N_5}$ compared to $N_5$ for the gauginos, we in general expect the scalars to be lighter in GMSB models. One should also notice that this parameterisation  gives a hierarchy of gaugino masses, $M_3>M_2>M_1$, since (\ref{eq:GMSBgauginomass}) is ordered in terms of the strength of the gauge couplings $\alpha_i$. 
+%he same hierarchy of gaugino masses as in mSUGRA, $M_3>M_2>M_1$, since (\ref{eq:GMSBgauginomass}) is ordered in terms of the strength of the gauge couplings $\alpha_i$. The origin of the hierarchy is different since in mSUGRA it comes from the running of the parameters down from the GUT scale.
 
 
 

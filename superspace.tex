@@ -303,7 +303,7 @@ This means that a field fulfilling $\bar{D}_{\dot{A}} \Phi = 0$ in the new set o
 \Phi(y, \theta) = A(y) + \sqrt{2}\theta\psi(y) + \theta\theta F(y),
 \label{eq:leftscalarsuperfield_y}
 \end{equation}
-and looking at the much restricted component field content we get the result in Table~\ref{tab:lscsup}.
+and looking at the much restricted component field content we get the result in Table~\ref{tab:lscsup}. 
 \begin{center}
    \begin{tabular}{c |l| c} 
    \noalign{\smallskip}\hline\noalign{\smallskip}
@@ -316,7 +316,7 @@ and looking at the much restricted component field content we get the result in 
    \captionof{table}{Component fields contained in a left-handed scalar superfield. \label{tab:lscsup}}
    \end{center}
 
-Since we wish to interpret the Weyl spinor here as a fermion quantum field with dimension $M^{3/2}$, and given that $[\theta]=M^{-1/2}$, the scalar superfield itself must have mass dimension $[\Phi]=1$. This means that the scalar field $A$ has the expected mass dimension $M^1$ of an ordinary scalar quantum field, however, the scalar $F$ has the odd mass dimension $[F]=2$.\footnote{Odd as in strange, 2 is known to be an even number.}
+Since we wish to interpret the Weyl spinor here as a fermion quantum field with dimension $M^{3/2}$, and given that $[\theta]=M^{-1/2}$, the scalar superfield itself must have mass dimension $[\Phi]=1$. This means that the scalar field $A$ has the expected mass dimension $M^1$ of an ordinary scalar quantum field, however, the scalar $F$ has the odd mass dimension $[F]=2$.\footnote{Odd as in strange, 2 is known to be an even number.} The Weyl spinor is used to represent (half of) one of the Dirac fermions of the Standard Model, while the scalar $A$ is typically given the same name as the fermion with an `s'-prefix, and the scalar $F$ is called an {\bf auxiliary} field, for reasons which will become clear later.
 
 We can undo the coordinate change in (\ref{eq:leftscalarsuperfield_y}) by inserting for $y$ and expanding in powers of $\theta$ and $\bar{\theta}$, giving
 \begin{equation}
@@ -330,9 +330,9 @@ By using the transformation  $y^\mu \equiv x^\mu - i\theta\sigma^\mu \bar{\theta
 \label{eq:rightscalarsuperfield}
 \end{equation}
 
-We can now compare the above to the $j=0$ representation of the super-Poincaré group that had two scalar states and two fermionic states (d.o.f.).  After applying the equations of motions (e.o.m.)\ the {\bf auxillary} field $F(x)$, with the strange mass dimension, can be completely eliminated as it does not have any derivatives.\footnote{Remember that the classical equation of motion for a field/particle, the Lagrange equation, has a term with the derivative of the Lagrangian w.r.t.\ to the field derivatives/velocities and one w.r.t.\ the fields/coordinates. For $F$ only the latter is non-zero and can be used to solve for $F$. We will show this in more detail in Sec.~\ref{sec:eom} when we construct supersymmetric Lagrangians.} The e.o.m.\ also eliminate two of the fermion d.o.f. using the Direc/Weyl equations from Sec.~\ref{sec:Dirac_spinors}.\footnote{Since the Lagrangian is linear in time derivatives of $\psi$ -- it will have to be  when we construct it from these superfields that are linear -- the generalised momenta $\pi=\partial_0\psi$ can be re-expressed in terms of the generalised coordinates without time derivatives and are not independent coordinates.} 
+We can now compare the above to the $j=0$ representation of the super-Poincaré group that had two scalar states and two fermionic states (d.o.f.).  After applying the equations of motions (e.o.m.)\ the auxiliary field $F(x)$, with the strange mass dimension, can be completely eliminated as it does not have any derivatives.\footnote{Remember that the classical equation of motion for a field/particle, the Lagrange equation, has a term with the derivative of the Lagrangian w.r.t.\ to the field derivatives/velocities and one w.r.t.\ the fields/coordinates. For $F$ only the latter is non-zero and can be used to solve for $F$. We will show this in more detail in Sec.~\ref{sec:eom} when we construct supersymmetric Lagrangians.} The e.o.m.\ also eliminate two of the fermion d.o.f. using the Direc/Weyl equations from Sec.~\ref{sec:Dirac_spinors}.\footnote{Since the Lagrangian is linear in time derivatives of $\psi$ -- it will have to be  when we construct it from these superfields that are linear -- the generalised momenta $\pi=\partial_0\psi$ can be re-expressed in terms of the generalised coordinates without time derivatives and are not independent coordinates.} 
 % TODO: Move this comment to the Weyl spinor section and include a Lagrangian?
-This does not happen for the scalar $\phi$ since they are not linear in the time-derivative. Thus, after the equations of motion, we are left with the same states as in the $j=0$ representation.
+This does not happen for the scalar $A(x)$ since their e.o.m\ are not linear in the time-derivative. Thus, after the equations of motion, we are left with the same states as in the $j=0$ representation.
 
 However, the scalar superfields will not correspond directly to particle states for the known Standard Model particles since, as we discussed in Sec.~\ref{sec:SP_irreps}, a Weyl spinor on its own cannot describe a Dirac fermion. When we construct particle representations we will take one left-handed scalar superfield and one {\it different} right-handed scalar superfield. These will form a Dirac fermion and two scalars (and their anti-particles) after application of the e.o.m. 
 
@@ -418,7 +418,7 @@ A vector superfield in the WZ-gauge can then be written:
 V_{WZ} (x, \theta, \bar{\theta}) = (\theta\sigma^\mu \bar{\theta})[V_\mu(x) + i\partial_\mu(A(x) - A^*(x))] + \theta\theta\bar{\theta}\bar{\lambda}(x) + \bar{\theta}\bar{\theta}\theta\lambda (x) + \theta\theta\bar{\theta}\bar{\theta}D(x).
 \label{eq:vectorsuperfieldWZ}
 \end{equation}
-Again, the equations of motion will eliminate the auxiliary $D$-field, as well as one d.o.f.\ from the gauge field leaving the  two d.o.f.\ of a massless on-shell gauge boson,\footnote{Hang on, where did that last d.o.f.\ go from $V(x)$? We have a remaining gauge freedom in the choice of the imaginary component of $A(x)$, which is the ordinary gauge freedom of a $U(1)$ field theory. This can be used to eliminate one d.o.f.\ from the vector field.}  and two d.o.f.\ from the (Majorana) fermion formed by $\lambda$. This does contain the correct number of degrees of freedom that corresponds to the representation $j=\frac{1}{2}$, however, for the massless $m=0$ representation.\footnote{The vector bosons will get mass through electroweak symmetry breaking just as in the Standard Model.}
+Again, the equations of motion will eliminate the auxiliary $D$-field, as well as one d.o.f.\ from the gauge field leaving the  two d.o.f.\ of a massless on-shell gauge boson as found in the Standard Model,\footnote{Hang on, where did that last d.o.f.\ go from $V(x)$? We have a remaining gauge freedom in the choice of the imaginary component of $A(x)$, which is the ordinary gauge freedom of a $U(1)$ field theory. This can be used to eliminate one d.o.f.\ from the vector field.}  and two d.o.f.\ from the (Majorana) fermion formed by $\lambda$, usually called the {\bf gaugino} partner of the gauge boson. This does contain the correct number of degrees of freedom that corresponds to the representation $j=\frac{1}{2}$, however, for the massless $m=0$ representation.\footnote{The vector bosons will get mass through electroweak symmetry breaking just as in the Standard Model.}
 
 Notice that the WZ gauge is particularly convenient for calculations because:
 \begin{equation}
