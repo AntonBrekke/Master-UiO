@@ -75,6 +75,7 @@ These representations can also be used for $SO(3)$ in odd dimensions, where $j$ 
 
 %%%
 \subsection{The lowest-dimensional representations}
+\label{sec:SU2_irreps}
 The spin-0 representation is the trivial representation where $j=0$ and the representation space is one dimensional and everything acts as the identity element. 
 
 The first non-trivial representation is for spin-$\half$ with $j=\half$. Here the two states are $|\half,\half\rangle$ and $|\half,-\half\rangle$. To write down a representation of the algebra in terms of $2\times2$ matrices we think of the states as two basis vectors
@@ -361,10 +362,10 @@ For a consistent index notation, the relationship between the vectors $\psi$ and
 \[  \psi^A = \bar\psi_{\dot{A}}^*\bar{\sigma}^{0\dot{A}A}, \quad  \psi_A = {\sigma}^0_{A\dot{A}}\bar\psi^{\dot{A}*}, \quad  \bar{\psi}^{\dot{A}} = \bar{\sigma}^{0\dot{A}A}\psi_A^*, \quad \text{and}\quad  \bar{\psi}_{\dot{A}} =\psi^{A*} \sigma^0_{A\dot{A}} .\]
 This may be seen as a bit of an overkill in indices as $\bar{\sigma^0}^{\dot{A}A} = \delta^{\dot{A}A}$, and we will in the following often omit the matrix and simply write $(\psi_A)^* = \bar{\psi}^{\dot{A}}$.
 Note that from the above the following relationships hold for the hermitian conjugate:
-\begin{eqnarray*}
+\begin{eqnarray}
 (\psi_A)^\dagger &=& \bar{\psi}_{\dot{A}} \\
-(\bar{\psi}_{\dot{A}})^\dagger &=& \psi_A.
-\end{eqnarray*}
+(\bar{\psi}_{\dot{A}})^\dagger &=& \psi_A. \label{eq:Weyl_hc}
+\end{eqnarray}
 
 We further define contractions of Weyl spinors that are invariant under $SL(2,\mathbb{C})$ transformations -- just as  contractions of four-vectors are invariant under Lorentz transformations -- as follows:
 \df{The contraction of two Weyl spinors $\psi$ and $\chi$ is given by $\psi\chi \equiv \psi ^A \chi_A$ and $\bar{\psi}\bar{\chi} \equiv \bar{\psi}_{\dot{A}}\bar{\chi}^{\dot{A}}$.}
