@@ -4,9 +4,10 @@ import multiprocessing as mp
 
 """
 This code is not really good at what it was meant to do. 
-I think 1D-integrals are not big enough. To split the domain 
-into smaller pieces for multivariable integrals is hard, as 
-the integral no longer is linear, but contain cross terms. 
+I think 1D-integrals are not big enough (8D is limit where MC
+is superior to other techniques). 
+To split the domain into smaller pieces for multivariable integrals 
+is hard, as the integral no longer is linear, but contain cross terms. 
 
 1D: I = I_a + I_b
 2D: I_x*I_y = (I_xa + I_xb)*(I_ya + I_yb)
@@ -15,21 +16,18 @@ which is a mess.
 """
 
 x0 = 0
-x1 = np.pi
-Nx = int(1e8)
+x1 = 1000
+Nx = int(1e5)
 
-proc_num = 6
+proc_num = 4
 
-x = np.linspace(x0, x1, Nx)
+N = 1000
+step = (x1 - x0) / N
 
-N = 6
-step = int(Nx / N)
-
-x_list = []
+x = []
 for i in range(N):
-    k0 = i*step
-    k1 = (i+1)*step
-    x_list.append(x[k0:k1])
+    xi = np.linspace(i*step, (i+1)*step, Nx)
+    x.append(xi)
 
 t0 = time.time()
 
@@ -52,7 +50,7 @@ def f(x):
 
 config = []
 for i in range(N):
-    config.append([f, x_list[i]])
+    config.append([f, x[i]])
 
 if __name__ == '__main__':
 

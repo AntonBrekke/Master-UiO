@@ -1,0 +1,139 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath, amsfonts, amssymb, fancyhdr, floatflt, epsfig, graphicx,psfrag}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{url}
+
+%A4 = 210x297 => 170x257 with 2cm margins
+%=>these are generous ways of implementing this
+\textwidth=16cm
+\textheight=24.5cm
+
+%now adjust TeX margins to generously fit this 
+\topmargin=-0.3in
+\oddsidemargin=0.0cm
+\evensidemargin=0.0cm
+
+\usepackage{hyperref}
+%\hypersetup{
+%    colorlinks=true,
+%    linkcolor=blue,
+%    filecolor=magenta,      
+%    urlcolor=cyan,
+%}
+
+\newcommand{\ds}{{\sf DarkSUSY}}
+
+\begin{document}
+\pagestyle{plain}
+
+
+ \vspace*{-1.5cm}
+
+\thispagestyle{empty}
+
+{\begin{center}
+MSc project \\[1ex]
+ {\large \bf  Thermal production of feebly interacting dark matter}\\[0.5ex]
+ {\scriptsize \bf Kristian Gjestad Vangsnes}
+\end{center}
+}
+ \vspace*{0.5cm}
+
+\noindent{\bf Introduction}\\[1ex]
+There is compelling evidence for the existence of dark matter (DM), where the only effects we observe are gravitational. 
+We see these effects in the  rotational curves of spiral galaxies, gravitational lensing and importantly in the cosmic 
+microwave background (CMB), where the inferred cosmological DM abundance is about five times the abundance of ordinary 
+matter~\cite{Planc_colab}.  The most popular scenario for the creation of DM is the so-called freeze-out mechanism,
+where DM was in thermal equilibrium with the visible sector heat bath at early times~\cite{Gondolo:1990dk};
+once its annihilation rate fell behind the expansion rate of the universe, DM would decouple and its comoving number 
+density freeze to a constant value. 
+A typical example for this are so-called weakly interacting massive particles (WIMPs) 
+with mass around the electroweak scale. However there is no theoretical reason why the assumption that the 
+DM was in thermal equilibrium with the visible heat bath must hold. Instead the present DM abundance may have 
+been generated out of equilibrium, in a process known as freeze-in mechanism. In this scenario, DM couples very weakly, 
+which means that it never reached thermal equilibrium. Instead, the DM particles were continuously produced by decay or 
+annihilation processes from the visible sector -- or a dark sector heat bath -- until  the  production  stopped once  the  heat bath 
+temperature dropped  below the relevant mass scale connecting the DM particle to the visible sector.  
+Due to the small 
+coupling strength, DM particles produced via the freeze-in mechanism have been called Feebly Interacting 
+Massive Particles (FIMPs)~\cite{FIMP_DM_Summary}. 
+
+
+ \vspace*{0.6cm}
+\noindent
+{\bf Scope}\\[1ex]
+The FORTRAN package \ds~\cite{DarkSUSYsite} was originally developed to numerically calculate properties of 
+supersymmetric DM, which historically was the most popular DM candidate. The package has been upgraded to include 
+other theories containing DM candidates as well~\cite{DarkSUSY}, which also will be the focus of my MSc project. 
+Its main scope will be to further develop \ds\ by adding the possibility to calculate the freeze-in abundance of FIMP 
+DM candidates.
+As of today, the only publicly available code with this ability is {\sf micrOMEGAs5.0}~\cite{micrOMEGAs5}. An important 
+task will thus be to independently verify the results presented there, and check the validity of the approximations
+entering in their derivation. In a second step, the newly written \ds~routines will be used to study freeze-in production
+for a model where DM does not couple to standard model particles, but only to particles contained in a separate, `dark'
+sector that is thermalized but with a temperature different from that of the photons.
+
+
+%\newpage 
+ \vspace*{0.6cm}
+\noindent
+{\bf Project tasks}\\
+{\scriptsize (dates mark deadlines for the completion of the respective task)}\\[-3ex]
+
+\begin{itemize}
+\item Thorough familiarization with the theoretical framework of how to calculate the DM relic density, both for freeze-out and 
+freeze-in, as part of a special reading course in the curriculum. {\scriptsize \bf [\emph{June 2020}]}
+
+\item Familiarization with programming in FORTRAN, and the structure of \ds. Demonstrate basic usage of {\sf git} 
+(the version control system \ds\ is based on), the makefiles used in \ds, and \ds\ example programs that involve 
+{\it i)} different particle modules and {\it ii)} `replaceable functions'. 
+{\scriptsize \bf [\emph{July 2020}]}
+
+\item Write a first version of subroutines to calculate the relic density, and a main program to test it, focussing on
+the simpler case of assuming Maxwell-Boltzmann statistics for all particles involved. Specifically, test the 
+results obtained in Ref.~\cite{micrOMEGAs5} for a $Z'$ portal. \\{\scriptsize \bf [\emph{September 2020}]}
+
+\item Update the routines to use the full Bose-Einstein statistics and Fermi-Dirac statistics, 
+and compare the results with those reported for the Scalar portal in Ref.~\cite{micrOMEGAs5}. 
+{\scriptsize \bf [\emph{November 2020}]}
+
+
+\item Tidy up and optimize existing code. Prepare a short written report of results obtained so far, including the 
+theoretical tools necessary to obtain them. {\scriptsize \bf [\emph{December 2020}]}
+
+\item Implement dark sector model with changing number of degrees of freedom (and therefore dark sector temperature).
+Compute freeze-in production and discuss differences to models studied so far.
+ {\scriptsize \bf [\emph{February 2021}]}
+
+
+\item Fully focus on thesis writing  {\scriptsize \bf [ \underline{from} \emph{Februrary -- March 2021}]}
+\end{itemize}
+
+
+
+
+% \vspace*{0.3cm}
+%\noindent
+%{\bf Methods}
+% \vspace*{0.1cm}
+
+%The first part  of the project largely consists in literature research and the compilation of a 
+%short written report. The following steps then require mostly analytical calculations, 
+%but likely numerical evaluations of the final results (both to be done with the  {\sf mathematica} package).
+
+ \vspace*{0.5cm}
+{
+%\footnotesize
+%\noindent
+%{\bf References}
+
+\renewcommand\refname{\normalsize \bf References}
+\bibliographystyle{unsrt}
+
+\bibliography{refs.bib}
+
+
+\end{document}
