@@ -28,9 +28,12 @@ def monte_carlo(func, args):
     MCI = V * np.mean(W)          # Uniform so that probability = area_graph / voluma
     return MCI
 
+# Any arbitrary function, just made a choice
 def f(args):
-    x, y, z = args
-    return z*np.sin(y)*np.exp(-x**2)
+    s = 1
+    for n, x in enumerate(args, start=1):
+        s *= np.exp(-1/n*x**2)
+    return s
 
 M = int(1e5)
 config = M*[[f,x]]
