@@ -1,4 +1,6 @@
-      !Write "gfortran -o filename hello_word.f" to run 
+      ! Write "gfortran -o filename hello_word.f" to run 
+
+      ! https://github.uio.no/olews/Introduction-to-Fortran
       
       program helloworld
       implicit none
