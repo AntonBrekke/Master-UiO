@@ -60,7 +60,7 @@ program fibfunctest
   end do
 
   write(*,'(a,f10.8)') 'The golden ratio is connected to this sequence &
-       fib(n+1)/fin(n) : ', real(fib(31),real32) / real(fib(30),real32)
+       fib(n+1)/fib(n) : ', real(fib(31),real32) / real(fib(30),real32)
 
 ! https://en.wikipedia.org/wiki/Golden_ratio
 ! https://www.mathsisfun.com/numbers/golden-ratio.html

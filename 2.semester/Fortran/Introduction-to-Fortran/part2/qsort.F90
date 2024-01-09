@@ -38,6 +38,7 @@ module qsort_functions
       real, dimension(:), intent(in) :: data
       real, dimension(1:size(data))  :: sorted
 
+! called with "gfortran -o -DDEBUG filename qsort.F90" I think, if not play around with placement of -DDEBUG
 #ifdef DEBUG
       write(*,'(ai1a)') "****************************** ",size(data),&
             " ******************************************************"
