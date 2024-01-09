@@ -1,0 +1,421 @@
+{
+    "Cpu ID": "GenuineIntel-6-55-4",
+    "Date & Time": "2023-12-04 16:10:01.149539",
+    "Hostname": "login-2.saga",
+    "Linux Version": "5.14.0",
+    "Lscpu": {
+        "Address sizes": "46 bits physical, 48 bits virtual",
+        "Architecture": "x86_64",
+        "BogoMIPS": "4200.00",
+        "Byte Order": "Little Endian",
+        "CPU family": "6",
+        "CPU op-mode(s)": "32-bit, 64-bit",
+        "CPU(s)": "64",
+        "Core(s) per socket": "16",
+        "Flags": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 cdp_l3 invpcid_single pti intel_ppin ssbd mba ibrs ibpb stibp fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb intel_pt avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts pku ospke md_clear flush_l1d arch_capabilities",
+        "L1d cache": "1 MiB (32 instances)",
+        "L1i cache": "1 MiB (32 instances)",
+        "L2 cache": "32 MiB (32 instances)",
+        "L3 cache": "44 MiB (2 instances)",
+        "Model": "85",
+        "Model name": "Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz",
+        "NUMA node(s)": "2",
+        "NUMA node0 CPU(s)": "0-15,32-47",
+        "NUMA node1 CPU(s)": "16-31,48-63",
+        "On-line CPU(s) list": "0-63",
+        "Socket(s)": "2",
+        "Stepping": "4",
+        "Thread(s) per core": "2",
+        "Vendor ID": "GenuineIntel",
+        "Vulnerability Itlb multihit": "KVM: Mitigation: VMX unsupported",
+        "Vulnerability L1tf": "Mitigation; PTE Inversion",
+        "Vulnerability Mds": "Mitigation; Clear CPU buffers; SMT vulnerable",
+        "Vulnerability Meltdown": "Mitigation; PTI",
+        "Vulnerability Mmio stale data": "Mitigation; Clear CPU buffers; SMT vulnerable",
+        "Vulnerability Retbleed": "Mitigation; IBRS",
+        "Vulnerability Spec store bypass": "Mitigation; Speculative Store Bypass disabled via prctl",
+        "Vulnerability Spectre v1": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization",
+        "Vulnerability Spectre v2": "Mitigation; IBRS, IBPB conditional, RSB filling, PBRSB-eIBRS Not affected",
+        "Vulnerability Srbds": "Not affected",
+        "Vulnerability Tsx async abort": "Mitigation; Clear CPU buffers; SMT vulnerable"
+    },
+    "PerfEvents": [
+        {
+            "BriefDescription": "Total cycles, beware CPU frequency scaling",
+            "Category": "Generalized hardware",
+            "EventCode": "0x0",
+            "EventName": "cpu-cycles",
+            "PerfEventName": "PERF_COUNT_HW_CPU_CYCLES",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "Total cycles. Be wary of what happens during CPU frequency scaling."
+        },
+        {
+            "BriefDescription": "Retired instructions, beware hardware interrupt counts.",
+            "Category": "Generalized hardware",
+            "EventCode": "0x1",
+            "EventName": "instructions",
+            "PerfEventName": "PERF_COUNT_HW_INSTRUCTIONS",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "Retired instructions. Be careful, these can be affected by various issues, most notably hardware interrupt counts."
+        },
+        {
+            "BriefDescription": "Cache accesses, usually last level",
+            "Category": "Generalized hardware",
+            "EventCode": "0x2",
+            "EventName": "cache-references",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_REFERENCES",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "Cache accesses. Usually this indicates Last Level Cache accesses but this may vary depending on your CPU.  This may include prefetches and coherency messages; again this depends on the design of your CPU."
+        },
+        {
+            "BriefDescription": "Cache misses, usually last level",
+            "Category": "Generalized hardware",
+            "EventCode": "0x3",
+            "EventName": "cache-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_MISSES",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "Cache misses. Usually this indicates Last Level Cache misses; this is intended to be used in conjunction with the PERF_COUNT_HW_CACHE_REFERENCES event to calculate cache miss rates."
+        },
+        {
+            "BriefDescription": "Retired branch instructions",
+            "Category": "Generalized hardware",
+            "EventCode": "0x4",
+            "EventName": "branch-instructions",
+            "PerfEventName": "PERF_COUNT_HW_BRANCH_INSTRUCTIONS",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "Retired branch instructions. Prior to Linux 2.6.35, this used the wrong event on AMD processors."
+        },
+        {
+            "BriefDescription": "Mispredicted branch instructions",
+            "Category": "Generalized hardware",
+            "EventCode": "0x5",
+            "EventName": "branch-misses",
+            "PerfEventName": "PERF_COUNT_HW_BRANCH_MISSES",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "Mispredicted branch instructions."
+        },
+        {
+            "BriefDescription": "Bus cycles",
+            "Category": "Generalized hardware",
+            "EventCode": "0x6",
+            "EventName": "bus-cycles",
+            "PerfEventName": "PERF_COUNT_HW_BUS_CYCLES",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "Bus cycles, which can be different from total cycles."
+        },
+        {
+            "BriefDescription": "Total cycles, not affected by CPU frequency scaling",
+            "Category": "Generalized hardware",
+            "EventCode": "0x9",
+            "EventName": "ref-cycles",
+            "PerfEventName": "PERF_COUNT_HW_REF_CPU_CYCLES",
+            "PerfEventType": "0x0",
+            "PerfEventTypeName": "PERF_TYPE_HARDWARE",
+            "PublicDescription": "{since Linux 3.3} Total cycles; not affected by CPU frequency scaling."
+        },
+        {
+            "BriefDescription": "High-resolution per-CPU timer",
+            "Category": "Software",
+            "EventCode": "0x0",
+            "EventName": "cpu-clock",
+            "PerfEventName": "PERF_COUNT_SW_CPU_CLOCK",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "This reports the CPU clock, a high-resolution per-CPU timer."
+        },
+        {
+            "BriefDescription": "Task-specific clock count",
+            "Category": "Software",
+            "EventCode": "0x1",
+            "EventName": "task-clock",
+            "PerfEventName": "PERF_COUNT_SW_TASK_CLOCK",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "This reports a clock count specific to the task that is running."
+        },
+        {
+            "BriefDescription": "Page faults",
+            "Category": "Software",
+            "EventCode": "0x2",
+            "EventName": "page-faults",
+            "PerfEventName": "PERF_COUNT_SW_PAGE_FAULTS",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "This reports the number of page faults."
+        },
+        {
+            "BriefDescription": "Context switches",
+            "Category": "Software",
+            "EventCode": "0x3",
+            "EventName": "context-switches",
+            "PerfEventName": "PERF_COUNT_SW_CONTEXT_SWITCHES",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "This counts context switches.  Until Linux 2.6.34, these were all reported as user-space events, after that they are reported as happening in the kernel."
+        },
+        {
+            "BriefDescription": "Process migrations to a new CPU",
+            "Category": "Software",
+            "EventCode": "0x4",
+            "EventName": "cpu-migrations",
+            "PerfEventName": "PERF_COUNT_SW_CPU_MIGRATIONS",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "This reports the number of times the process has migrated to a new CPU."
+        },
+        {
+            "BriefDescription": "Minor page faults, not requiring disk I/O",
+            "Category": "Software",
+            "EventCode": "0x5",
+            "EventName": "minor-faults",
+            "PerfEventName": "PERF_COUNT_SW_PAGE_FAULTS_MIN",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "This counts the number of minor page faults. These did not require disk I/O to handle."
+        },
+        {
+            "BriefDescription": "Major page faults, required disk I/O",
+            "Category": "Software",
+            "EventCode": "0x6",
+            "EventName": "major-faults",
+            "PerfEventName": "PERF_COUNT_SW_PAGE_FAULTS_MAJ",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "This counts the number of major page faults. These required disk I/O to handle."
+        },
+        {
+            "BriefDescription": "Alignment faults (unaligned memory accesses)",
+            "Category": "Software",
+            "EventCode": "0x7",
+            "EventName": "alignment-faults",
+            "PerfEventName": "PERF_COUNT_SW_ALIGNMENT_FAULTS",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "{since Linux 2.6.33} This counts the number of alignment faults. These happen when unaligned memory accesses happen; the kernel can handle these but it reduces performance. This happens only on some architectures {never on x86}."
+        },
+        {
+            "BriefDescription": "Emulation faults (unimplemented instructions emulated in user space",
+            "Category": "Software",
+            "EventCode": "0x8",
+            "EventName": "emulation-faults",
+            "PerfEventName": "PERF_COUNT_SW_EMULATION_FAULTS",
+            "PerfEventType": "0x1",
+            "PerfEventTypeName": "PERF_TYPE_SOFTWARE",
+            "PublicDescription": "{since Linux 2.6.33} This counts the number of emulation faults.  The kernel sometimes traps on unimplemented instructions and emulates them for user space.  This can negatively impact performance."
+        },
+        {
+            "BriefDescription": "L1 data cache access, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x0",
+            "EventName": "L1-dcache-loads",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_L1D:READ:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Level 1 Data Cache read accesses"
+        },
+        {
+            "BriefDescription": "Last-Level cache access, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x2",
+            "EventName": "LLC-loads",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_LL:READ:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Last-Level Cache read accesses"
+        },
+        {
+            "BriefDescription": "Data TLB access, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x3",
+            "EventName": "dTLB-loads",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_DTLB:READ:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Data TLB read accesses"
+        },
+        {
+            "BriefDescription": "Instruction TLB access, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x4",
+            "EventName": "iTLB-loads",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_ITLB:READ:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Instruction TLB read accesses"
+        },
+        {
+            "BriefDescription": "Branch prediction unit access, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x5",
+            "EventName": "branch-loads",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_BPU:READ:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Branch prediction unit read accesses"
+        },
+        {
+            "BriefDescription": "Local memory access, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x6",
+            "EventName": "node-loads",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_NODE:READ:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "{since Linux 3.1} Local memory read accesses"
+        },
+        {
+            "BriefDescription": "L1 data cache access, write",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x100",
+            "EventName": "L1-dcache-stores",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_L1D:WRITE:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Level 1 Data Cache write accesses"
+        },
+        {
+            "BriefDescription": "Last-Level cache access, write",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x102",
+            "EventName": "LLC-stores",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_LL:WRITE:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Last-Level Cache write accesses"
+        },
+        {
+            "BriefDescription": "Data TLB access, write",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x103",
+            "EventName": "dTLB-stores",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_DTLB:WRITE:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Data TLB write accesses"
+        },
+        {
+            "BriefDescription": "Local memory access, write",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x106",
+            "EventName": "node-stores",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_NODE:WRITE:ACCESS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "{since Linux 3.1} Local memory write accesses"
+        },
+        {
+            "BriefDescription": "L1 data cache miss, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10000",
+            "EventName": "L1-dcache-load-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_L1D:READ:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Level 1 Data Cache read misses"
+        },
+        {
+            "BriefDescription": "L1 instruction cache miss, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10001",
+            "EventName": "L1-icache-load-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_L1I:READ:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Level 1 Instruction Cache read misses"
+        },
+        {
+            "BriefDescription": "Last-Level cache miss, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10002",
+            "EventName": "LLC-load-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_LL:READ:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Last-Level Cache read misses"
+        },
+        {
+            "BriefDescription": "Data TLB miss, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10003",
+            "EventName": "dTLB-load-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_DTLB:READ:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Data TLB read misses"
+        },
+        {
+            "BriefDescription": "Instruction TLB miss, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10004",
+            "EventName": "iTLB-load-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_ITLB:READ:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Instruction TLB read misses"
+        },
+        {
+            "BriefDescription": "Branch prediction unit miss, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10005",
+            "EventName": "branch-load-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_BPU:READ:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Branch prediction unit read misses"
+        },
+        {
+            "BriefDescription": "Local memory miss, read",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10006",
+            "EventName": "node-load-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_NODE:READ:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "{since Linux 3.1} Local memory read misses"
+        },
+        {
+            "BriefDescription": "Last-Level cache miss, write",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10102",
+            "EventName": "LLC-store-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_LL:WRITE:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Last-Level Cache write misses"
+        },
+        {
+            "BriefDescription": "Data TLB miss, write",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10103",
+            "EventName": "dTLB-store-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_DTLB:WRITE:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "Data TLB write misses"
+        },
+        {
+            "BriefDescription": "Local memory miss, write",
+            "Category": "Generalized hardware cache",
+            "EventCode": "0x10106",
+            "EventName": "node-store-misses",
+            "PerfEventName": "PERF_COUNT_HW_CACHE_NODE:WRITE:MISS",
+            "PerfEventType": "0x3",
+            "PerfEventTypeName": "PERF_TYPE_HW_CACHE",
+            "PublicDescription": "{since Linux 3.1} Local memory write misses"
+        }
+    ],
+    "Uname": {
+        "machine": "x86_64",
+        "nodename": "login-2",
+        "release": "5.14.0-162.23.1.el9_1.x86_64",
+        "sysname": "Linux",
+        "version": "#1 SMP PREEMPT_DYNAMIC Tue Apr 11 19:09:37 UTC 2023"
+    }
+}

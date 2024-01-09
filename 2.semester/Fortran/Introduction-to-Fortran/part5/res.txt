@@ -1,0 +1,20 @@
+11.716:	-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-mem-layout-trans=3 -fomit-frame-pointer 
+12.043:	-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-mem-layout-trans=3 -fomit-frame-pointer 
+12.073:	-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 
+12.098:	-Ofast -xCORE-AVX512 -fomit-frame-pointer 
+12.101:	-Ofast -march=skylake-avx512 
+12.101:	-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-mem-layout-trans=3 -fomit-frame-pointer 
+12.131:	-fast -fomit-frame-pointer 
+12.133:	-fast -fomit-frame-pointer 
+12.138:	-Ofast -march=skylake-avx512 
+12.140:	-Ofast -xCORE-AVX512 
+12.143:	-fast -march=skylake-avx512 
+12.144:	-Ofast -xCORE-AVX512 -qopt-zmm-usage=low 
+12.145:	-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-mem-layout-trans=3 -fomit-frame-pointer 
+12.171:	-Ofast -march=skylake-avx512 
+12.174:	-Ofast -march=skylake-avx512 -fomit-frame-pointer 
+12.190:	-Ofast -xCORE-AVX512 -qopt-zmm-usage=low 
+12.191:	-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -fomit-frame-pointer 
+12.192:	-fast -march=skylake-avx512 -qopt-prefetch=2 -fomit-frame-pointer 
+12.232:	-Ofast -xCORE-AVX512 
+12.255:	-Ofast -march=skylake-avx512 

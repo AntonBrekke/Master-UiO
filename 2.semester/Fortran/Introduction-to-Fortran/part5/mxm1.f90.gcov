@@ -1,0 +1,60 @@
+        -:    0:Source:mxm1.f90
+        -:    0:Graph:./mxm1.x-mxm1.gcno
+        -:    0:Data:./mxm1.x-mxm1.gcda
+        -:    0:Runs:1
+        -:    1:!
+        -:    2:! «Introduction to Fortran»
+        -:    3:! NRIS (Norwegian Research Infrastructure Service), https://www.sigma2.no/nris
+        -:    4:! 
+        -:    5:! Ole W. Saastad, University of Oslo  & NRIS
+        -:    6:! 
+        -:    7:!
+        -:    8:! Ole W. Saastad, UiO.
+        -:    9:! September 2023
+        -:   10:!
+        -:   11:!
+        -:   12:!  module load  GCC/12.2.0 to get 2008 standard
+        -:   13:!
+        -:   14:! The 12.2.0 GNU Fortran implements the Fortran 77, 90 and 95 standards completely, 
+        -:   15:! most of the Fortran 2003 and 2008 standards, and some features from the 2018 standard. 
+        -:   16:!
+        -:   17:!
+        -:   18:
+        1:   19:program mxm
+        1:   20:  use timings
+        -:   21:  implicit none
+        1:   22:  real(real64), allocatable, dimension(:,:)  :: a,b
+        -:   23:  real(real64), allocatable, dimension(:,:)  :: c
+        -:   24:  integer(int32) :: i,j,l,n
+        -:   25:  character(len=5) :: arg
+        -:   26:
+        -:   27:  
+        1:   28:  if (command_argument_count() < 1) then
+    #####:   29:     print *,'Usage : ./a.out SIZE'
+    #####:   30:     call exit(2)
+        -:   31:  end if
+        1:   32:  call get_command_argument(1, arg)
+        1:   33:  read(arg,*) n
+        -:   34:
+       6*:   35:  allocate(a(n,n),b(n,n))
+   16.0M*:   36:  allocate(c(n,n),source=0.0_real64)
+        -:   37:  
+        1:   38:  call random_number(a)
+        1:   39:  call random_number(b)
+        -:   40:
+        -:   41:
+        1:   42:  call start_timer
+     4.0k:   43:  do j = 1,n
+    16.0M:   44:     do l = 1,n
+    64.0G:   45:        do i = 1,n
+    64.0G:   46:           c(i,j) = c(i,j) + a(i,l)*b(l,j)
+        -:   47:        enddo
+        -:   48:     enddo
+        -:   49:  enddo
+        1:   50:  call stop_timer
+        1:   51:  call showresults(n)
+        -:   52:
+    16.0M:   53:  write(*,'(a,2(es10.2,2x ))') 'Done c(1,1), sum(c)', c(1,1), sum(c)
+       1*:   54:  deallocate(a,b,c)
+        1:   55:end program mxm
+        -:   56:

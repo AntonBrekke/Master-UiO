@@ -1,0 +1,2 @@
+module load Arm-Forge/22.1.3
+perf-report  a.out

@@ -1,0 +1,1 @@
+salloc --x11 -A nn9970k --reservation=nn9970k_course --partition=accel -t 06:00:00 --mem-per-cpu=2G --ntasks=1 --cpus-per-task=1

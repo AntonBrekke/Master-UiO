@@ -1,0 +1,35 @@
+-O2  Total footprint a,b & c   366 MiB, Walltime   81.069 seconds,    0.789 Gflops/s 
+-O3  Total footprint a,b & c   366 MiB, Walltime   14.537 seconds,    4.403 Gflops/s 
+-Ofast  Total footprint a,b & c   366 MiB, Walltime   14.511 seconds,    4.410 Gflops/s 
+-fast  Total footprint a,b & c   366 MiB, Walltime    6.348 seconds,   10.081 Gflops/s 
+-fast -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.348 seconds,   10.082 Gflops/s 
+-Ofast -falign-loops  Total footprint a,b & c   366 MiB, Walltime   14.509 seconds,    4.411 Gflops/s 
+-Ofast -qopt-mem-layout-trans=4  Total footprint a,b & c   366 MiB, Walltime   14.509 seconds,    4.411 Gflops/s 
+-Ofast -qopt-prefetch=2  Total footprint a,b & c   366 MiB, Walltime   14.544 seconds,    4.400 Gflops/s 
+-Ofast -qopt-prefetch=5  Total footprint a,b & c   366 MiB, Walltime   14.542 seconds,    4.401 Gflops/s 
+-Ofast -unroll  Total footprint a,b & c   366 MiB, Walltime   14.508 seconds,    4.411 Gflops/s 
+-Ofast -unroll-aggressive  Total footprint a,b & c   366 MiB, Walltime   14.540 seconds,    4.402 Gflops/s 
+-Ofast -msse4.2  Total footprint a,b & c   366 MiB, Walltime   14.715 seconds,    4.349 Gflops/s 
+-Ofast -march=core-avx2  Total footprint a,b & c   366 MiB, Walltime   10.491 seconds,    6.100 Gflops/s 
+-Ofast -mtune=skylake  Total footprint a,b & c   366 MiB, Walltime   14.533 seconds,    4.404 Gflops/s 
+-Ofast -march=skylake  Total footprint a,b & c   366 MiB, Walltime   10.213 seconds,    6.267 Gflops/s 
+-Ofast -march=skylake-avx512  Total footprint a,b & c   366 MiB, Walltime    6.309 seconds,   10.144 Gflops/s 
+-Ofast -march=skylake-avx512 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.312 seconds,   10.139 Gflops/s 
+-Ofast -xCORE-AVX2  Total footprint a,b & c   366 MiB, Walltime   10.193 seconds,    6.279 Gflops/s 
+-Ofast -xCORE-AVX512  Total footprint a,b & c   366 MiB, Walltime    6.351 seconds,   10.077 Gflops/s 
+-Ofast -xCORE-AVX512 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.364 seconds,   10.057 Gflops/s 
+-Ofast -xCOMMON-AVX512  Total footprint a,b & c   366 MiB, Walltime    7.739 seconds,    8.270 Gflops/s 
+-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512  Total footprint a,b & c   366 MiB, Walltime    6.350 seconds,   10.078 Gflops/s 
+-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.369 seconds,   10.048 Gflops/s 
+-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-prefetch=2 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    7.796 seconds,    8.209 Gflops/s 
+-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-prefetch=5 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime   10.204 seconds,    6.272 Gflops/s 
+-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-mem-layout-trans=3 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.305 seconds,   10.151 Gflops/s 
+-Ofast -xCORE-AVX512 -falign-loops -mtune=skylake-avx512 -qopt-prefetch=5 -qopt-mem-layout-trans=3 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime   10.143 seconds,    6.310 Gflops/s 
+-Ofast -xCORE-AVX512 -qopt-zmm-usage=high  Total footprint a,b & c   366 MiB, Walltime    7.046 seconds,    9.083 Gflops/s 
+-Ofast -xCORE-AVX512 -qopt-zmm-usage=low  Total footprint a,b & c   366 MiB, Walltime    6.350 seconds,   10.078 Gflops/s 
+-fast -march=skylake-avx512  Total footprint a,b & c   366 MiB, Walltime    6.338 seconds,   10.098 Gflops/s 
+-fast -march=skylake-avx512 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.354 seconds,   10.072 Gflops/s 
+-fast -march=skylake-avx512 -qopt-prefetch=2 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.337 seconds,   10.099 Gflops/s 
+-fast -march=skylake-avx512 -qopt-prefetch=5 -qopt-mem-layout-trans=3 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.351 seconds,   10.078 Gflops/s 
+-fast -march=skylake-avx512 -qopt-prefetch=2 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.343 seconds,   10.091 Gflops/s 
+-fast -march=skylake-avx512 -fomit-frame-pointer  Total footprint a,b & c   366 MiB, Walltime    6.339 seconds,   10.096 Gflops/s 

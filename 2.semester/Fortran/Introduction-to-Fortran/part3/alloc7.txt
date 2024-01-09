@@ -1,0 +1,40 @@
+Comments to alloc7.F90
+
+To use the C/Fortran preprocessor the suffix part of filename must be with capital F.
+Here we use the preprocessor to compile code with either a static of dynamic declaration
+of the vector x. In addition the size of the vector is also set at compile tile using
+the -DN=100000 or some other suitable length.
+
+Compile : gfortran -Dstatic -DN=200000000  alloc6.F90  - static declation of vector x with a 
+                                                         size of 200000000.
+          gfortran  -DN=200000000  alloc6.F90          - dynamic allocation of vector x.
+
+To check the difference and see the different segment sizes :
+
+Static :
+size  ./a.out
+   text    data     bss             dec            hex          filename
+   2987     684 1600000032      1600003703      5f5e1e77        ./a.out
+
+Dynamic :
+size  ./a.out
+   text    data     bss     dec     hex filename
+   4056     724       4    4784    12b0 ./a.out
+
+
+Using valgrind on dynamic:
+valgrind ./a.out
+
+==2356036== HEAP SUMMARY:
+==2356036==     in use at exit: 40 bytes in 1 blocks
+==2356036==   total heap usage: 29 allocs, 28 frees, 1,600,026,174 bytes allocated
+
+
+Valgrind fails with too big segments:
+valgrind: mmap(0x405000, 1600000000) failed in UME with error 22 (Invalid argument).
+valgrind: this can be caused by executables with very large text, data or bss segments.
+
+
+Valgrind does not work on Saga and Betzy, there are some build issues. It works on Fram.
+This application can help debugging mamory issues and can be found on some systems,
+while old it still provide nice help.

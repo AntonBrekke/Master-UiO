@@ -1,0 +1,574 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.9.0 Build 20230302_000000
+
+Compiler options: -Ofast -march=skylake-avx512 -fomit-frame-pointer -qopt-report=5 -o mxm1.x
+
+    Report from: Interprocedural optimizations [ipo]
+
+  WHOLE PROGRAM (SAFE) [EITHER METHOD]: false
+  WHOLE PROGRAM (SEEN) [TABLE METHOD]: false
+  WHOLE PROGRAM (READ) [OBJECT READER METHOD]: false
+
+INLINING OPTION VALUES:
+  -inline-factor: 100
+  -inline-min-size: 30
+  -inline-max-size: 230
+  -inline-max-total-size: 2000
+  -inline-max-per-routine: 10000
+  -inline-max-per-compile: 500000
+
+In the inlining report below:
+   "sz" refers to the "size" of the routine. The smaller a routine's size,
+      the more likely it is to be inlined.
+   "isz" refers to the "inlined size" of the routine. This is the amount
+      the calling routine will grow if the called routine is inlined into it.
+      The compiler generally limits the amount a routine can grow by having
+      routines inlined into it.
+
+Begin optimization report for: MXM
+
+    Report from: Interprocedural optimizations [ipo]
+
+INLINE REPORT: (MXM) [1/1=100.0%] mxm1.f90(19,9)
+  -> EXTERN: (19,9) for_set_reentrancy
+  -> EXTERN: (28,7) for_iargc
+  -> EXTERN: (29,6) for_write_seq_lis
+  -> EXTERN: (30,11) for_exit
+  -> EXTERN: (32,8) for_getcmd_arg_err
+  -> EXTERN: (33,3) for_read_int_lis
+  -> EXTERN: (35,3) for_alloc_allocatable
+  -> EXTERN: (35,3) for_check_mult_overflow64
+  -> EXTERN: (35,3) for_alloc_allocatable
+  -> EXTERN: (35,3) for_check_mult_overflow64
+  -> EXTERN: (36,3) for_alloc_allocatable
+  -> EXTERN: (36,3) for_check_mult_overflow64
+  -> EXTERN: (38,8) for_random_number
+  -> EXTERN: (39,8) for_random_number
+  -> EXTERN: (42,8) START_TIMER
+  -> EXTERN: (50,8) STOP_TIMER
+  -> EXTERN: (51,8) SHOWRESULTS
+  -> EXTERN: (53,3) for_write_seq_fmt_xmit
+  -> EXTERN: (53,3) for_write_seq_fmt_xmit
+  -> EXTERN: (53,3) for_write_seq_fmt
+  -> EXTERN: (54,3) for_dealloc_allocatable
+  -> EXTERN: (54,3) for_dealloc_allocatable
+  -> EXTERN: (54,3) for_dealloc_allocatable
+
+
+    Report from: Loop nest, Vector & Auto-parallelization optimizations [loop, vec, par]
+
+
+LOOP BEGIN at mxm1.f90(36,12)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at mxm1.f90(36,12)
+      remark #25408: memset generated
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at mxm1.f90(36,12)
+         remark #15389: vectorization support: reference C(:,:) has unaligned access
+         remark #15381: vectorization support: unaligned access used inside loop body
+         remark #15305: vectorization support: vector length 4
+         remark #15399: vectorization support: unroll factor set to 2
+         remark #15309: vectorization support: normalized vectorization overhead 0.300
+         remark #15300: LOOP WAS VECTORIZED
+         remark #26013: Compiler has chosen to target XMM/YMM vector. Try using -qopt-zmm-usage=high to override
+         remark #15451: unmasked unaligned unit stride stores: 1 
+         remark #15475: --- begin vector cost summary ---
+         remark #15476: scalar cost: 3 
+         remark #15477: vector cost: 1.250 
+         remark #15478: estimated potential speedup: 1.440 
+         remark #15488: --- end vector cost summary ---
+         remark #25015: Estimate of max trip count of loop=1
+      LOOP END
+
+      LOOP BEGIN at mxm1.f90(36,12)
+      <Remainder loop for vectorization>
+         remark #25015: Estimate of max trip count of loop=12
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at mxm1.f90(38,8)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at mxm1.f90(38,8)
+   <Peeled loop for vectorization>
+      remark #15389: vectorization support: reference A(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.182
+      remark #15301: PEEL LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 103 
+      remark #15477: vector cost: 19.000 
+      remark #15478: estimated potential speedup: 5.200 
+      remark #15482: vectorized math library calls: 1 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at mxm1.f90(38,8)
+      remark #15389: vectorization support: reference A(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.145
+      remark #15300: LOOP WAS VECTORIZED
+      remark #26013: Compiler has chosen to target XMM/YMM vector. Try using -qopt-zmm-usage=high to override
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 103 
+      remark #15477: vector cost: 19.000 
+      remark #15478: estimated potential speedup: 5.200 
+      remark #15482: vectorized math library calls: 1 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at mxm1.f90(38,8)
+   <Remainder loop for vectorization>
+      remark #15389: vectorization support: reference A(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.182
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 103 
+      remark #15477: vector cost: 19.000 
+      remark #15478: estimated potential speedup: 5.200 
+      remark #15482: vectorized math library calls: 1 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+LOOP END
+
+LOOP BEGIN at mxm1.f90(39,8)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at mxm1.f90(39,8)
+   <Peeled loop for vectorization>
+      remark #15389: vectorization support: reference B(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.182
+      remark #15301: PEEL LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 103 
+      remark #15477: vector cost: 19.000 
+      remark #15478: estimated potential speedup: 5.200 
+      remark #15482: vectorized math library calls: 1 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at mxm1.f90(39,8)
+      remark #15389: vectorization support: reference B(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.145
+      remark #15300: LOOP WAS VECTORIZED
+      remark #26013: Compiler has chosen to target XMM/YMM vector. Try using -qopt-zmm-usage=high to override
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 103 
+      remark #15477: vector cost: 19.000 
+      remark #15478: estimated potential speedup: 5.200 
+      remark #15482: vectorized math library calls: 1 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at mxm1.f90(39,8)
+   <Remainder loop for vectorization>
+      remark #15389: vectorization support: reference B(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.182
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 103 
+      remark #15477: vector cost: 19.000 
+      remark #15478: estimated potential speedup: 5.200 
+      remark #15482: vectorized math library calls: 1 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+LOOP END
+
+LOOP BEGIN at mxm1.f90(43,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at mxm1.f90(43,3)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at mxm1.f90(43,3)
+         remark #15542: loop was not vectorized: inner loop was already vectorized
+
+         LOOP BEGIN at mxm1.f90(43,3)
+            remark #25442: blocked by 125   (pre-vector) 
+            remark #25440: unrolled and jammed by 4   (pre-vector) 
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+            remark #25015: Estimate of max trip count of loop=125
+
+            LOOP BEGIN at mxm1.f90(44,6)
+               remark #25442: blocked by 125   (pre-vector) 
+               remark #25440: unrolled and jammed by 4   (pre-vector) 
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+               remark #25015: Estimate of max trip count of loop=125
+
+               LOOP BEGIN at mxm1.f90(45,9)
+                  remark #25442: blocked by 128   (pre-vector) 
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15381: vectorization support: unaligned access used inside loop body
+                  remark #15305: vectorization support: vector length 4
+                  remark #15309: vectorization support: normalized vectorization overhead 0.579
+                  remark #15300: LOOP WAS VECTORIZED
+                  remark #26013: Compiler has chosen to target XMM/YMM vector. Try using -qopt-zmm-usage=high to override
+                  remark #15450: unmasked unaligned unit stride loads: 8 
+                  remark #15451: unmasked unaligned unit stride stores: 16 
+                  remark #15475: --- begin vector cost summary ---
+                  remark #15476: scalar cost: 133 
+                  remark #15477: vector cost: 38.000 
+                  remark #15478: estimated potential speedup: 3.430 
+                  remark #15488: --- end vector cost summary ---
+                  remark #25456: Number of Array Refs Scalar Replaced In Loop: 36
+                  remark #25015: Estimate of max trip count of loop=32
+               LOOP END
+
+               LOOP BEGIN at mxm1.f90(45,9)
+               <Remainder loop for vectorization>
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15381: vectorization support: unaligned access used inside loop body
+                  remark #15335: remainder loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+                  remark #15305: vectorization support: vector length 2
+                  remark #15309: vectorization support: normalized vectorization overhead 0.180
+                  remark #15448: unmasked aligned unit stride loads: 1 
+                  remark #15449: unmasked aligned unit stride stores: 1 
+                  remark #15450: unmasked unaligned unit stride loads: 1 
+                  remark #15475: --- begin vector cost summary ---
+                  remark #15476: scalar cost: 8 
+                  remark #15477: vector cost: 2.000 
+                  remark #15478: estimated potential speedup: 3.480 
+                  remark #15488: --- end vector cost summary ---
+                  remark #25456: Number of Array Refs Scalar Replaced In Loop: 36
+                  remark #25015: Estimate of max trip count of loop=128
+               LOOP END
+            LOOP END
+
+            LOOP BEGIN at mxm1.f90(44,6)
+            <Remainder>
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+               remark #25015: Estimate of max trip count of loop=125
+
+               LOOP BEGIN at mxm1.f90(45,9)
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15381: vectorization support: unaligned access used inside loop body
+                  remark #15305: vectorization support: vector length 4
+                  remark #15309: vectorization support: normalized vectorization overhead 0.756
+                  remark #15300: LOOP WAS VECTORIZED
+                  remark #26013: Compiler has chosen to target XMM/YMM vector. Try using -qopt-zmm-usage=high to override
+                  remark #15450: unmasked unaligned unit stride loads: 5 
+                  remark #15451: unmasked unaligned unit stride stores: 4 
+                  remark #15475: --- begin vector cost summary ---
+                  remark #15476: scalar cost: 33 
+                  remark #15477: vector cost: 10.250 
+                  remark #15478: estimated potential speedup: 3.140 
+                  remark #15488: --- end vector cost summary ---
+                  remark #25456: Number of Array Refs Scalar Replaced In Loop: 3
+                  remark #25015: Estimate of max trip count of loop=32
+               LOOP END
+
+               LOOP BEGIN at mxm1.f90(45,9)
+               <Remainder loop for vectorization>
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15381: vectorization support: unaligned access used inside loop body
+                  remark #15335: remainder loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+                  remark #15305: vectorization support: vector length 2
+                  remark #15309: vectorization support: normalized vectorization overhead 0.630
+                  remark #15448: unmasked aligned unit stride loads: 1 
+                  remark #15449: unmasked aligned unit stride stores: 1 
+                  remark #15450: unmasked unaligned unit stride loads: 1 
+                  remark #15475: --- begin vector cost summary ---
+                  remark #15476: scalar cost: 8 
+                  remark #15477: vector cost: 2.000 
+                  remark #15478: estimated potential speedup: 3.480 
+                  remark #15488: --- end vector cost summary ---
+                  remark #25456: Number of Array Refs Scalar Replaced In Loop: 3
+                  remark #25015: Estimate of max trip count of loop=128
+               LOOP END
+            LOOP END
+         LOOP END
+
+         LOOP BEGIN at mxm1.f90(43,3)
+         <Remainder>
+            remark #15542: loop was not vectorized: inner loop was already vectorized
+            remark #25015: Estimate of max trip count of loop=125
+
+            LOOP BEGIN at mxm1.f90(44,6)
+               remark #15542: loop was not vectorized: inner loop was already vectorized
+               remark #25015: Estimate of max trip count of loop=125
+
+               LOOP BEGIN at mxm1.f90(45,9)
+               <Peeled loop for vectorization>
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15381: vectorization support: unaligned access used inside loop body
+                  remark #15335: peel loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+                  remark #15305: vectorization support: vector length 2
+                  remark #15309: vectorization support: normalized vectorization overhead 0.328
+                  remark #15448: unmasked aligned unit stride loads: 1 
+                  remark #15449: unmasked aligned unit stride stores: 1 
+                  remark #15450: unmasked unaligned unit stride loads: 1 
+                  remark #15475: --- begin vector cost summary ---
+                  remark #15476: scalar cost: 8 
+                  remark #15477: vector cost: 2.000 
+                  remark #15478: estimated potential speedup: 3.480 
+                  remark #15488: --- end vector cost summary ---
+                  remark #25015: Estimate of max trip count of loop=3
+               LOOP END
+
+               LOOP BEGIN at mxm1.f90(45,9)
+                  remark #15388: vectorization support: reference C(i,j) has aligned access   [ mxm1.f90(46,12) ]
+                  remark #15388: vectorization support: reference C(i,j) has aligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15381: vectorization support: unaligned access used inside loop body
+                  remark #15305: vectorization support: vector length 4
+                  remark #15309: vectorization support: normalized vectorization overhead 1.750
+                  remark #15300: LOOP WAS VECTORIZED
+                  remark #26013: Compiler has chosen to target XMM/YMM vector. Try using -qopt-zmm-usage=high to override
+                  remark #15448: unmasked aligned unit stride loads: 1 
+                  remark #15449: unmasked aligned unit stride stores: 1 
+                  remark #15450: unmasked unaligned unit stride loads: 1 
+                  remark #15475: --- begin vector cost summary ---
+                  remark #15476: scalar cost: 8 
+                  remark #15477: vector cost: 2.000 
+                  remark #15478: estimated potential speedup: 3.480 
+                  remark #15488: --- end vector cost summary ---
+                  remark #25015: Estimate of max trip count of loop=32
+               LOOP END
+
+               LOOP BEGIN at mxm1.f90(45,9)
+               <Remainder loop for vectorization>
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,12) ]
+                  remark #15389: vectorization support: reference C(i,j) has unaligned access   [ mxm1.f90(46,21) ]
+                  remark #15389: vectorization support: reference A(i,l) has unaligned access   [ mxm1.f90(46,30) ]
+                  remark #15381: vectorization support: unaligned access used inside loop body
+                  remark #15335: remainder loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+                  remark #15305: vectorization support: vector length 2
+                  remark #15309: vectorization support: normalized vectorization overhead 0.875
+                  remark #15448: unmasked aligned unit stride loads: 1 
+                  remark #15449: unmasked aligned unit stride stores: 1 
+                  remark #15450: unmasked unaligned unit stride loads: 1 
+                  remark #15475: --- begin vector cost summary ---
+                  remark #15476: scalar cost: 8 
+                  remark #15477: vector cost: 2.000 
+                  remark #15478: estimated potential speedup: 3.480 
+                  remark #15488: --- end vector cost summary ---
+                  remark #25015: Estimate of max trip count of loop=128
+               LOOP END
+            LOOP END
+         LOOP END
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at mxm1.f90(53,63)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at mxm1.f90(53,63)
+   <Peeled loop for vectorization>
+      remark #25015: Estimate of max trip count of loop=3
+   LOOP END
+
+   LOOP BEGIN at mxm1.f90(53,63)
+      remark #15389: vectorization support: reference C(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.500
+      remark #15355: vectorization support: at (53:63) is double type reduction
+      remark #15300: LOOP WAS VECTORIZED
+      remark #26013: Compiler has chosen to target XMM/YMM vector. Try using -qopt-zmm-usage=high to override
+      remark #15442: entire loop may be executed in remainder
+      remark #15450: unmasked unaligned unit stride loads: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 5 
+      remark #15477: vector cost: 1.250 
+      remark #15478: estimated potential speedup: 3.480 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at mxm1.f90(53,63)
+   <Remainder loop for vectorization>
+      remark #15389: vectorization support: reference C(:,:) has unaligned access
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 4
+      remark #15309: vectorization support: normalized vectorization overhead 2.167
+      remark #15355: vectorization support: at (53:63) is double type reduction
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15450: unmasked unaligned unit stride loads: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 5 
+      remark #15477: vector cost: 1.250 
+      remark #15478: estimated potential speedup: 3.480 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at mxm1.f90(53,63)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+
+    Report from: Code generation optimizations [cg]
+
+mxm1.f90(36,12):remark #34014: optimization advice for memset: increase the destination's alignment to 16 (and use __assume_aligned) to speed up library implementation
+mxm1.f90(36,12):remark #34026: call to memset implemented as a call to optimized library version
+mxm1.f90(19,9):remark #34051: REGISTER ALLOCATION : [MAIN__] mxm1.f90:19
+
+    Hardware registers
+        Reserved     :    2[ rsp rip]
+        Available    :   63[ rax rdx rcx rbx rbp rsi rdi r8-r15 mm0-mm7 zmm0-zmm31 k0-k7]
+        Callee-save  :    6[ rbx rbp r12-r15]
+        Assigned     :   47[ rax rdx rcx rbx rsi rdi r8-r15 zmm0-zmm31 k1]
+        
+    Routine temporaries
+        Total         :     821
+            Global    :     289
+            Local     :     532
+        Regenerable   :      99
+        Spilled       :     112
+        
+    Routine stack
+        Variables     :     168 bytes*
+            Reads     :       9 [2.81e-02 ~ 0.0%]
+            Writes    :      14 [3.45e-02 ~ 0.0%]
+        Spills        :     952 bytes*
+            Reads     :     175 [8.41e+00 ~ 8.4%]
+            Writes    :     145 [4.10e+00 ~ 4.1%]
+    
+    Notes
+    
+        *Non-overlapping variables and spills may share stack space,
+         so the total stack size might be less than this.
+    
+
+===========================================================================

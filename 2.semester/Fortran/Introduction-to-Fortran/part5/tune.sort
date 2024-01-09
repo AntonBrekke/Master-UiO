@@ -1,0 +1,3 @@
+#/bin/bash 
+echo "Gflops/s   FLAGS"
+cat $1 | sed 's/Total footprint a,b & c   ... MiB, Walltime   .......seconds,//'|awk '{print $(NF-1),$0}'  | sort -n | awk '{for (j=1; j<NF-1; j++) if (j==1) printf("%s:\t",$j); else printf("%s ",$j); printf("\n") }'
