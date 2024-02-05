@@ -1,0 +1,40 @@
+Hei Anton,
+
+her kommer noen referanser angående det vi snakket om.
+
+Selve mekanismen ‘pandemic dark matter’ ble introdusert her:
+https://inspirehep.net/literature/1961113
+(bruk gjerne alltid bibtex eller latex post fra inspire når du lager referanselister!)
+ 
+Så brukte vi denne generelle mekanismen på sterile neutriner som eksempel her:
+https://inspirehep.net/literature/2099426
+
+Her er to (ganske like) foredrag om akkurat dette:
+https://agenda.infn.it/event/33457/contributions/206799/attachments/109565/155689/Depta_TeVPA_23.pdf
+https://indico.ijclab.in2p3.fr/event/9501/contributions/31658/attachments/22018/31405/Pascal_Bringmann.pdf
+
+
+Tekniske detaljer som sikkert vil hjelpe i begynnelsen:
+
+* Forelesninger om mørk-materie produksjon (i hvert fall del 1-3 er relevante):
+   - video: https://www.ggi.infn.it/showevent.pl?id=445
+   - notater: https://agenda.infn.it/event/33079/page/6841-scientific-program
+   - se spesielt oppgavene, de kan være svært nyttige!
+
+* Denne artikkelen har faktisk sett på sterile neutriner med en ‘dark photon’, men ikke tatt med
+  ‘pandemisk' produksjon:
+  https://iopscience.iop.org/article/10.1088/1475-7516/2022/01/035/pdf
+  Den kan være bra for å få et inntrykk hvordan man kan koble en U(1) til en steril neutrino
+  (men også for diskusjonen av produksjonsmekanismer).
+
+* Se også (begynnelsen av) ) https://arxiv.org/pdf/1312.4947.pdf og noen — dessverre ganske utdaterte — interne
+   notater fra dette prosjektet i vedlegg.
+
+
+Sist men ikke minst så legger jeg ved en prosjektbeskrivelse fra for noen år siden, slik at du får et inntrykk
+av hvordan det hele bør se ut, sånn omtrent. Bruk helst den malen, og ikke vær redd for å ‘likne for mye’
+i struktur og kanskje de generelle tingene om mørk materie.
+
+Lykke til med skrivingen! :) Og ikke nøl med å spørre dersom det er noe du lurer på !!
+
+Torsten

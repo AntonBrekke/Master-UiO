@@ -6,10 +6,13 @@ Task 2g) midterm FYS4110
 Represent + measure as 1, - measure as -1 in code.
 """
 
-def P(s, eig):
-    # Probability for measuring either + or - 
-    return 1/2 * (1 + s*np.imag(eig))      # P(\pm) = 1/2 * (1 \pm \sin(\theta))
+plt.style.use('seaborn-v0_8')
 
+def P(s, eig_val):
+    # Probability for measuring either + or - 
+    return 1/2 * (1 + s*np.imag(eig_val))      # P(\pm) = 1/2 * (1 \pm \sin(\theta))
+
+# Some sort of Monte Carlo simulation
 def iterate_circuit(N_iter, eig0):
     eig = np.zeros(N_iter, dtype=complex)       # Contatining eigenvalue for each iteration 
     eig[0] = eig0 
@@ -20,7 +23,7 @@ def iterate_circuit(N_iter, eig0):
 
 
 ze = 1e-3           # Smaller -> more iterations for convergence, less "noise"        
-theta0 = np.pi/2    # initial angle for eigenvalue 
+theta0 = np.pi    # initial angle for eigenvalue. theta0=np.pi is a fun choice 
 eig0 = np.exp(1j*theta0)        # Initial eigenvalue
 N_iter = int(1e4)        
 
@@ -32,8 +35,8 @@ ax.set_title(r'$\theta = \pi,$' + r'$\quad|z||\epsilon|$ = ' + f'{ze:.0e}', font
 
 ax.plot(range(0, N_iter), eig.real, 'tab:blue')
 ax.plot(range(0, N_iter), eig.imag,'r')
-ax.plot(range(0, N_iter), abs(eig),'g')
+ax.plot(range(0, N_iter), abs(eig)**2,'g')
 ax.set_xlabel('Number of iterations', fontsize=16)
-ax.legend(['Re(eig)', 'Im(eig)'], prop={'size':16})
+ax.legend(['Re(eig)', 'Im(eig)', r'$|\text{eig}|^2$'], prop={'size':16})
 
 plt.show()
