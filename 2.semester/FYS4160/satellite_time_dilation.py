@@ -13,5 +13,10 @@ gamma = 1 / np.sqrt(1 - (v/c)**2)
 def phi(r):
     return -G*M_earth/r
 
-delta_time = (1/gamma + np.sqrt((c**2 + 2*phi(R_sat))/(c**2 + 2*phi(R_earth))) - 2)*dt_earth
+def delta_time_tot(r_earth, r_sat, dt_earth=86400):
+    delta = (1/gamma + np.sqrt((c**2 + 2*phi(R_sat))/(c**2 + 2*phi(R_earth))) - 2)*dt_earth
+    return delta
+
+delta_time = delta_time_tot(R_earth, R_sat, dt_earth)
 print(f'\nTotal difference in time due to GR and SR: {delta_time:.3e}')
+print(f'Length scale given light speed signals: {delta_time*c:.3e}')
