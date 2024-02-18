@@ -13,7 +13,7 @@ l2 = 6 and l4 = 6 (best yet)
 Solving a trebuchet, i.e some sort of triple pendulum.
 """
 
-# Defining constants of the system
+# Defining parameters of the system
 m1 = 7000
 m2 = 15
 l1 = 1.5
@@ -70,6 +70,9 @@ x4d_sol = sol[q2dd]
 x6d_sol = sol[q3dd]
 
 # If you want to print the equations, print like this:
+# If you want the parameters m1, l1, m2, l2 etc. as symbols
+# they must be defined as m1, m2, l1, l2, l3, l4, g = sy.symbols('m1 m2 l1 l2 l3 l4 g')
+# Check 'sympy_ex_emma_print_latex_equations.py' to see
 # print(sy.latex(x2d_sol))
 # print(sy.latex(x4d_sol))
 # print(sy.latex(x6d_sol))
