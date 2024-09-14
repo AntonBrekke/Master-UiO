@@ -20,7 +20,7 @@ z2 = np.cos(t2)
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
 
-ax.plot_surface(x,y,z, alpha=0.5)
-ax.plot_surface(x2,y2,z2, color='r', alpha=0.5)
+ax.plot_surface(x, y, z, alpha=0.5)
+ax.plot_surface(x2, y2, z2, color='r', alpha=0.5)
 
 plt.show()

@@ -1,5 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import pynverse as pyinv  
 
 # Function in which you want spacing,
 # i.e logspace for log spacing.
@@ -8,25 +9,28 @@ import matplotlib.pyplot as plt
 def f(x):
     return np.log(x)
 
-# Inverse of function above.
-def f_inv(x):
-    return np.exp(x)
+# # Inverse of function above.
+# def f_inv(x):
+#     return np.exp(x)
 
-x0 = 2
-x1 = 8
-N = 50
+# Or use library 
+f_inv = pyinv.inversefunc(f)
+
+x0 = 0.1
+x1 = 1
+N = 20
 xx = np.linspace(x0, x1, N)
 # Sample from y-axis
-x = np.linspace(f(x0), f(x1), N)
+y = np.linspace(f(x0), f(x1), N)
 # Project y-axis point onto the x-axis
-x_f = f_inv(x)
+x_f = f_inv(y)
 
-y = np.zeros(N)
+Y = np.zeros(N)
 
 yline = int(N/2)
-plt.plot(x_f, f(x_f))
-plt.plot(y + x0, x, 'go')
-plt.plot(xx, y + f(5), 'k')
-plt.plot(y + f_inv(f(5)), f(x_f), 'k')
-plt.plot(x_f, y, 'ro')
+plt.plot(x_f, f(x_f), marker='o')
+plt.plot(Y + x0, y, 'go')
+# plt.plot(xx, y + f(5), 'k')
+# plt.plot(y + f_inv(f(5)), f(x_f), 'k')
+plt.plot(x_f, Y, 'ro')
 plt.show()

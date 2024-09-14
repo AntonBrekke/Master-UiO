@@ -7,7 +7,8 @@ import cmasher as cmr
 """
 Simple code for solving Ising model using Monte Carlo.
 Not optimized in terms of efficiency, and focus more on 
-readability. Not suited for all the purposes of FYS3150. 
+readability. Not suited for all the purposes of FYS3150 
+done in C++. 
 """
 
 cmap = cmr.get_sub_cmap('Greys', 0, 1)
@@ -46,19 +47,22 @@ def ising_model(s_init):
             r = np.random.uniform(0,1)
             if r < np.exp(-Ediff/T):
                 s[i,j] = -s[i,j]
-    return s 
 
+    return s
+
+print('Start running')
 t0 = time.time()
 s = ising_model(s_init)
 t1 = time.time()
 print(f'Runtime: {t1-t0}s')
+print(f'N-cycles: {M}')
 
 fig = plt.figure()
-ax = fig.add_subplot(122)
-ax2 = fig.add_subplot(121)
+ax = fig.add_subplot(121)
+ax2 = fig.add_subplot(122)
 
-spins = ax.imshow(s, cmap=cmap)
-spins_init = ax2.imshow(s_init, cmap=cmap)
+spins_init = ax.imshow(s_init, cmap=cmap)
+spins = ax2.imshow(s, cmap=cmap)
 
 # cbar = fig.colorbar(spins, ax=ax, location='right', ticks=[-1, 0, 1])
 # cbar.set_ticklabels(['-1', '0', '1'])

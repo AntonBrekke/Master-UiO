@@ -25,10 +25,10 @@ def monte_carlo(func, args):
         V *= (xi1 - xi0)
         randargs.append(randxi)
     W = f(randargs)
-    MCI = V * np.mean(W)          # Uniform so that probability = area_graph / voluma
+    MCI = V * np.mean(W)          # Uniform so that probability = area_graph / volume
     return MCI
 
-# Any arbitrary function, just made a choice
+# Any arbitrary function, just made a choice. Could make multiple functions as well 
 def f(args):
     s = 1
     for n, x in enumerate(args, start=1):

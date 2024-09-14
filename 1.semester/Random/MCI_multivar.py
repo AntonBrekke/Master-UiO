@@ -6,7 +6,7 @@ import sys
 
 a = [0, 0, 0]     # Start points for variables x1, x2, ...
 b = [np.pi, np.pi, np.pi]   # End points for variables x1, x2, ...
-ni = int(1e6)        
+ni = int(1e3)        
 N = 3*[ni]      # Num of points in array for each variable 
 
 x = []          # Collection of arrays for each variable 
