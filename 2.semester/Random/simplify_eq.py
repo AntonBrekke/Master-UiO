@@ -1,48 +1,54 @@
 import sympy as sp
-s, u, t, a, b = sp.symbols('s u t a b')
 
-# a = 0
-# b = 0 
-s = 2*a + 2*b - u - t
-m = a - b
+def compare_depta(momentum='p3 - p1'):
 
+   if momentum == 'p3 - p1': sgn = 1
+   if momentum == 'p1 - p3': sgn = -1
 
-p1p2, p1q, p1k, p2q, p2k, qk = sp.symbols('p1p2 p1q p1k p2q p2k qk')
+   s, t, a, b = sp.symbols('s t a b')
 
-""""
-p1p2 = 0.5*(s - 2*a)
-p1q = 0.5*(t + m)
-p1k = 0.5*(u + m)
-p2q = -0.5*(t + m)
-p2k = -0.5*(u + m)
-qk = 2*m
-"""
+   """
+   a = m_s^2, b = m_phi^2
+   """
 
-# s = 2*(p1p2 + a)
-# t = 2*p1q - m
-# u = 2*p1k - m
-# m = qk/2
-# b = a - m
+   # a = 0
+   # b = 0 
+   u = 2*a + 2*b - s - t
 
-eq_torsten = ( (s + 2*t - 2*b - 2*a)**2*(-a**2 - b**2 - a*(2*b - s - 2*t) + 2*b*t - t*(s + t)) )
+   p1q = -sgn*1/2*(t + a - b)
+   p1k = -sgn*1/2*(u + a - b)
+   p2q = sgn*1/2*(t + a - b)
+   p2k = sgn*1/2*(u + a - b)
+   qk = a - b
+   p1p2 = 1/2*(s - 2*a)
 
-# eq_start = ( (u - a)**2 * (-1/2*(t + m)**2 - t/2*(s - 2*a) - a*(3*t + 2*m + a - 1/2*s) - a**2)
-#      + (t - a)**2 * (-1/2*(u + m)**2 - u/2*(s - 2*a) - a*(3*u + 2*m + a - 1/2*s) - a**2)
-#      - 2*(t - a)*(u - a) * (-1/2*(t + m)*(u + m) - 1/2*(s - 2*a)*2*m - a*(t + u + 4*m + a - 1/2*s) - a**2)
-#    )
+   """
+   From squaring the matrix element 
+   iM = -iy^2*cos^4(theta)*v(p1)*[(q + m_s)/(t - a) + (k + m_s)/(u - a)]u(p2)
+   and summing (not average) over initial spin d.o.f. we get start_expr 
+   (where a factor of 4 is removed):  
+   """
 
-eq_start_2 = ( (u - a)**2 * (-1/2*(t + m)**2 - t/2*(s - 2*a) + a*(t - 2*b + 1/2*s))
-     + (t - a)**2 * (-1/2*(u + m)**2 - u/2*(s - 2*a) + a*(u - 2*b + 1/2*s))
-     + 2*(t - a)*(u - a) * (-1/2*(t + m)*(u + m) - 1/2*(s - 2*a)*2*m + a*(u + t - 2*a + 1/2*s))
+   start_expr = ( (u - a)**2*(2*(p1q)*(p2q) - (p1p2)*(t - a) + a*(2*(p1q) - 2*(p2q) - t - a)) 
+               + (t - a)**2*(2*(p1k)*(p2k) - (p1p2)*(u - a) + a*(2*(p1k) - 2*(p2k) - u - a))
+            + 2*(u-a)*(t-a)*((p1q)*(p2k) + (p1k)*(p2q) - (p1p2)*(qk - a) + a*(p1q - p2q + p1k - p2k - qk - a)) 
    )
 
+   # expression I found for Depta's choice of propagator momentum
+   depta = (u-t)**2*(1/2*(a + b - t)*(a + b - u) - 1/2*b*s)
 
-eq_me = ( -1/2*(2*a - b)**2*(u-t)**2 - 4*a**2*(u-t)**2 - a*(2*(a-b) - 1/2*s)*(u-t)**2
-              -1/2*s*a*(u-t)**2 - 0.5*s*(u + t - 4*(a-b))*(u-a)*(t-a) )
+   # expression I found for corrected choice of propagator momentum
+   corrected = (u-t)**2*(1/2*(a + b - t)*(a + b - u) - 1/2*b*s) + 4*a*(s - 2*b)*((u - a)*(t + a - b) + (t - a)*(u + a - b))
 
-eq_me_2 = ( -1/2*(2*a - b)**2*(u-t)**2 - a*(2*a - 2*b - 1/2*s)*(u-t)**2 - 4*a**2*(u-t)**2 - 1/2*s*a*(u-t)**2 - 1/2*s*(u + t - 4*(a-b))*(u-a)*(t-a) )
+   check_depta = sp.simplify(start_expr - depta)
+   check_corrected = sp.simplify(start_expr - corrected)
+   diff_depta_corrected = sp.simplify(depta - corrected)
+   print('------------------------------------------')
+   print(f'Momentum: {momentum}')
+   print(f'Error in Depta: \n{check_depta}\n')
+   print(f'Error in corrected: \n{check_corrected}\n')
+   print(f'Difference depta - corrected: \n{diff_depta_corrected}\n')
+   print('------------------------------------------')
 
-
-check = sp.simplify(sp.expand(0.5*eq_torsten) - sp.expand(eq_start_2))
-
-print(check)
+compare_depta(momentum='p1 - p3')
+compare_depta(momentum='p3 - p1')

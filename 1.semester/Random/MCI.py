@@ -2,11 +2,13 @@ import numpy as np
 import time
 from numba import njit 
 
+# Start
 x0 = 0
-x1 = np.pi
 y0 = 0
-y1 = np.pi
 z0 = 0
+# End
+x1 = np.pi
+y1 = np.pi
 z1 = np.pi
 
 Nx = int(1e6)
