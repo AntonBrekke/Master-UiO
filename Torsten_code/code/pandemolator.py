@@ -16,7 +16,7 @@ from scipy.special import kn
 t_max = 1e16 / cf.hbar
 
 rtol_ode = 1e-6
-rtol_ode_pan = 1e-1
+rtol_ode_pan = 1e-4
 rtol_int = 1e-4
 
 fac_abund_stop = 100.
@@ -261,7 +261,10 @@ class Pandemolator(object):
         elif rho/n - self.m_chi < self.m_chi:
             self.T_chi_last = (rho/n - self.m_chi)/1.5      # Anton: Should this be negative???
             self.xi_chi_last = log(n/(self.dof_chi*((self.m_chi*self.T_chi_last/(2.*np.pi))**1.5))) + self.m_chi/self.T_chi_last
+
+            print(rho, n, self.m_chi)
             print(self.T_chi_last, (self.T_chi_last/(2.*np.pi))**1.5)
+
         root_sol = root(self.n_rho_root, [log(self.T_chi_last), self.xi_chi_last-self.m_chi/self.T_chi_last], args = (n, rho), jac=self.jac_n_rho_root, method='lm')
         T_chi = exp(root_sol.x[0])
         xi_chi = min(root_sol.x[1] + self.m_chi/T_chi, (1.-1e-14)*self.m_phi/(self.fac_n_phi*T_chi))
@@ -363,6 +366,7 @@ class Pandemolator(object):
         sf0 = self.sf_grid[self.i_ic + i_max]
         print("Entering pandemolate while-loop ")
         while i_max < n_pts - 1:
+            print(f'Pandemolator iterator: {i_max}')
             if i_max > 0:#self.event_xi_nonzero(self.log_x_pts[i_max], [rho0*(sf0**4.)]) > 0.: # xi = 0 at beginning of calculation
                 def event_xi(log_x, y):
                     return self.event_xi_nonzero(log_x, y)
@@ -372,7 +376,7 @@ class Pandemolator(object):
                     return self.event_abund_large_xi_0(log_x, y)
                 event_abund.terminal = True
                 event_abund.direction = -1
-                sol_xi0 = solve_ivp(self.der_xi_0, [self.log_x_pts[i_max], self.log_x_pts[-1]], [rho0*(sf0**4.)], t_eval=self.log_x_pts[i_max:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='LSODA', first_step=self.log_x_pts[i_max+1]-self.log_x_pts[i_max], max_step=1.)
+                sol_xi0 = solve_ivp(self.der_xi_0, [self.log_x_pts[i_max], self.log_x_pts[-1]], [rho0*(sf0**4.)], t_eval=self.log_x_pts[i_max:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='RK45', first_step=self.log_x_pts[i_max+1]-self.log_x_pts[i_max], max_step=1.)
                 i_xi_nonzero = i_max + sol_xi0.t.size - 1
 
                 self.T_chi_last = (rho0 / (cf.pi2*(dof_fac_chi+dof_fac_phi)/30.))**0.25

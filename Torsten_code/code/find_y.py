@@ -17,21 +17,29 @@ k_phi = -1.
 dof_d = 2.
 dof_phi = 1.
 
-n_m = 5         # 21
-n_th = 5        # 81
-m_d_grid = np.logspace(-6, -3.7, n_m)
-sin2_2th_grid = np.logspace(-17, -8, n_th)
+# The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
+n_m = 10         # 21
+n_th = 10        # 81
+# m_d_grid = np.logspace(-6, -3.7, n_m)
+m_d_grid = 1e-6*np.logspace(1.7, 2.5, n_m)          # 1e-6*m_d = 1e-6 * GeV = keV, plotted values: (10^0 - 10^2) keV
+sin2_2th_grid = np.logspace(-17, -15, n_th)
+# m_d_grid = 1e-6*10**(np.array([1.7, 2.24, 1.15, 2.3, 1.5]))         # 1e-6*m_d = 1e-6 * GeV = keV, plotted values: (10^0 - 10^2) keV
+# sin2_2th_grid = 10**(np.array([-16.0762, -15.6541, -16.5350, -15.6037, -16.2373]))
+# m_d_grid = 1e-6*10**(np.array([1.7, 1.15, 2.3, 1.5]))         # 1e-6*m_d = 1e-6 * GeV = keV, plotted values: (10^0 - 10^2) keV
+# sin2_2th_grid = 10**(np.array([-16.0762, -16.5350, -15.6037, -16.2373]))
+# m_d_grid = 1e-6*10**(np.array([2.00, 2.23, 2.41, 2.3, 1.15]))         # 1e-6*m_d = 1e-6 * GeV = keV, plotted values: (10^0 - 10^2) keV
+# sin2_2th_grid = 10**(np.array([-17.9334, -17.7420, -17.5984, -15.6037, -16.5345]))
 
 num_cpus = cpu_count()
 num_process = int(2.5*num_cpus) # cpu_count()
 
-params_grid = np.array((np.repeat(m_d_grid, n_th), np.tile(sin2_2th_grid, n_m))).T
+params_grid = np.array((np.repeat(m_d_grid, m_d_grid.size), np.tile(sin2_2th_grid, sin2_2th_grid.size))).T
 
 spin_facs = True
 off_shell = False
 
 dirname = './sterile_res/'
-i_max = 0       # 60
+i_max = 5       # 60
 i_skip = 20
 def find_y(params):
     m_d = params[0]
@@ -41,9 +49,11 @@ def find_y(params):
 
     O_d_h2_dw = cf.O_h2_dw(m_d, th)     # Anton: Omega_DM * h^2 from Dodelson-Widrow mechanism
     log_enhance_req = np.log(cf.omega_d0/O_d_h2_dw)
-    if log_enhance_req < 0.:
-        return m_d, m_phi, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     y_cur = np.sqrt(log_enhance_req/(1e19*sin2_2th/m_phi)) # 1.65e16 roughly the scaling factor from parameter scans
+    print(f'm_d: {m_d:.2e}, sin2_2th: {sin2_2th:2e}, O_d_h2_dw: {O_d_h2_dw:2e}, log_enchance_req: {log_enhance_req:.2f}, y_cur: {y_cur:.2e}')
+    if log_enhance_req < 0.:
+        print(f'log_enhance_req < 0 : {log_enhance_req:.2f}')
+        return m_d, m_phi, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     # print(m_d, sin2_2th, O_d_h2_dw, log_enhance_req, y_cur)
     O_d_h2_old = O_d_h2_dw
     y_old = 0.
@@ -91,7 +101,7 @@ def find_y(params):
                 break
             # print(m_d, sin2_2th, O_d_h2_dw, log_enhance_req, log_enhance_cur, y_old, y_cur)
 
-    print(f'Exceptions: {exception_num} ')
+    # print(f'Exceptions: {exception_num} ')
     print('find_y.py for-loop done ')
     filename = f'md_{m_d:.4e}_mphi_{m_phi:.4e}_sin22th_{sin2_2th:.4e}_y_{y_cur:.4e}.dat'
     np.savetxt(dirname + 'benchmark_pts/' + filename, np.column_stack((t_grid[::-i_skip][::-1], T_SM_grid[::-i_skip][::-1], T_nu_grid[::-i_skip][::-1], ent_grid[::-i_skip][::-1], hubble_grid[::-i_skip][::-1], sf_grid[::-i_skip][::-1], T_d_grid[::-i_skip][::-1], xi_d_grid[::-i_skip][::-1], xi_phi_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1], n_phi_grid[::-i_skip][::-1], C_therm_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1]*m_d*cf.s0/(ent_grid[::-i_skip][::-1]*cf.rho_crit0_h2))))
@@ -102,6 +112,7 @@ def find_y(params):
     therm_ratio_max = np.amax(therm_ratio)
     O_d_h2 = n_d_grid[-1]*m_d*cf.s0/(ent_grid[-1]*cf.rho_crit0_h2)
     # print(m_d, m_phi, sin2_2th, y_cur, O_d_h2, x_therm, x_d_therm, therm_ratio_max, fs_length)
+    print(f'Returned y = {y_cur:.2e} for m_d = {m_d:.2e}, sin2_2th = {sin2_2th:.2e}')
     return m_d, m_phi, sin2_2th, y_cur, O_d_h2, x_therm, x_d_therm, therm_ratio_max, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3
 
 """
@@ -178,6 +189,12 @@ if __name__ == '__main__':
 
     n_m = 10
     n_th = 10
+    i_max = 10
+    t_gp_pd = 100
+    find_y.py ran in 2.0h 42.0m 38.207s
+
+    n_m = 10
+    n_th = 10
     i_max = 1
     t_gp_pd = 300
     find_y.py ran in 4.0h 9.0m 14.983s
@@ -200,6 +217,19 @@ if __name__ == '__main__':
     i_max = 5
     t_gp_pd = 300
     find_y.py ran in 8.0h 46.0m 38.839345932006836s
+
+    
+    n_m = 20         # 21
+    n_th = 20
+    i_max = 5
+    t_gp_pd = 100
+    find_y.py ran in 10.0h 50.0m 20.120605945587158s
+
+    n_m = 15         # 21
+    n_th = 30
+    i_max = 20
+    t_gp_pd = 100
+    find_y.py ran in 34.0h 21.0m 58.66656732559204s
 
     Bottlenecks:
     line 413 pandemolator.py: solve_ivp()       (***)

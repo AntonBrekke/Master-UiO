@@ -34,6 +34,7 @@ plt.rc('font', family='serif', size=14)
 plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig = plt.figure(figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white")
+# fig = plt.figure(figsize=(8, 5), dpi=150, edgecolor="white")
 ax = fig.add_subplot(1,1,1)
 ax.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
 ax.xaxis.set_ticks_position('both')
@@ -60,6 +61,8 @@ T_d_kd = data[:,13].reshape((nx, ny))
 T_d_kd_3 = data[:,14].reshape((nx, ny))
 r_sound = data[:,15].reshape((nx, ny))
 r_sound_3 = data[:,16].reshape((nx, ny))
+
+ax.format_coord = lambda x, y: f"x: {x:.2f}, y: {y:.4f}"
 
 # md = data[:,0].reshape((nx, ny))
 # mphi = data[:,1].reshape((nx, ny))
@@ -89,15 +92,25 @@ r_sound_3 = data[:,16].reshape((nx, ny))
 # xdtherm2 = data2[:,6].reshape((nx, ny))
 # fs_length2 = data2[:,8].reshape((nx, ny))
 
-nx_new, ny_new = 5, 5
+nx_new, ny_new = 4, 4          # md, sin22th sizes
 data_new = np.loadtxt('rm_5.00e+00_y_relic_new.dat')
 md_new = data_new[:,0].reshape((nx_new, ny_new))
 sin22th_new = data_new[:,2].reshape((nx_new, ny_new))
 y_new = data_new[:,3].reshape((nx_new, ny_new))
+# md_new = data_new[0]
+# sin22th_new = data_new[2]
+# y_new = data_new[3]
 
-plt.contour(np.log10(1e6*md_new), np.log10(sin22th_new), np.log10(y_new), levels=[-6., -5., -4., -3., -2., -1.], colors='blue', linewidths = 0.4, zorder=-1, linestyles='-')
+# plt.contour(np.log10(1e6*md_new), np.log10(sin22th_new), np.log10(y_new), levels=[-5,-4,-3], colors='blue', linewidths = 0.4, zorder=-1, linestyles='-')
+# print(f'{y_new:.3e}')
+# md_new = md[np.where(abs(y-y_new) < 1e-4)]
+# sin22th_new = sin22th[np.where(abs(y-y_new) < 1e-4)]
+print(f'{y_new}')
+print(f'{np.log10(1e6*md_new)}')
+print(f'{np.log10(sin22th_new)}')
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(y), levels=[-6., -5., -4., -3., -2., -1.], colors='forestgreen', linewidths = 0.4, zorder=-1, linestyles='-')
-
+plt.contour(np.log10(1e6*md_new), np.log10(sin22th_new), np.log10(y_new), levels=[-6., -5., -4., -3., -2., -1.], color='blue', zorder=-1, linestyles='-')
+plt.plot(np.log10(1e6*md_new), np.log10(sin22th_new), np.log10(y_new), color='blue', zorder=-1, marker='o')
 # plt.contour(np.log10(1e6*md), np.log10(sin22th), np.abs(Odh2_no_spin_stat-Odh2)/Odh2, levels=[95.])
 
 # LYMAN-ALPHA

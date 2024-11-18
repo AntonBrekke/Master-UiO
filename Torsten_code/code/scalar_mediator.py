@@ -40,7 +40,7 @@ def M2_gen(s, t, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
 
     u = m12 + m22 + m32 + m42 - s - t
 
-    s_prop = 1. / ((s - m_phi2)*(s - m_phi2) + m_Gamma_phi2)
+    s_prop = 1. / ((s - m_phi2)*(s - m_phi2) + m_Gamma_phi2)        # G_F * G_F^* ? 
     t_prop = 1. / ((t - m_phi2)*(t - m_phi2) + m_Gamma_phi2)
     u_prop = 1. / ((u - m_phi2)*(u - m_phi2) + m_Gamma_phi2)
 

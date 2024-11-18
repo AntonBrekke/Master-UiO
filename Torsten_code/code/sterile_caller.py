@@ -36,7 +36,7 @@ def call(m_d, m_phi, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y, spin_fac
     Gamma_phi = scalar_mediator.Gamma_phi(y, th, m_phi, m_d)
     m_Gamma_phi2 = m_phi2*Gamma_phi*Gamma_phi
 
-    if spin_facs:
+    if spin_facs:       # Anton: If spin statistics if important
         import C_res_scalar
         if m_phi > 2.*m_d:
             import C_res_scalar_no_spin_stat as C_res_scalar_no_spin_stat
