@@ -951,11 +951,11 @@ if __name__ == '__main__':
     import time
 
     m_d = 1e-6*5e12    # Mass is given in GeV, but plotted in kev. (1e-6*x) GeV = x kev
-    m_d = 1e-6*1e2      # Maximal value in plot. Only start being weird at m_d ~ 1e6 GeV = 1 PeV which is totally irrelevant         
+    m_d = 1e-5      # Maximal value in plot. Only start being weird at m_d ~ 1e6 GeV = 1 PeV which is totally irrelevant         
     m_a = 0.
-    m_phi = 5*m_d
-    sin2_2th = 1e-16
-    y = 1e-2
+    m_phi = 3*m_d
+    sin2_2th = 1e-12
+    y = 2e-4
 
     k_d = 1.
     k_a = 1.
@@ -975,7 +975,7 @@ if __name__ == '__main__':
     m_Gamma_phi2 = m_phi2*Gamma_phi*Gamma_phi
 
     T = 0.6510550394714374
-    xi_d = 0.#-8.551301127056323
+    xi_d = -8.551301127056323
     xi_phi = 0.
     vert = y2*y2*(c_th**8.)
     # print(th_avg_sigma_v_33_11(m_d, m_a, m_d, T, vert, m_phi2, m_Gamma_phi2))
@@ -1028,18 +1028,20 @@ if __name__ == '__main__':
 
     # Consider whether or not integration region is ill-defined, e.g. -1 < c_m < c_p < 1
     in_res = (ct_max > ct_min)
+    index_1 = 950
+    index_3 = 800
 
     time1 = time.time()
-    ker_C_n_pp_dd_s_t_integral_new_val = ker_C_n_pp_dd_s_t_integral_new_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=m_d, E3=m_phi, p1=0, p3=0, m_d=m_d, m_phi=m_phi, vert=vert)
+    ker_C_n_pp_dd_s_t_integral_new_val = ker_C_n_pp_dd_s_t_integral_new_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1[index_1], E3=E3[index_3], p1=p1[index_1], p3=p3[index_3], m_d=m_d, m_phi=m_phi, vert=vert)
     print(f'ker_C_n_pp_dd_s_t_integral_new_2 ran in {time.time()-time1}s')
     time1 = time.time()
-    ker_C_n_pp_dd_s_t_integral_val = ker_C_n_pp_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=m_d, E3=m_phi, p1=0, p3=0, m_d=m_d, m_phi=m_phi, vert=vert)
+    ker_C_n_pp_dd_s_t_integral_val = ker_C_n_pp_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1[index_1], E3=E3[index_3], p1=p1[index_1], p3=p3[index_3], m_d=m_d, m_phi=m_phi, vert=vert)
     print(f'ker_C_n_pp_dd_s_t_integral ran in {time.time()-time1}s')
 
     plt.plot(x[in_res], ker_C_n_pp_dd_s_t_integral_new_val, 'k')
     plt.plot(x[in_res], ker_C_n_pp_dd_s_t_integral_val, 'r--')
     # plt.plot(x, abs(ker_C_n_pp_dd_s_t_integral_new_val - ker_C_n_pp_dd_s_t_integral_val), 'r--')
-    plt.xlim(0, 0.2)
+    # plt.xlim(0, 0.2)
     plt.show()
     # print(ker_C_n_pp_dd_s_t_integral_new_val, ker_C_n_pp_dd_s_t_integral_val)
     m_d2 = m_d**2
@@ -1049,6 +1051,7 @@ if __name__ == '__main__':
     t_p = m_d2 + m_phi2 - 2.*E1*E3 + 2*p1*p3*ct_p
     t_min = m_d2 + m_phi2 - 2.*E1*E3 + 2*p1*p3*ct_min
     t_max = m_d2 + m_phi2 - 2.*E1*E3 + 2*p1*p3*ct_max
+    # print(t_max-t_m,t_min-t_p)
 
     t_p = t_p + 0j
     t_m = t_m + 0j
@@ -1074,6 +1077,7 @@ if __name__ == '__main__':
     T = m_d
     # print(th_avg_sigma_v_pp_dd(T, m_d, m_phi, vert)*exp(2.*xi_d))
     # print(C_n_pp_dd(m_d, m_phi, 0., 0., T, xi_d, xi_phi, vert, type = 1))
-    # res_2 = C_n_pp_dd(m_d, m_phi, 0., 0., T, xi_d, xi_phi, vert, type = -1)
-    end = time.time()
+    # res_2 = C_n_pp_dd(m_d, m_phi, -1, 1, T, xi_d, xi_phi, vert, type = 0)
+    # end = time.time()
+    # print(res_2)
     # print(f'res_1: {res_1}, res_2: {res_2}, C_res_scalar.py time elapsed: {end-start}s')

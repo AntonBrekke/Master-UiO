@@ -8,15 +8,15 @@ from scipy.integrate import quad
 rtol_int = 1e-4
 
 @nb.jit(nopython=True, cache=True)
-def Gamma_phi(y, th, m_X, m_d):
+def Gamma_X(y, th, m_X, m_d):
     y2 = y*y
     sth = sin(th)
     cth = cos(th)
 
-    # Decay to aa, ad, and dd
+    # Decay to aa, ad, and dd. Have used m_a = 0.
     X_aa = y2*sth**4 * m_X/(8*np.pi)
-    X_ad = y2*cth**2*sth**2 * (2*m_X**4 - m_X**2*m_d**2 - m_d**4)*(m_X**2 - m_d**2)/(8*np.pi*m_X**5)*(m_X**2 > m_d**2)
-    X_dd = y2*cth**4 * np.sqrt(m_X**2 - 4*m_d**2)*(m_X**2 + 2*m_d**2)/(8*np.pi*m_X**2)*(m_x**2 > 2*m_d**2)
+    X_ad = y2*cth**2*sth**2/(8*np.pi*m_X**5) * (2*m_X**4 - m_X**2*m_d**2 - m_d**4)*(m_X**2 - m_d**2) if m_X**2 > m_d**2 else 0. 
+    X_dd = y2*cth**4/(8*np.pi*m_X**2) * np.sqrt(m_X**2 - 4*m_d**2)*(m_X**2 + 2*m_d**2) if m_X**2 > 2*m_d**2 else 0. 
 
     return X_aa + X_ad + X_dd
 
@@ -86,7 +86,7 @@ def M2_fi(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
 @nb.jit(nopython=True, cache=True)
 def M2_tr(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
     """
-    as --> dd
+    ad --> dd
     """
     u = 3.*m_d2 - s - t
     s_prop = 1. / ((s-m_phi2)*(s-m_phi2) + m_Gamma_phi2)
@@ -189,3 +189,15 @@ def sigma_el(s, m_d2, vert, m_phi2, m_Gamma_phi2):
 
     # factor 0.5 due to identical particles in final state
     return 0.5*vert*(sum_atan+sum_log+sum_3)/(4.*np.pi*m_Gamma_phi*s*(s-4.*m_d2)*(s-4.*m_d2+2.*m_phi2)*(m_phi4+s2-2.*s*m_phi2+m_Gamma_phi2))
+
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt 
+
+    m_d = 1e-5      # GeV 
+    m_a = 0.
+    m_X = 3*m_d
+    sin2_2th = 1e-12
+    th = 0.5*np.arcsin(np.sqrt(sin2_2th))
+    y = 2e-4
+
+    # print(Gamma_X(y=y, th=th, m_X=m_X, m_d=m_d))
