@@ -193,6 +193,8 @@ def ker_C_n_pp_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     u_p = u_add - t_p
     u_mp = u_m + u_p
 
+    print(np.max(t_max-t_min))
+
     in_min_neq = (ct_min != ct_p)
     in_max_neq = (ct_max != ct_m)
     in_any_neq = np.logical_or(in_min_neq, in_max_neq)
@@ -982,24 +984,28 @@ if __name__ == '__main__':
     # print(C_34_12(0., 1., 0., m_d, m_a, m_d, m_d, 0., 0., 0., 0., T, T, T, T, xi_d, xi_d, xi_d, 0., vert, m_phi2, m_Gamma_phi2))
     # exit(1)
     ########################################################################
-    x = np.linspace(0, 1, 1000)
+    x = np.linspace(0, 1, int(1e3))
     T_d = T
     log_E3_min = log(m_phi*offset)
     log_E3_max = log(max((max_exp_arg + xi_phi)*T_d, 1e1*m_phi))
     E3 = np.exp(np.fmin(log_E3_min * (1.-x) + log_E3_max * x, 6e2))
-    
     # Anton: This is treated as E2 in the article 
     E4_min = np.fmax(2.*m_d - E3, m_phi*offset)
     log_E4_min = np.log(E4_min)
     log_E4_max = np.log(np.fmax(1e1*E4_min, (max_exp_arg + xi_phi)*T_d))
     E4 = np.exp(np.fmin(log_E4_min * (1. - x) + log_E4_max * x, 6e2))
-
     # Anton: This is treated as E3 in article 
     log_E1_min = np.log(m_d*offset)
     log_E1_max = np.log(np.fmax(E3 + E4 - m_d, m_d*offset))
     E1 = np.exp(np.fmin(log_E1_min * (1.-x) + log_E1_max * x, 6e2))
 
     E2 = E3 + E4 - E1
+
+    E3 = E3[int(x.size*0.8)]
+    E4 = E4[int(x.size*0.8)]
+    E1 = E1[int(x.size*0.4)]
+    E2 = E4 + E3 - E1
+
     p1 = np.sqrt(np.fmax((E1 - m_d)*(E1 + m_d), 1e-200))
     p2 = np.sqrt(np.fmax((E2 - m_d)*(E2 + m_d), 1e-200))
     p3 = np.sqrt(np.fmax((E3 - m_phi)*(E3 + m_phi), 1e-200))
@@ -1028,24 +1034,29 @@ if __name__ == '__main__':
 
     # Consider whether or not integration region is ill-defined, e.g. -1 < c_m < c_p < 1
     in_res = (ct_max > ct_min)
-    index_1 = 950
-    index_3 = 800
 
     time1 = time.time()
-    ker_C_n_pp_dd_s_t_integral_new_val = ker_C_n_pp_dd_s_t_integral_new_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1[index_1], E3=E3[index_3], p1=p1[index_1], p3=p3[index_3], m_d=m_d, m_phi=m_phi, vert=vert)
+    ker_C_n_pp_dd_s_t_integral_new_val = ker_C_n_pp_dd_s_t_integral_new_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_phi, vert=vert)
     print(f'ker_C_n_pp_dd_s_t_integral_new_2 ran in {time.time()-time1}s')
     time1 = time.time()
-    ker_C_n_pp_dd_s_t_integral_val = ker_C_n_pp_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1[index_1], E3=E3[index_3], p1=p1[index_1], p3=p3[index_3], m_d=m_d, m_phi=m_phi, vert=vert)
+    ker_C_n_pp_dd_s_t_integral_val = ker_C_n_pp_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_phi, vert=vert)
     print(f'ker_C_n_pp_dd_s_t_integral ran in {time.time()-time1}s')
 
-    plt.plot(x[in_res], ker_C_n_pp_dd_s_t_integral_new_val, 'k')
-    plt.plot(x[in_res], ker_C_n_pp_dd_s_t_integral_val, 'r--')
+    plt.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_new_val, 'k')
+    plt.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val, 'r--')
     # plt.plot(x, abs(ker_C_n_pp_dd_s_t_integral_new_val - ker_C_n_pp_dd_s_t_integral_val), 'r--')
     # plt.xlim(0, 0.2)
     plt.show()
     # print(ker_C_n_pp_dd_s_t_integral_new_val, ker_C_n_pp_dd_s_t_integral_val)
     m_d2 = m_d**2
     m_phi2 = m_phi**2
+
+    # Define well-defined regions 
+    res = np.logical_and(s > 4*m_d**2, s > 4*m_phi**2)
+    s_res = s[:999]
+    sigma_pp_dd_vec = np.vectorize(sigma_pp_dd)
+    plt.plot(s_res, sigma_pp_dd_vec(s=s_res, m_d=m_d, m_phi=m_phi, vert=vert))
+    plt.show()
 
     t_m = m_d2 + m_phi2 - 2.*E1*E3 + 2*p1*p3*ct_m
     t_p = m_d2 + m_phi2 - 2.*E1*E3 + 2*p1*p3*ct_p

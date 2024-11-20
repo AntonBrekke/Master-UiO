@@ -7,6 +7,16 @@ from scipy.integrate import quad
 
 rtol_int = 1e-4
 
+"""
+Changes:
+Updated Gamma_phi to Gamma_X 
+
+What must be done: 
+Update 
+M2_gen, M2_gen_ss, M2_fi, M2_tr, M2_el
+sigma_gen, sigma_fi, sigma_tr, sigma_el
+"""
+
 @nb.jit(nopython=True, cache=True)
 def Gamma_X(y, th, m_X, m_d):
     y2 = y*y
