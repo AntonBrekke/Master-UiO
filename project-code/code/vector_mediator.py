@@ -15,13 +15,16 @@ What must be done:
 Update 
 M2_gen, M2_gen_ss, M2_fi, M2_tr, M2_el
 sigma_gen, sigma_fi, sigma_tr, sigma_el
+
+However, only sigma_gen is ever called in the code - 
+may not have to fix the others 
 """
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def Gamma_X(y, th, m_X, m_d):
     y2 = y*y
-    sth = sin(th)
-    cth = cos(th)
+    sth = np.sin(th)
+    cth = np.cos(th)
 
     # Decay to aa, ad, and dd. Have used m_a = 0.
     X_aa = y2*sth**4 * m_X/(8*np.pi)
@@ -32,7 +35,7 @@ def Gamma_X(y, th, m_X, m_d):
 
 # sub indicates if s-channel on-shell resonance is subtracted
 @nb.jit(nopython=True, cache=True)
-def M2_gen(s, t, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
+def M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
     """
     12 --> 34, 1,2,3,4 = a, d
     """
@@ -47,23 +50,11 @@ def M2_gen(s, t, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
 
     u = m12 + m22 + m32 + m42 - s - t
 
-    s_prop = 1. / ((s-m_phi2)*(s-m_phi2) + m_Gamma_phi2)
-    t_prop = 1. / ((t-m_phi2)*(t-m_phi2) + m_Gamma_phi2)
-    u_prop = 1. / ((u-m_phi2)*(u-m_phi2) + m_Gamma_phi2)
+    s_prop = 1. / ((s-m_X2)*(s-m_X2) + m_Gamma_X2)
+    t_prop = 1. / ((t-m_X2)*(t-m_X2) + m_Gamma_X2)
+    u_prop = 1. / ((u-m_X2)*(u-m_X2) + m_Gamma_X2)
 
-    ss = ((m1+m2)*(m1+m2)-s)*((m3+m4)*(m3+m4)-s)*s_prop*(s_prop*(s-m_phi2)*(s-m_phi2) if sub else 1.)
-    tt = ((m1+m3)*(m1+m3)-t)*((m2+m4)*(m2+m4)-t)*t_prop
-    uu = ((m1+m4)*(m1+m4)-u)*((m2+m3)*(m2+m3)-u)*u_prop
-    st = -(m23*m3+m13*m4+m22*m3*(m3+m4)+m12*m4*(m2+m3+m4)-s*(m3*m4+t)
-     +m1*(m22*m3+m3*m42+m43+m2*(m32+2.*m3*m4+m42-s)-m4*s-m3*t-m4*t)
-     +m2*(m33+m32*m4-m4*t-m3*(s+t)))*s_prop*t_prop*((s-m_phi2)*(t-m_phi2)+(0. if sub else m_Gamma_phi2))
-    su = -(m13*m3+m23*m4+m22*m4*(m3+m4)+m12*m3*(m2+m3+m4)-s*(m3*m4+u)
-     +m1*(m33+m22*m4+m32*m4+m2*(m32+2.*m3*m4+m42-s)-m4*u-m3*(s+u))
-     +m2*(m3*m42+m43-m4*s-m3*u-m4*u))*s_prop*u_prop*((s-m_phi2)*(u-m_phi2)+(0. if sub else m_Gamma_phi2))
-    tu = -((m13*m2+m33*m4+m42*m3*(m3+m4)+m12*m2*(m2+m3+m4)-m3*m4*(t+u)-t*u
-     +m1*(m23+m32*m4+m3*m42+m22*(m3+m4)-m3*t+m2*(2.*m3*m4-t-u)-m4*u)
-     +m2*(m32*m4+m3*m42-m4*t-m3*u))
-     *((t-m_phi2)*(u-m_phi2)+m_Gamma_phi2))*t_prop*u_prop
+    ss = 1
 
     return 4.*vert*ss#(ss+tt+uu+st+su+tu)
 
@@ -93,23 +84,24 @@ def M2_fi(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
 
     return 4.*vert*(ss + tt + uu + st + su + tu)
 
-@nb.jit(nopython=True, cache=True)
-def M2_tr(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
+# @nb.jit(nopython=True, cache=True)
+def M2_tr(s, t, m_d2, vert, m_X2, m_Gamma_X2):
     """
     ad --> dd
     """
     u = 3.*m_d2 - s - t
-    s_prop = 1. / ((s-m_phi2)*(s-m_phi2) + m_Gamma_phi2)
-    t_prop = 1. / ((t-m_phi2)*(t-m_phi2) + m_Gamma_phi2)
-    u_prop = 1. / ((u-m_phi2)*(u-m_phi2) + m_Gamma_phi2)
-    ss = (4.*m_d2*m_d2 - 5.*m_d2*s + s*s) * s_prop
-    tt = (4.*m_d2*m_d2 - 5.*m_d2*t + t*t) * t_prop
-    uu = (4.*m_d2*m_d2 - 5.*m_d2*u + u*u) * u_prop
-    st = - (5.*m_d2*m_d2 - s*t - 2.*m_d2*(s+t)) * ((s-m_phi2)*(t-m_phi2) + m_Gamma_phi2) * s_prop * t_prop
-    su = - (5.*m_d2*m_d2 - s*u - 2.*m_d2*(s+u)) * ((s-m_phi2)*(u-m_phi2) + m_Gamma_phi2) * s_prop * u_prop
-    tu = - (5.*m_d2*m_d2 - t*u - 2.*m_d2*(t+u)) * ((t-m_phi2)*(u-m_phi2) + m_Gamma_phi2) * t_prop * u_prop
+    s_prop = 1. / ((s-m_X2)*(s-m_X2) + m_Gamma_X2)
+    t_prop = 1. / ((t-m_X2)*(t-m_X2) + m_Gamma_X2)
+    u_prop = 1. / ((u-m_X2)*(u-m_X2) + m_Gamma_X2)
 
-    return 4.*vert*(ss + tt + uu + st + su + tu)
+    ss = (8*(2*m_d2**2-m_d2*(s+6*t)+s**2+2*s*t+2*t**2))*s_prop
+    tt = (8*(2*m_d2**2-m_d2*(6*s+t)+2*s**2+2*s*t+t**2))*t_prop
+    uu = (8*(8*m_d2**2-5*m_d2*(s+t)+s**2+t**2))*u_prop
+    st = (16*(-2*m_d2+s+t)*(m_d2+s+t)*(m_Gamma_X2+(m_X2-s)*(m_X2-t)))*s_prop*t_prop
+    su = -(16*(4*m_d2**2-5*m_d2*t+t**2)*(m_Gamma_X2+(m_X**2-s)*(m_X**2-3*m_d2+s+t)))*s_prop*u_prop
+    tu = (16*(4*m_d2**2-5*m_d2*s+s**2)*(m_Gamma_X2+(m_X2-t)*(m_X2-3*m_d2+s+t)))*t_prop*u_prop
+
+    return vert*(ss + tt + uu + st + su + tu)
 
 @nb.jit(nopython=True, cache=True)
 def M2_el(s, t, m_d, vert, m_phi2, m_Gamma_phi2):
@@ -210,4 +202,28 @@ if __name__ == '__main__':
     th = 0.5*np.arcsin(np.sqrt(sin2_2th))
     y = 2e-4
 
-    # print(Gamma_X(y=y, th=th, m_X=m_X, m_d=m_d))
+    vert_tr = y**4 * np.cos(th)**6*np.sin(th)**2
+
+    th_arr = np.linspace(0, 2*np.pi, 1000)
+    Gamma = Gamma_X(y=y, th=th_arr, m_X=m_X, m_d=m_d)
+    plt.plot(th_arr, Gamma)
+    plt.xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi], labels=[r'$0$',r'$\pi/2$',r'$\pi$',r'$3\pi/2$', r'$2\pi$'])
+    plt.show()
+
+    S = np.linspace(m_d**2, 100, int(1e3))
+    T = np.linspace(-1, 1, int(1e3))
+    s, t = np.meshgrid(S, T, indexing='ij')
+
+    Gamma = Gamma_X(y=y, th=th, m_X=m_X, m_d=m_d)
+    print(Gamma)
+
+    fig = plt.figure()
+    ax = fig.add_subplot()
+
+    m_Gamma_X2 = (m_X*Gamma)**2
+    plot_M2 = ax.contourf(s, t, M2_tr(s, t, m_d**2, vert_tr, m_X**2, m_Gamma_X2), levels=300, cmap='jet')
+    fig.colorbar(plot_M2)
+    ax.set_xscale('log')
+
+    fig.tight_layout()
+    plt.show()

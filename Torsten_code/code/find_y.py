@@ -18,8 +18,8 @@ dof_d = 2.
 dof_phi = 1.
 
 # The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
-n_m = 10         # 21
-n_th = 10        # 81
+n_m = 5         # 21
+n_th = 5        # 81
 # m_d_grid = np.logspace(-6, -3.7, n_m)
 m_d_grid = 1e-6*np.logspace(1.7, 2.5, n_m)          # 1e-6*m_d = 1e-6 * GeV = keV, plotted values: (10^0 - 10^2) keV
 sin2_2th_grid = np.logspace(-17, -15, n_th)
@@ -39,7 +39,7 @@ spin_facs = True
 off_shell = False
 
 dirname = './sterile_res/'
-i_max = 5       # 60
+i_max = 0       # 60
 i_skip = 20
 def find_y(params):
     m_d = params[0]

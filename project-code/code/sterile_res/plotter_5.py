@@ -30,7 +30,8 @@ yMajorFormatter = FixedFormatter(ylMajor)
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif', size=14)
-plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig = plt.figure(figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white")
 ax = fig.add_subplot(1,1,1)
