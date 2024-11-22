@@ -554,8 +554,8 @@ def sigma_XX_dd(s, m_d, m_X, vert):
     s = (p1/3 + p2/4)^2 = (E1/3 + E2/4)^2 = 4E1/3^2, since m1 = m2, m3 = m4 in this case
     => p1cm = sqrt(1/4*s - m1^2) * H(s-4*m1^2), p3cm = sqrt(1/4*s - m3^2) * H(s - 4*m3^2)
     Generically with m1 != m2, m3 != m4, 
-    p1/3cm = sqrt(1/(4*s) * [s^2 - 2*s(m1/3^2 + m2/4^2) + (m1/3^2 - m2/4^2)^2]) * H(s - (m1/3 + m2/4)^2)
-           = sqrt(1/(4*s) * [(s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2]) * H(s - (m1/3 + m2/4)^2)
+    p1/3cm = sqrt{1/(4*s) * [s^2 - 2*s(m1/3^2 + m2/4^2) + (m1/3^2 - m2/4^2)^2]} * H(s - (m1/3 + m2/4)^2)
+           = sqrt{1/(4*s) * [(s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2]} * H(s - (m1/3 + m2/4)^2)
     Heavysides from demanding positive p_cm^2: 
     H(1/(4*s)*[(s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2]) = H((s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2)
     = H(s - m1/3 - m2/4 - 2*m1/3*m2/4)
