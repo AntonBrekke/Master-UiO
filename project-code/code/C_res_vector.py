@@ -313,10 +313,10 @@ def ker_C_n_XX_dd_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p
     m_X8 = m_X4*m_X4
 
     t_add = m_d2 + m_X2
-    t_min = t_add - 2.*E1*E3 + 2*p1*p3*ct_min
-    t_max = t_add - 2.*E1*E3 + 2*p1*p3*ct_max
-    t_m = t_add - 2.*E1*E3 + 2*p1*p3*ct_m
-    t_p = t_add - 2.*E1*E3 + 2*p1*p3*ct_p
+    t_min = t_add - 2.*E1*(E3 - p1*p3/E1*ct_min)
+    t_max = t_add - 2.*E1*(E3 - p1*p3/E1*ct_max)
+    t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
+    t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
     
     # Write each term of t-integrated matrix element sorted by denominators, evaluated at t_min and t_max. 
     """
@@ -340,12 +340,7 @@ def ker_C_n_XX_dd_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p
     sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min >= 0)] = 1
     sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min < 0)] = 1
     sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min < 0)] = -1
-
-    # print(np.min(X_max), np.max(X_max))
-    # print(np.min(X_min), np.max(X_min))
-    # print(np.min(Y_max), np.max(Y_max))
-    # print(np.min(Y_min), np.max(Y_min))
-
+    
     # Trick to make numpy evaluate negative numbers 
     t_min = t_min + 0j
     t_max = t_max + 0j
@@ -354,6 +349,7 @@ def ker_C_n_XX_dd_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p
     s = s + 0j
     s2 = s2 + 0j
     
+    # When t_max = t_m, t_min = t_p, max - min always cancel ... 
     term1_max = -((8*(2*m_d2+m_X2)**2*np.sqrt((t_max-t_m)*(t_max-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_max+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_max+t_m+t_p)+3*s2+2*s*(t_max+t_m+t_p)+2*t_p*(t_max+t_m)+2*t_max*t_m)+(2*m_X2-s)*(2*m_X2-s-t_max)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_max+t_m)+s2+s*(t_max+t_m)+2*t_max*t_m)))/((t_max-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_max)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
 
     term1_min = -((8*(2*m_d2+m_X2)**2*np.sqrt((t_min-t_m)*(t_min-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_min+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_min+t_m+t_p)+3*s2+2*s*(t_min+t_m+t_p)+2*t_p*(t_min+t_m)+2*t_min*t_m)+(2*m_X2-s)*(2*m_X2-s-t_min)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_min+t_m)+s2+s*(t_min+t_m)+2*t_min*t_m)))/((t_min-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_min)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
@@ -369,16 +365,6 @@ def ker_C_n_XX_dd_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p
     term4_max = -((16*sqrt_fac_tmax*np.log(2*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)+2*t_max-t_m-t_p)))
     term4_min = -((16*sqrt_fac_tmin*np.log(2*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)+2*t_min-t_m-t_p)))
 
-    # print(np.max(np.abs((term1_max - term1_min).imag)))
-    # print(np.max(np.abs((term2_max - term2_min).imag)))
-    # print(np.max(np.abs((term3_max - term3_min).imag)))
-    # print(np.max(np.abs((term4_max - term4_min).imag)))
-
-    # print(np.max((term1_max + term2_max + term3_max + term4_max - term1_min - term2_min - term3_min - term4_min).imag))
-    # print(np.min((term1_max + term2_max + term3_max + term4_max - term1_min - term2_min - term3_min - term4_min).imag))
-
-    # return vert*(term1_max + term2_max + term3_max + term4_max).real
-    # return vert*( - term1_min - term2_min - term3_min - term4_min).real
     return vert*(term1_max + term2_max + term3_max + term4_max - term1_min - term2_min - term3_min - term4_min).real
 
 @nb.jit(nopython=True, cache=True)
@@ -898,8 +884,9 @@ if __name__ == '__main__':
 
     ########################################################################
     # Mostly plot things to check 
-    x = np.linspace(0, 1, int(1e4))    # x = ln(s/s_min) / ln(s_max/s_min)
+    x = np.linspace(0, 1, int(1e3))    # x = ln(s/s_min) / ln(s_max/s_min)
     T_d = T
+    # T_d = 1
 
     # Switched from E1, E2 --> E3, E4 to E3, E4 --> E1, E2 (dd --> XX to XX --> dd)
     # Anton: Treated as E1 in article 
@@ -910,7 +897,7 @@ if __name__ == '__main__':
     E4_min = np.fmax(2.*m_d - E3_, m_X*offset)
     log_E4_min = np.log(E4_min)
     log_E4_max = np.log(np.fmax(1e1*E4_min, (max_exp_arg + xi_X)*T_d))
-    E4_ = np.exp(np.fmin(log_E4_min * (1. - x) + log_E4_max * x, 6e2))
+    E4_ = np.exp(np.fmin(log_E4_min * (1.-x) + log_E4_max * x, 6e2))
     # Anton: This is treated as E3 in article 
     log_E1_min = np.log(m_d*offset)
     log_E1_max = np.log(np.fmax(E3_ + E4_ - m_d, m_d*offset))
@@ -918,74 +905,79 @@ if __name__ == '__main__':
     # Anton: Treated as E4 in article 
     E2_ = E3_ + E4_ - E1_
 
-    n_plots = 5
-    for kidx, k in enumerate(np.linspace(0, 1, n_plots)):
-        col = 5
-        row = 5
-        fig = plt.figure()
-        for iidx, i in enumerate(np.linspace(0, 1, col)):
-            for jidx, j in enumerate(np.linspace(0, 1, row)):
-                ax = fig.add_subplot(int(row), int(col), int(row)*iidx+jidx+1)
-                E3 = E3_[int((x.size-1)*i)]
-                E4 = E4_[int((x.size-1)*k)]
-                E1 = E1_[int((x.size-1)*j)]
-                E2 = E4 + E3 - E1
+    # n_plots = 5
+    # for kidx, k in enumerate(np.linspace(0, 1, n_plots)):
+    #     col = 5
+    #     row = 5
+        # fig = plt.figure()
+    #     for iidx, i in enumerate(np.linspace(0, 1, col)):
+    #         for jidx, j in enumerate(np.linspace(0, 1, row)):
+    # ax = fig.add_subplot(int(row), int(col), int(row)*iidx+jidx+1)
+    fig = plt.figure()
+    ax = fig.add_subplot()
+    E3 = E3_[int((x.size-1)*0.5)]
+    E4 = E4_[int((x.size-1)*0.2)]
+    E1 = E1_[int((x.size-1)*0.1)]
+    E2 = E4 + E3 - E1
 
-                p1 = np.sqrt(np.fmax((E1 - m_d)*(E1 + m_d), 1e-200))
-                p2 = np.sqrt(np.fmax((E2 - m_d)*(E2 + m_d), 1e-200))
-                p3 = np.sqrt(np.fmax((E3 - m_X)*(E3 + m_X), 1e-200))
-                p4 = np.sqrt(np.fmax((E4 - m_X)*(E4 + m_X), 1e-200))
+    p1 = np.sqrt(np.fmax((E1 - m_d)*(E1 + m_d), 1e-200))
+    p2 = np.sqrt(np.fmax((E2 - m_d)*(E2 + m_d), 1e-200))
+    p3 = np.sqrt(np.fmax((E3 - m_X)*(E3 + m_X), 1e-200))
+    p4 = np.sqrt(np.fmax((E4 - m_X)*(E4 + m_X), 1e-200))
 
-                # Kinematical region for s 
-                s12_min = (E1 + E2)**2 - (p1 + p2)**2
-                s12_max = (E1 + E2)**2 - (p1 - p2)**2
-                s34_min = (E3 + E4)**2 - (p3 + p4)**2
-                s34_max = (E3 + E4)**2 - (p3 - p4)**2
-                log_s_min = np.log(np.fmax(np.fmax(s12_min, s34_min), 1e-200))
-                log_s_max = np.log(np.fmax(np.fmin(s12_max, s34_max), 1e-200))
-                s = np.exp(np.fmin(log_s_min * (1.-x) + log_s_max * x, 6e2))
+    # Kinematical region for s: s_min/max = (E + E')^2 - (p +- p')^2.
+    # Avoid catastrophic cancellation by a^2 - b^2 = (a+b)*(a-b)
+    s12_min = (E1 + E2 + p1 + p2)*(E1 + E2 - p1 - p2)
+    s12_max = (E1 + E2 + p1 - p2)*(E1 + E2 - p1 + p2)
+    s34_min = (E3 + E4 + p3 + p4)*(E3 + E4 - p3 - p4)
+    s34_max = (E3 + E4 + p3 - p4)*(E3 + E4 - p4 + p4)
+    log_s_min = np.log(np.fmax(np.fmax(s12_min, s34_min), 1e-200))
+    log_s_max = np.log(np.fmax(np.fmin(s12_max, s34_max), 1e-200))
+    s = np.exp(np.fmin(log_s_min * (1.-x) + log_s_max * x, 6e2))
 
-                # Something weird about s and the limits varying - s is multivalued in x 
-                # s1 = np.exp(np.log(s[0]) * (1.-x) + np.log(np.max(s)) * x)
+    # print(s12_min, s12_max, s34_min, s34_max)
 
-                # plt.plot(x, E1, 'tab:blue')
-                # plt.plot(x, E2, 'r--')
-                # plt.plot(x, E3, 'k--')
-                # plt.plot(x, E4, 'g-.')
-                # plt.plot(x,s)
-                # plt.plot(x,s1)
-                # plt.show()
+    # Something weird about s and the limits varying - s is multivalued in x 
+    # s1 = np.exp(np.log(s[0]) * (1.-x) + np.log(np.max(s)) * x)
 
-                a = np.fmin(-4.*p3*p3*((E1 + E2)*(E1 + E2) - s), -1e-200)
-                b = 2.*(p3/p1)*(s - 2.*E1*(E1 + E2))*(s - 2.*E3*(E3 + E4))
-                sqrt_arg = 4.*(p3*p3/(p1*p1))*(s - s12_min)*(s - s12_max)*(s - s34_min)*(s - s34_max)
-                sqrt_fac = np.sqrt(np.fmax(sqrt_arg, 0.))
+    # plt.plot(x, E1, 'tab:blue')
+    # plt.plot(x, E2, 'r--')
+    # plt.plot(x, E3, 'k--')
+    # plt.plot(x, E4, 'g-.')
+    # plt.plot(x,s)
+    # plt.plot(x,s1)
+    # plt.show()
 
-                # Anton: ct_p, ct_m solutions of a*cos^2 + b*cos + c = 0 for cos
-                ct_p = (-b + sqrt_fac)/(2.*a)
-                ct_m = (-b - sqrt_fac)/(2.*a)
+    a = np.fmin(-4.*p3*p3*((E1 + E2)*(E1 + E2) - s), -1e-200)
+    b = 2.*(p3/p1)*(s - 2.*E1*(E1 + E2))*(s - 2.*E3*(E3 + E4))
+    sqrt_arg = 4.*(p3*p3/(p1*p1))*(s - s12_min)*(s - s12_max)*(s - s34_min)*(s - s34_max)
+    sqrt_fac = np.sqrt(np.fmax(sqrt_arg, 0.))
 
-                # print(-sqrt_fac,a)
+    # Anton: ct_p, ct_m solutions of a*cos^2 + b*cos + c = 0 for cos
+    ct_p = (-b + sqrt_fac)/(2.*a)
+    ct_m = (-b - sqrt_fac)/(2.*a)
 
-                # Anton: R_theta integration region {-1 <= cos <= 1 | c_p <= cos <= c_m}. fmin = element-wise
-                # Take ct_p if -1 <= ct_p <= 1, else -1
-                # Take ct_m if ct_min <= ct_m <= 1. If ct_m > 1, take 1, if 1 < ct_m < ct_min, take ct_min
-                ct_min = np.fmin(np.fmax(-1., ct_p), 1.)
-                ct_max = np.fmax(np.fmin(1., ct_m), ct_min)   
+    # print(-sqrt_fac,a)
 
-                # Consider whether or not integration region is ill-defined, e.g. -1 < c_m < c_p < 1
-                in_res = (ct_max > ct_min)
-                # Pick one E_1, E_3 value to plot for
-                # print(f'E_1: {E1[index_1]:.3e}, E_3: {E3[index_3]:.3e}')
+    # Anton: R_theta integration region {-1 <= cos <= 1 | c_p <= cos <= c_m}. fmin = element-wise
+    # Take ct_p if -1 <= ct_p <= 1, else -1
+    # Take ct_m if ct_min <= ct_m <= 1. If ct_m > 1, take 1, if 1 < ct_m < ct_min, take ct_min
+    ct_min = np.fmin(np.fmax(-1., ct_p), 1.)
+    ct_max = np.fmax(np.fmin(1., ct_m), ct_min)   
 
-                time1 = time.time()
-                ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a, s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_X=m_X, vert=vert)
-                print(f'ker_C_n_XX_dd_s_t_integral ran in {time.time()-time1}s')
-                # print(ker_C_n_XX_dd_s_t_integral_val)
+    # Consider whether or not integration region is ill-defined, e.g. -1 < c_m < c_p < 1
+    in_res = (ct_max > ct_min)
+    # Pick one E_1, E_3 value to plot for
+    # print(f'E_1: {E1[index_1]:.3e}, E_3: {E3[index_3]:.3e}')
 
-                # x = ln(s/s_min) / ln(s_max/s_min)
-                ax.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val, 'r')
-                # ax.set_xscale('log')
+    time1 = time.time()
+    ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a, s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_X=m_X, vert=vert)
+    print(f'ker_C_n_XX_dd_s_t_integral ran in {time.time()-time1}s')
+    # print(ker_C_n_XX_dd_s_t_integral_val)
+
+    # x = ln(s/s_min) / ln(s_max/s_min)
+    ax.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val, 'r')
+    ax.set_xscale('log')
             
     # fig.tight_layout()
     plt.show()
