@@ -18,7 +18,7 @@ offset = 1.+1e-14
 
 """
 Changes: 
-Updated er_C_n_pp_dd_s_t_integral to ker_C_n_XX_dd_s_t_integral
+Updated er_C_n_pp_dd_s_t_integral to ker_C_n_XX_dd_s_t_integral (_2)
 Updated sigma_pp_dd to sigma_XX_dd
 
 Have to do: 
@@ -189,6 +189,7 @@ def C_rho_3_12(type, m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, M2):
 
     return M2*res/(32.*(pi**3.))
 
+# This kernel is replaced by 'ker_C_n_XX_dd_s_t_integral_2'. 
 @nb.jit(nopython=True, cache=True)
 def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3, m_d, m_X, vert):
     """
@@ -295,6 +296,7 @@ def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     print(np.min(term4_min), np.max(term4_max))
     return vert*(term1_max + term2_max + term3_max + term4_max - term1_min - term2_min - term3_min - term4_min).real
 
+# For XX --> dd (for some reason, instead of dd --> XX)
 @nb.jit(nopython=True, cache=True)
 def ker_C_n_XX_dd_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3, m_d, m_X, vert):
     """
@@ -385,16 +387,21 @@ def ker_C_n_XX_dd_s(s, E1, E2, E3, p1, p3, m_d, m_X, s12_min, s12_max, s34_min, 
     ct_max = np.fmax(np.fmin(1., ct_m), ct_min)
     in_res = (ct_max > ct_min)
 
-    # Anton: x = [1,2,3], then x[False] = 0 => x = [1,2,3], no change : x[True] = 0 => x = [0,0,0], change
-    # Thus return t_int as either 0 or ker_C_n_XX_dd_s_t_integral based in in_res = True or False
+    # Anton: return zero for integral if it is not inside defined region.
+    # x = [0,0,0], x[[True,False,True]] = [1,2,3] => x = [1,0,3]
     t_int = np.zeros(s.size)
-    t_int[in_res] = ker_C_n_XX_dd_s_t_integral(ct_min[in_res], ct_max[in_res], ct_p[in_res], ct_m[in_res], a[in_res], s[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m_d, m_X, vert)
+    t_int[in_res] = ker_C_n_XX_dd_s_t_integral_2(ct_min[in_res], ct_max[in_res], ct_p[in_res], ct_m[in_res], a[in_res], s[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m_d, m_X, vert)
     return t_int
 
-# 3 4 -> 1 2 <=> phi phi -> d d
+# 3 4 -> 1 2 <=> X X -> d d
 @nb.jit(nopython=True, cache=True)
 def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert):
-    # Anton: Seems like E1 <--> E3, E2 --> E4 compared to article. 
+    """
+    Anton: Seems like E1 <--> E3, E2 <--> E4 compared to article.
+    Think it is because we now do XX --> dd instead of dd --> XX, 
+    where 1,2 = d,d and 3,4 = X,X as someone once wrote in comment 
+    above the function (3 4 -> 1 2 <=> phi phi -> d d). 
+    """
     log_E3_min = log(m_X*offset)
     log_E3_max = log(max((max_exp_arg + xi_X)*T_d, 1e1*m_X))
     E3 = np.exp(np.fmin(log_E3_min * (1.-x[:,0]) + log_E3_max * x[:,0], 6e2))
@@ -446,7 +453,7 @@ def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert):
     return res
 
 # type == -1: only phi phi -> d d, type == 0: both reactions, type == 1: only d d -> phi phi, type == 2: (phi phi -> d d, d d -> phi phi)
-def C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert, type = 0):
+def C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type = 0):
     if m_X/T_d - xi_X > spin_stat_irr: # spin-statistics irrelevant here
         th_avg_s_v = th_avg_sigma_v_XX_dd(T_d, m_d, m_X, vert)
         if th_avg_s_v <= 0.:
@@ -473,7 +480,7 @@ def C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert, type = 0):
     # Send arrays in batches
     @vegas.batchintegrand
     def kernel(x):
-        return ker_C_n_XX_dd(x, m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert)
+        return ker_C_n_XX_dd(x, m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert)
 
     """
     Anton: Order of integration in analytic expression: E1, E2, E3, s. 
@@ -549,12 +556,11 @@ def sigma_XX_dd(s, m_d, m_X, vert):
     Generically with m1 != m2, m3 != m4, 
     p1/3cm = sqrt(1/(4*s) * [s^2 - 2*s(m1/3^2 + m2/4^2) + (m1/3^2 - m2/4^2)^2]) * H(s - (m1/3 + m2/4)^2)
            = sqrt(1/(4*s) * [(s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2]) * H(s - (m1/3 + m2/4)^2)
-
-    Heavysides from positive p_cm^2: 
+    Heavysides from demanding positive p_cm^2: 
     H(1/(4*s)*[(s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2]) = H((s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2)
-                                                       = H(s - m1/3 - m2/4 - 2*m1/3*m2/4)
-                                                       = H(s - (m1/3 + m2/4)^2)
-                                                       = H(E_cm - m1/3 - m2/4)
+    = H(s - m1/3 - m2/4 - 2*m1/3*m2/4)
+    = H(s - (m1/3 + m2/4)^2)
+    = H(E_cm - m1/3 - m2/4)
     Cross-section:
     sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(16*pi*[s^2 - 2*s(m1^2 + m2^2) + (m1^2 - m2^2)^2]) 
           * int_{t_lower}^{t_upper} dt |M|^2
@@ -998,12 +1004,12 @@ if __name__ == '__main__':
     # colorbar = fig.colorbar(ax_collection, ax=ax)
 
     # ax.plot(s, sigma*s*(s - 4*m_X**2), linestyle='none')        # |M|^2 integrated over t 
-    ax.plot(s[:int(x.size*0.98)], sigma[:int(x.size*0.98)], label='vector')
-    ax.plot(s[:int(x.size*0.98)], np.vectorize(sigma_pp_dd)(s=s, m_d=m_d, m_phi=m_X, vert=vert)[:int(x.size*0.98)], label='scalar')
+    ax.plot(s, sigma, label='vector')
+    ax.plot(s, np.vectorize(sigma_pp_dd)(s=s, m_d=m_d, m_phi=m_X, vert=vert), label='scalar')
     ax.set_xscale('log')
     ax.set_yscale('log')
     ax.legend()
     plt.show()
 
-    # res = C_n_XX_dd(m_d=m_d, m_phi=m_X, k_d=-1., k_phi=1., T_d=T, xi_d=xi_d, xi_phi=xi_X, vert=vert, type=0)
-    # print(res)
+    res = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=-1., k_X=1., T_d=T, xi_d=xi_d, xi_X=xi_X, vert=vert, type=0)
+    print(res)

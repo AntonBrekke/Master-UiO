@@ -20,7 +20,7 @@ However, only sigma_gen is ever called in the code -
 may not have to fix the others 
 """
 
-# @nb.jit(nopython=True, cache=True)
+@nb.jit(nopython=True, cache=True)
 def Gamma_X(y, th, m_X, m_d):
     y2 = y*y
     sth = np.sin(th)
@@ -28,8 +28,8 @@ def Gamma_X(y, th, m_X, m_d):
 
     # Decay to aa, ad, and dd. Have used m_a = 0.
     X_aa = y2*sth**4 * m_X/(8*np.pi)
-    X_ad = y2*cth**2*sth**2/(8*np.pi*m_X**5) * (2*m_X**4 - m_X**2*m_d**2 - m_d**4)*(m_X**2 - m_d**2) if m_X**2 > m_d**2 else 0. 
-    X_dd = y2*cth**4/(8*np.pi*m_X**2) * np.sqrt(m_X**2 - 4*m_d**2)*(m_X**2 + 2*m_d**2) if m_X**2 > 2*m_d**2 else 0. 
+    X_ad = y2*cth**2*sth**2/(8*np.pi*m_X**5)*(2*m_X**4 - m_X**2*m_d**2 - m_d**4)*(m_X**2 - m_d**2) * (m_X**2 > m_d**2)
+    X_dd = y2*cth**4/(8*np.pi*m_X**2)*np.sqrt(m_X**2 - 4*m_d**2)*(m_X**2 + 2*m_d**2) * (m_X**2 > 2*m_d**2)
 
     return X_aa + X_ad + X_dd
 
@@ -38,6 +38,7 @@ def Gamma_X(y, th, m_X, m_d):
 def M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
     """
     12 --> 34, 1,2,3,4 = a, d
+    Under update
     """
     m12 = m1*m1
     m22 = m2*m2
@@ -84,7 +85,7 @@ def M2_fi(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
 
     return 4.*vert*(ss + tt + uu + st + su + tu)
 
-# @nb.jit(nopython=True, cache=True)
+@nb.jit(nopython=True, cache=True)
 def M2_tr(s, t, m_d2, vert, m_X2, m_Gamma_X2):
     """
     ad --> dd
@@ -118,7 +119,7 @@ def ker_sigma_gen(t, s, p1cm, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub):
 
 # no factor taking care of identical particles (not known on this level)
 def sigma_gen(s, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
-    if s < (m1+m2)**2. or s < (m3+m4)**2.:
+    if s < (m1 + m2)**2. or s < (m3 + m4)**2.:
         return 0.
     sqrt_s = sqrt(s)
     E1cm = (s+m1*m1-m2*m2)/(2.*sqrt_s)
