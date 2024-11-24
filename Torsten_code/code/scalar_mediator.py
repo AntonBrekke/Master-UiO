@@ -80,8 +80,8 @@ def M2_fi(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
     ss = s * (s - 4.*m_d2) * s_prop
     tt = (t - m_d2) * (t - m_d2) * t_prop
     uu = (u - m_d2) * (u - m_d2) * u_prop
-    st = s * (t + m_d2) * ((s - m_phi2)*(t - m_phi2) + m_Gamma_phi2) * s_prop * t_prop
-    su = s * (u + m_d2) * ((s - m_phi2)*(u - m_phi2) + m_Gamma_phi2) * s_prop * u_prop
+    st = s * (t + m_d2) * ((s - m_phi2)*(t - m_phi2) + m_Gamma_phi2) * s_prop*t_prop
+    su = s * (u + m_d2) * ((s - m_phi2)*(u - m_phi2) + m_Gamma_phi2) * s_prop*u_prop
     tu = -(3.*m_d2*m_d2 - t*u - m_d2*(t + u)) * ((t - m_phi2)*(u - m_phi2) + m_Gamma_phi2) * t_prop * u_prop
 
     return 4.*vert*(ss + tt + uu + st + su + tu)
@@ -92,12 +92,12 @@ def M2_tr(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
     s_prop = 1. / ((s - m_phi2)*(s - m_phi2) + m_Gamma_phi2)
     t_prop = 1. / ((t - m_phi2)*(t - m_phi2) + m_Gamma_phi2)
     u_prop = 1. / ((u - m_phi2)*(u - m_phi2) + m_Gamma_phi2)
-    ss = (4.*m_d2*m_d2 - 5.*m_d2*s + s*s) * s_prop
-    tt = (4.*m_d2*m_d2 - 5.*m_d2*t + t*t) * t_prop
-    uu = (4.*m_d2*m_d2 - 5.*m_d2*u + u*u) * u_prop
-    st = -(5.*m_d2*m_d2 - s*t - 2.*m_d2*(s+t)) * ((s-m_phi2)*(t-m_phi2) + m_Gamma_phi2) * s_prop * t_prop
-    su = -(5.*m_d2*m_d2 - s*u - 2.*m_d2*(s+u)) * ((s-m_phi2)*(u-m_phi2) + m_Gamma_phi2) * s_prop * u_prop
-    tu = -(5.*m_d2*m_d2 - t*u - 2.*m_d2*(t+u)) * ((t-m_phi2)*(u-m_phi2) + m_Gamma_phi2) * t_prop * u_prop
+    ss = s_prop*(4.*m_d2*m_d2 - 5.*m_d2*s + s*s)
+    tt = t_prop*(4.*m_d2*m_d2 - 5.*m_d2*t + t*t)
+    uu = u_prop*(4.*m_d2*m_d2 - 5.*m_d2*u + u*u)
+    st = -s_prop*t_prop*(5.*m_d2*m_d2 - s*t - 2.*m_d2*(s+t))*((s-m_phi2)*(t-m_phi2) + m_Gamma_phi2)
+    su = -s_prop*u_prop*(5.*m_d2*m_d2 - s*u - 2.*m_d2*(s+u))*((s-m_phi2)*(u-m_phi2) + m_Gamma_phi2)
+    tu = -t_prop*u_prop*(5.*m_d2*m_d2 - t*u - 2.*m_d2*(t+u))*((t-m_phi2)*(u-m_phi2) + m_Gamma_phi2)
 
     return 4.*vert*(ss + tt + uu + st + su + tu)
 

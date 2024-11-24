@@ -541,21 +541,24 @@ def sigma_pp_dd(s, m_d, m_phi, vert):
     return vert*(int0-int1+log_part)/(8.*pi*s*(4.*m_phi2-s))
 
 # X X -> d d
-# @nb.jit(nopython=True, cache=True)
+@nb.jit(nopython=True, cache=True)
 def sigma_XX_dd(s, m_d, m_X, vert):
     """
     Anton: Since sigma ~ int d(cos(theta)) |M|^2 for 2 to 2 process, we must integrate |M|^2 analytically. 
     Switch integration to t = m_d^2 + m_phi^2 - 2E1*E3 + 2p1*p3*cos(theta), d(cos(theta)) = 1/(2*p1*p3)dt
     Since sigma is Lorentz invariant, calculate in CM-frame
-    t = (p1-p3)^2 = -(p1cm - p3cm)^2 = -(p1cm^2 + p3cm^2 - 2*p1cm*p3cm*cos(theta))
-    This gives upper and lower bounds 
-    t_upper = -(p1cm - p3cm)^2
-    t_lower = -(p1cm + p3cm)^2
-    s = (p1/3 + p2/4)^2 = (E1/3 + E2/4)^2 = 4E1/3^2, since m1 = m2, m3 = m4 in this case
-    => p1cm = sqrt(1/4*s - m1^2) * H(s-4*m1^2), p3cm = sqrt(1/4*s - m3^2) * H(s - 4*m3^2)
-    Generically with m1 != m2, m3 != m4, 
-    p1/3cm = sqrt{1/(4*s) * [s^2 - 2*s(m1/3^2 + m2/4^2) + (m1/3^2 - m2/4^2)^2]} * H(s - (m1/3 + m2/4)^2)
-           = sqrt{1/(4*s) * [(s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2]} * H(s - (m1/3 + m2/4)^2)
+    t = (p1-p3)^2 = (E1cm - E3cm)^2 - (p1cm - p3cm)^2
+      = (E1cm - E3cm)^2 - (p1cm^2 + p3cm^2 - 2*p1cm*p3cm*cos(theta))
+    This gives upper and lower bounds (cos(theta)=1, cos(theta)=-1)
+    t_upper = (E1cm - E3cm)^2 - (p1cm - p3cm)^2 = (E1cm-E3cm + (p1cm-p3cm))*(E1cm-E3cm - (p1cm-p3cm))
+    t_lower = (E1cm - E3cm)^2 - (p1cm + p3cm)^2 = (E1cm-E3cm + (p1cm+p3cm))*(E1cm-E3cm - (p1cm+p3cm))
+    s = (p1/3 + p2/4)^2 = (E1/3cm + E2/4cm)^2 
+    sqrt(s) = E1/3cm + E2/4cm
+    Trick: E2/4^2 = E1/3^2 - m1/3^2 + m2/4^2
+    => (sqrt(s) - E1/3cm)^2 = E1/3cm^2 - m1/3^2 + m2/4^2
+    => E1/3cm = (s + m1/3^2 - m2/4^2) / (2*sqrt(s))
+    which would also give momentum p1/3cm = sqrt(E1/3cm^2 - m1/2^2) for integration bounds. 
+    In this case, m1 = m3, m2 = m4.
     Heavysides from demanding positive p_cm^2: 
     H(1/(4*s)*[(s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2]) = H((s - m1/3 - m2/4)^2 - 4*m1/3^2*m2/4^2)
     = H(s - m1/3 - m2/4 - 2*m1/3*m2/4)
@@ -571,8 +574,9 @@ def sigma_XX_dd(s, m_d, m_X, vert):
     m_X4 = m_X2*m_X2
 
     # Sigma zero when Heavyside violated, obtain values everywhere else
-    cross_section = np.nan*np.zeros(s.size)
-    res = np.logical_and(s > 4*m_d2, s > 4*m_X2)   # Area where the three-momenta is defined.
+    cross_section = np.zeros(s.size)
+    # Area where the three-momenta is defined.
+    res = np.logical_and(s > 4*m_d2, s > 4*m_X2)
 
     s_res = s[res]
     s2_res = s_res*s_res
