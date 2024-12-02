@@ -22,8 +22,8 @@ dof_phi = 1.
 # sin2_2th_grid = np.logspace(-17, -8, n_th)
 
 # The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
-n_m = 10         # 21
-n_th = 10        # 81
+n_m = 1         # 21
+n_th = 1        # 81
 m_d_grid = 1e-6*np.logspace(1.7, 2.5, n_m)          # 1e-6*m_d = 1e-6 * GeV = keV, plotted values: (10^0 - 10^2) keV
 sin2_2th_grid = np.logspace(-17, -15, n_th)
 # m_d_grid = 1e-6*10**(np.array([1.7, 2.24, 1.15, 2.3, 1.5]))         
@@ -48,13 +48,13 @@ def find_y(params):
     m_d = params[0]
     sin2_2th = params[1]
     th = 0.5*np.arcsin(np.sqrt(sin2_2th))
-    m_phi = r_m*m_d
+    m_X = r_m*m_d
 
     O_d_h2_dw = cf.O_h2_dw(m_d, th)         # Anton: Omega_DM * h^2 from Dodelson-Widrow mechanism
     log_enhance_req = np.log(cf.omega_d0/O_d_h2_dw)
     if log_enhance_req < 0.:
-        return m_d, m_phi, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-    y_cur = np.sqrt(log_enhance_req/(1e19*sin2_2th/m_phi)) # 1.65e16 roughly the scaling factor from parameter scans
+        return m_d, m_X, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+    y_cur = np.sqrt(log_enhance_req/(1e19*sin2_2th/m_X)) # 1.65e16 roughly the scaling factor from parameter scans
     print(f'm_d: {m_d:.2e}, sin2_2th: {sin2_2th:.2e}, O_d_g2_dw: {O_d_h2_dw:.2e}, log_enhance_req: {log_enhance_req:.2e}, y_cur: {y_cur:.2e}')
     O_d_h2_old = O_d_h2_dw
     y_old = 0.
@@ -64,14 +64,14 @@ def find_y(params):
         try:
             time1 = time.time()
             print("Running sterile_caller.call ")
-            t_grid, T_SM_grid, T_nu_grid, ent_grid, hubble_grid, sf_grid, T_d_grid, xi_d_grid, xi_phi_grid, n_d_grid, n_phi_grid, C_therm_grid, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = sterile_caller.call(m_d, m_phi, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y_cur, spin_facs = spin_facs, off_shell = off_shell)
+            t_grid, T_SM_grid, T_nu_grid, ent_grid, hubble_grid, sf_grid, T_d_grid, xi_d_grid, xi_phi_grid, n_d_grid, n_phi_grid, C_therm_grid, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = sterile_caller.call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y_cur, spin_facs = spin_facs, off_shell = off_shell)
             print(f"sterile_caller.call ran in {time.time()-time1}s")
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print("something went wrong... ", e, exc_type, fname, exc_tb.tb_lineno)
-            return m_d, m_phi, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
+            return m_d, m_X, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
 
         O_d_h2_cur = n_d_grid[-1]*m_d*cf.s0/(ent_grid[-1]*cf.rho_crit0_h2)
         print(f'm_d: {m_d:.2e}, sin2_2th: {sin2_2th:.2e}, y_cur: {y_cur:.2e}, O_d_g2_cur: {O_d_h2_cur:.2e}')
@@ -102,7 +102,7 @@ def find_y(params):
             # print(m_d, sin2_2th, O_d_h2_dw, log_enhance_req, log_enhance_cur, y_old, y_cur)
 
     print('find_y.py for-loop done ')
-    filename = f'md_{m_d:.4e}_mphi_{m_phi:.4e}_sin22th_{sin2_2th:.4e}_y_{y_cur:.4e}.dat'
+    filename = f'md_{m_d:.4e}_mphi_{m_X:.4e}_sin22th_{sin2_2th:.4e}_y_{y_cur:.4e}.dat'
     np.savetxt(dirname+'benchmark_pts/'+filename, np.column_stack((t_grid[::-i_skip][::-1], T_SM_grid[::-i_skip][::-1], T_nu_grid[::-i_skip][::-1], ent_grid[::-i_skip][::-1], hubble_grid[::-i_skip][::-1], sf_grid[::-i_skip][::-1], T_d_grid[::-i_skip][::-1], xi_d_grid[::-i_skip][::-1], xi_phi_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1], n_phi_grid[::-i_skip][::-1], C_therm_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1]*m_d*cf.s0/(ent_grid[::-i_skip][::-1]*cf.rho_crit0_h2))))
 
     therm_ratio = C_therm_grid / (3.*hubble_grid*n_d_grid)
@@ -111,7 +111,7 @@ def find_y(params):
     therm_ratio_max = np.amax(therm_ratio)
     O_d_h2 = n_d_grid[-1]*m_d*cf.s0/(ent_grid[-1]*cf.rho_crit0_h2)
     print(f'Returned y = {y_cur:.2e} for m_d = {m_d:.2e}, sin2_2th = {sin2_2th:.2e}')
-    return m_d, m_phi, sin2_2th, y_cur, O_d_h2, x_therm, x_d_therm, therm_ratio_max, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3
+    return m_d, m_X, sin2_2th, y_cur, O_d_h2, x_therm, x_d_therm, therm_ratio_max, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3
 
 if __name__ == '__main__':
     time1 = time.time()

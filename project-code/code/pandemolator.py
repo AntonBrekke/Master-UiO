@@ -92,17 +92,17 @@ class TimeTempRelation(object):
         return [der_SM, der_nu]
 
 class Pandemolator(object):
-    def __init__(self, m_chi, k_chi, dof_chi, m_phi, k_phi, dof_phi, m_psi, k_psi, C_n, C_rho, C_xi0, t_grid, T_grid, dT_dt_grid, ent_grid, hubble_grid, sf_grid, i_ic, n_ic, rho_ic, i_end):
+    def __init__(self, m_chi, k_chi, dof_chi, m_X, k_phi, dof_phi, m_psi, k_psi, C_n, C_rho, C_xi0, t_grid, T_grid, dT_dt_grid, ent_grid, hubble_grid, sf_grid, i_ic, n_ic, rho_ic, i_end):
         self.m_chi = m_chi # in GeV
         self.k_chi = k_chi # +1 for fermion, -1 for boson, 0 for Maxwell-Boltzmann
         self.dof_chi = dof_chi
-        self.m_phi = m_phi # in GeV
+        self.m_X = m_X # in GeV
         self.k_phi = k_phi # +1 for fermion, -1 for boson, 0 for Maxwell-Boltzmann
         self.dof_phi = dof_phi
         self.m_psi = m_psi # in GeV
         self.k_psi = k_psi # +1 for fermion, -1 for boson, 0 for Maxwell-Boltzmann
 
-        self.fac_n_phi = 2. if self.m_phi > 2.*self.m_chi else 1.
+        self.fac_n_phi = 2. if self.m_X > 2.*self.m_chi else 1.
 
         self.C_n = C_n     # rhs of Boltzmann-eq. for n_chi + self.fac_n_phi*n_phi
         self.C_rho = C_rho # rhs of Boltzmann-eq. for rho_chi + rho_phi
@@ -142,16 +142,16 @@ class Pandemolator(object):
         return dens.n(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi)
 
     def n_phi(self, T_chi, xi_phi):
-        return dens.n(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.n(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def rho(self, T_chi, xi_chi, xi_phi):
-        return dens.rho(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.rho(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.rho(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.rho(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def P(self, T_chi, xi_chi, xi_phi):
-        return dens.P(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.P(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.P(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.P(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def rho_3P_diff(self, T_chi, xi_chi, xi_phi):
-        return dens.rho_3P_diff(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.rho_3P_diff(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.rho_3P_diff(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.rho_3P_diff(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def n_chi_der_T(self, T_chi, xi_chi):
         return dens.n_der_T(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi)
@@ -160,30 +160,30 @@ class Pandemolator(object):
         return dens.n_der_xi(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi)
 
     def n_phi_der_T(self, T_chi, xi_phi):
-        return dens.n_der_T(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.n_der_T(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def n_phi_der_xi(self, T_chi, xi_phi):
-        return dens.n_der_xi(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.n_der_xi(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def rho_der_T(self, T_chi, xi_chi, xi_phi):
-        return dens.rho_der_T(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.rho_der_T(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.rho_der_T(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi) + dens.rho_der_T(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def rho_chi_der_xi(self, T_chi, xi_chi):
         return dens.rho_der_xi(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi)
 
     def rho_phi_der_xi(self, T_chi, xi_phi):
-        return dens.rho_der_xi(self.k_phi, T_chi, self.m_phi, self.dof_phi, xi_phi)
+        return dens.rho_der_xi(self.k_phi, T_chi, self.m_X, self.dof_phi, xi_phi)
 
     def n_rho_root(self, Txi_chi, n_in, rho_in):
         T_chi = exp(max(min(Txi_chi[0], 10.), -100.))
-        xi_chi = min(Txi_chi[1]+self.m_chi/T_chi, (1.-1e-14)*self.m_phi/(self.fac_n_phi*T_chi))
+        xi_chi = min(Txi_chi[1]+self.m_chi/T_chi, (1.-1e-14)*self.m_X/(self.fac_n_phi*T_chi))
         n = max(self.n_chi(T_chi, xi_chi) + self.fac_n_phi*self.n_phi(T_chi, self.fac_n_phi*xi_chi), 1e-300)
         rho = max(self.rho(T_chi, xi_chi, self.fac_n_phi*xi_chi), 1e-300)
         return [log(n/n_in), log(rho/rho_in)]
 
     def jac_n_rho_root(self, Txi_chi, n_in, rho_in):
         T_chi = exp(max(min(Txi_chi[0], 10.), -100.))
-        xi_chi = min(Txi_chi[1]+self.m_chi/T_chi, (1.-1e-14)*self.m_phi/(self.fac_n_phi*T_chi))
+        xi_chi = min(Txi_chi[1]+self.m_chi/T_chi, (1.-1e-14)*self.m_X/(self.fac_n_phi*T_chi))
         n = max(self.n_chi(T_chi, xi_chi) + self.fac_n_phi*self.n_phi(T_chi, self.fac_n_phi*xi_chi), 1e-300)
         rho = max(self.rho(T_chi, xi_chi, self.fac_n_phi*xi_chi), 1e-300)
         n_der_T = self.n_chi_der_T(T_chi, xi_chi) + self.fac_n_phi*self.n_phi_der_T(T_chi, self.fac_n_phi*xi_chi)
@@ -224,10 +224,10 @@ class Pandemolator(object):
             self.xi_chi_last = log(n/(self.dof_chi*((self.m_chi*self.T_chi_last/(2.*np.pi))**1.5)))+self.m_chi/self.T_chi_last
         root_sol = root(self.n_rho_root, [log(self.T_chi_last), self.xi_chi_last-self.m_chi/self.T_chi_last], args = (n, rho), jac=self.jac_n_rho_root, method='lm')
         T_chi = exp(root_sol.x[0])
-        xi_chi = min(root_sol.x[1] + self.m_chi/T_chi, (1.-1e-14)*self.m_phi/(self.fac_n_phi*T_chi))
+        xi_chi = min(root_sol.x[1] + self.m_chi/T_chi, (1.-1e-14)*self.m_X/(self.fac_n_phi*T_chi))
         xi_phi = self.fac_n_phi*xi_chi
 
-        # print(np.exp(xi_chi), self.n_phi(T_chi, self.fac_n_phi*xi_chi)/self.n_chi(T_chi, xi_chi), dens.rho(self.k_phi, T_chi, self.m_phi, self.dof_phi, 2.*xi_chi)/dens.rho(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi))
+        # print(np.exp(xi_chi), self.n_phi(T_chi, self.fac_n_phi*xi_chi)/self.n_chi(T_chi, xi_chi), dens.rho(self.k_phi, T_chi, self.m_X, self.dof_phi, 2.*xi_chi)/dens.rho(self.k_chi, T_chi, self.m_chi, self.dof_chi, xi_chi))
         n_sol = self.n_chi(T_chi, xi_chi) + self.fac_n_phi*self.n_phi(T_chi, xi_phi)
         rho_sol = self.rho(T_chi, xi_chi, xi_phi)
         self.T_chi_last, self.xi_chi_last = T_chi, xi_chi
@@ -262,7 +262,7 @@ class Pandemolator(object):
             self.xi_chi_last = log(n/(self.dof_chi*((self.m_chi*self.T_chi_last/(2.*np.pi))**1.5)))+self.m_chi/self.T_chi_last
         root_sol = root(self.n_rho_root, [log(self.T_chi_last), self.xi_chi_last-self.m_chi/self.T_chi_last], args = (n, rho), jac=self.jac_n_rho_root, method='lm')
         T_chi = exp(root_sol.x[0])
-        xi_chi = min(root_sol.x[1] + self.m_chi/T_chi, (1.-1e-14)*self.m_phi/(self.fac_n_phi*T_chi))
+        xi_chi = min(root_sol.x[1] + self.m_chi/T_chi, (1.-1e-14)*self.m_X/(self.fac_n_phi*T_chi))
         xi_phi = self.fac_n_phi*xi_chi
 
         C_xi0 = self.C_xi0(T, T_chi, xi_chi, xi_phi)
@@ -421,7 +421,7 @@ class Pandemolator(object):
                     rho = sol.y[1, i-i_xi_nonzero]/(sf**4.)
                     root_sol = root(self.n_rho_root, [log(self.T_chi_last), self.xi_chi_last-self.m_chi/self.T_chi_last], jac=self.jac_n_rho_root, args = (n, rho), method='lm')
                     self.T_chi_grid_sol[i] = exp(root_sol.x[0])
-                    self.xi_chi_grid_sol[i] = min(root_sol.x[1] + self.m_chi/self.T_chi_grid_sol[i], (1.-1e-14)*self.m_phi/(self.fac_n_phi*self.T_chi_grid_sol[i]))#root_sol.x[1] + self.m_chi/self.T_chi_grid_sol[i]
+                    self.xi_chi_grid_sol[i] = min(root_sol.x[1] + self.m_chi/self.T_chi_grid_sol[i], (1.-1e-14)*self.m_X/(self.fac_n_phi*self.T_chi_grid_sol[i]))#root_sol.x[1] + self.m_chi/self.T_chi_grid_sol[i]
                     self.T_chi_last, self.xi_chi_last = self.T_chi_grid_sol[i], self.xi_chi_grid_sol[i]
                     self.xi_phi_grid_sol[i] = self.fac_n_phi*self.xi_chi_grid_sol[i]
                     self.n_chi_grid_sol[i] = self.n_chi(self.T_chi_grid_sol[i], self.xi_chi_grid_sol[i])
@@ -457,7 +457,7 @@ if __name__ == '__main__':
 
     m_d = 1e-4
     m_a = 0.
-    m_phi = 2.5e-4
+    m_X = 2.5e-4
     sin2_2th = 1e-16
     y = 1e-4
 
@@ -469,28 +469,35 @@ if __name__ == '__main__':
 
     m_d2 = m_d*m_d
     m_a2 = m_a*m_a
-    m_phi2 = m_phi*m_phi
+    m_X2 = m_X*m_X
     th = 0.5*asin(sqrt(sin2_2th))
     c_th = cos(th)
     s_th = sin(th)
     y2 = y*y
 
-    M2_dd = 2. * y2 * (c_th**4.) * (m_phi2 - 4.*m_d2)
-    M2_aa = 2. * y2 * (s_th**4.) * (m_phi2 - 4.*m_a2)
-    M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_phi2 - ((m_a+m_d)**2.))
+    # Anton: For some reason, matrix elements are added here
+    # M2_dd = 2. * y2 * (c_th**4.) * (m_X2 - 4.*m_d2)
+    # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
+    # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
+
+    # M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2) * (2*m_X2 + (m2 + m3)**2)
+
+    M2_dd = 2.*y2*(c_th**4.)/m_X2 * m_X2*(2*m_X2 + 4*m_d**2)
+    M2_aa = 2.*y2*(s_th**4.) * (2*m_X2)
+    M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
     def C_n(T_a, T_d, xi_d, xi_phi):
-        C_pp_dd = C_res_scalar.C_n_pp_dd(m_d, m_phi, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.)) / 4. # symmetry factor 1/4
-        C_da = C_res_scalar.C_n_3_12(m_d, m_a, m_phi, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d,   0., xi_phi, M2_da)
-        C_aa = C_res_scalar.C_n_3_12(m_a, m_a, m_phi, k_a, k_a, k_phi, T_a, T_a, T_d,   0.,   0., xi_phi, M2_aa) / 2.
+        C_pp_dd = C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.)) / 4. # symmetry factor 1/4
+        C_da = C_res_scalar.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d,   0., xi_phi, M2_da)
+        C_aa = C_res_scalar.C_n_3_12(m_a, m_a, m_X, k_a, k_a, k_phi, T_a, T_a, T_d,   0.,   0., xi_phi, M2_aa) / 2.
         print('C_ns:', C_pp_dd, C_da, C_aa)
         return C_da + 2.*C_aa + 2.*C_pp_dd
     def C_rho(T_a, T_d, xi_d, xi_phi):
-        C_da = C_res_scalar.C_rho_3_12(2, m_d, m_a, m_phi, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da)
-        C_aa = C_res_scalar.C_rho_3_12(3, m_a, m_a, m_phi, k_d, k_a, k_phi, T_a, T_a, T_d,   0., 0., xi_phi, M2_aa) / 2. # symmetry factor 1/2
+        C_da = C_res_scalar.C_rho_3_12(2, m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da)
+        C_aa = C_res_scalar.C_rho_3_12(3, m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d,   0., 0., xi_phi, M2_aa) / 2. # symmetry factor 1/2
         return C_da + C_aa
     def C_xi0(T_a, T_d, xi_d, xi_phi):
-        C_pp_dd = C_res_scalar.C_n_pp_dd(m_d, m_phi, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4.
+        C_pp_dd = C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4.
         return 2.*C_pp_dd
 
     Ttrel = TimeTempRelation()
@@ -501,7 +508,7 @@ if __name__ == '__main__':
     sf_ic_norm_0 = (cf.s0/(cf.s_SM_no_nu(Ttrel.T_SM_grid[i_ic]) + cf.s_nu(Ttrel.T_nu_grid[i_ic])))**(1./3.)
     n_ic = cf.n_0_dw(m_d, th) / (sf_ic_norm_0**3.)
     rho_ic = n_ic * cf.avg_mom_0_dw(m_d) / sf_ic_norm_0
-    pan = Pandemolator(m_d, k_d, dof_d, m_phi, k_phi, dof_phi, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, n_ic, rho_ic, i_end)
+    pan = Pandemolator(m_d, k_d, dof_d, m_X, k_phi, dof_phi, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, n_ic, rho_ic, i_end)
 
     T_d_last = m_d/2363419.2747363993
     xi_d_last = 2363419.529806943
@@ -509,7 +516,7 @@ if __name__ == '__main__':
     rho = 3.486289072693418e-27
     root_sol = root(pan.n_rho_root, [log(T_d_last), xi_d_last-m_d/T_d_last], args = (n, rho), jac=pan.jac_n_rho_root, method='lm')
     T_d = exp(root_sol.x[0])
-    xi_d = min(root_sol.x[1] + m_d/T_d, (1.-1e-14)*0.5*m_phi/T_d)
+    xi_d = min(root_sol.x[1] + m_d/T_d, (1.-1e-14)*0.5*m_X/T_d)
     print(T_d, xi_d)
     exit(1)
 
@@ -528,14 +535,14 @@ if __name__ == '__main__':
     plt.show()
 
     i_skip = 100
-    C_dd = np.array([-C_res_scalar.C_n(m_d, m_d, m_phi, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=-1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_dd = np.array([C_res_scalar.C_n(m_d, m_d, m_phi, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_da = np.array([-C_res_scalar.C_n(m_d, m_a, m_phi, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=-1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_da = np.array([C_res_scalar.C_n(m_d, m_a, m_phi, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_aa = np.array([-C_res_scalar.C_n(m_a, m_a, m_phi, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=-1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_aa = np.array([C_res_scalar.C_n(m_a, m_a, m_phi, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_ann = np.array([-C_res_scalar.C_n_pp_dd(m_d, m_phi, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=-1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_ann = np.array([C_res_scalar.C_n_pp_dd(m_d, m_phi, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_dd = np.array([-C_res_scalar.C_n(m_d, m_d, m_X, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=-1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_dd = np.array([C_res_scalar.C_n(m_d, m_d, m_X, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_da = np.array([-C_res_scalar.C_n(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=-1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_da = np.array([C_res_scalar.C_n(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_aa = np.array([-C_res_scalar.C_n(m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=-1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_aa = np.array([C_res_scalar.C_n(m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_ann = np.array([-C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=-1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_ann = np.array([C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
     plt.loglog(m_d/Ttrel.T_nu_grid[i_ic:i_end+1:i_skip], 2.*C_dd, color='dodgerblue')
     plt.loglog(m_d/Ttrel.T_nu_grid[i_ic:i_end+1:i_skip], 2.*C_inv_dd, color='dodgerblue', ls='--')
     plt.loglog(m_d/Ttrel.T_nu_grid[i_ic:i_end+1:i_skip], C_da, color='darkorange')
