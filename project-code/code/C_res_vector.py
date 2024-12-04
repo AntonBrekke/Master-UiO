@@ -20,20 +20,34 @@ offset = 1.+1e-14
 
 """
 Changes: 
+--------
 Updated er_C_n_pp_dd_s_t_integral to ker_C_n_XX_dd_s_t_integral (_2)
 Updated sigma_pp_dd to sigma_XX_dd
 Implemented ker_C_34_12_s_t_integral_2 by integrating over t with quad 
+Updated matrix elements 
+    * M2_dd 
+    * M2_aa 
+    * M2_da
+which updates C_n_3_12
+
 
 What must be done: 
+------------------
 Change 3 --> 12:
-ker_C_n_3_12_E2 
-ker_C_n_3_12_E1
-Gamma_scat (?, not called)
-C_n_3_12
+Gamma_scat (?, not called anywhere)
 
 Change 34 --> 12:
 ker_C_34_12_s_t_integral (difficult)
-ker_th_avg_sigma_v_33_11 (?)
+ker_th_avg_sigma_v_33_11 (?, does not seem to be called anywhere)
+
+-- Comment: 
+    To change C_n_3_12, update matrix elements in 
+    * pandemolator.py 
+    * sterile_caller.py 
+    * sterile_pandemic.py 
+    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+    M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
+    M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 """
 
 @nb.jit(nopython=True, cache=True)
@@ -223,11 +237,10 @@ def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
     t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
     
-    # Write each term of t-integrated matrix element sorted by denominators, evaluated at t_min and t_max. 
+    # Anton: Write each term of t-integrated matrix element sorted by denominators, evaluated at t_min and t_max. 
     """
     sqrt(x)*sqrt(y) / sqrt(x*y) makes trouble. 
     This is either 1 for (x>=0, y>=0), (x>=0, y<0), (x<0, y>=0) and -1 for (x<0, y<0).
-    Also, t_p > t_m always, so write log(t_m - t_p) = i*pi + log(t_p - t_m)
     """
     sqrt_fac_tmin = np.zeros(n)
     sqrt_fac_tmax = np.zeros(n)
@@ -246,7 +259,7 @@ def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min < 0)] = 1
     sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min < 0)] = -1
     
-    # Trick to make numpy evaluate negative numbers 
+    # Anton: Trick to make numpy evaluate negative numbers 
     t_min = t_min + 0j
     t_max = t_max + 0j
     t_m = t_m + 0j
@@ -254,7 +267,7 @@ def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     s = s + 0j
     s2 = s2 + 0j
     
-    # When t_max = t_m, t_min = t_p, max - min always cancel ... 
+    # Anton: When t_max = t_m, t_min = t_p, max - min always cancel ... 
     term1_max = -((8*(2*m_d2+m_X2)**2*np.sqrt((t_max-t_m)*(t_max-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_max+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_max+t_m+t_p)+3*s2+2*s*(t_max+t_m+t_p)+2*t_p*(t_max+t_m)+2*t_max*t_m)+(2*m_X2-s)*(2*m_X2-s-t_max)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_max+t_m)+s2+s*(t_max+t_m)+2*t_max*t_m)))/((t_max-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_max)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
 
     term1_min = -((8*(2*m_d2+m_X2)**2*np.sqrt((t_min-t_m)*(t_min-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_min+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_min+t_m+t_p)+3*s2+2*s*(t_min+t_m+t_p)+2*t_p*(t_min+t_m)+2*t_min*t_m)+(2*m_X2-s)*(2*m_X2-s-t_min)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_min+t_m)+s2+s*(t_min+t_m)+2*t_min*t_m)))/((t_min-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_min)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
@@ -621,12 +634,11 @@ def ker_C_34_12_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, s, E1, E3, p1, p3, m1
     def ker_t_integral(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, t_m, t_p):
         return vector_mediator.M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2) * 1/np.sqrt((t - t_m)*(t - t_p))
     
-    @np.vectorize(otypes=[float])
+    @np.vectorize
     def integrate(ker_t_integral, t_min, t_max, s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, t_m, t_p):
         return quad(ker_t_integral, t_min, t_max, args=(s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, t_m, t_p), epsabs=0., epsrel=rtol_int)
 
     res, err = integrate(ker_t_integral, t_min, t_max, s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, t_m, t_p)
-    print(res)
     return res
 
 # @nb.jit(nopython=True, cache=True)

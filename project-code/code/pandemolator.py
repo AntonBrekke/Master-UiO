@@ -222,7 +222,7 @@ class Pandemolator(object):
         elif rho/n - self.m_chi < self.m_chi:
             self.T_chi_last = (rho/n - self.m_chi)/1.5
             self.xi_chi_last = log(n/(self.dof_chi*((self.m_chi*self.T_chi_last/(2.*np.pi))**1.5)))+self.m_chi/self.T_chi_last
-        root_sol = root(self.n_rho_root, [log(self.T_chi_last), self.xi_chi_last-self.m_chi/self.T_chi_last], args = (n, rho), jac=self.jac_n_rho_root, method='lm')
+        root_sol = root(self.n_rho_root, [log(self.T_chi_last), self.xi_chi_last-self.m_chi/self.T_chi_last], args=(n, rho), jac=self.jac_n_rho_root, method='lm')
         T_chi = exp(root_sol.x[0])
         xi_chi = min(root_sol.x[1] + self.m_chi/T_chi, (1.-1e-14)*self.m_X/(self.fac_n_phi*T_chi))
         xi_phi = self.fac_n_phi*xi_chi
@@ -480,10 +480,10 @@ if __name__ == '__main__':
     # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
     # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
 
-    # M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2) * (2*m_X2 + (m2 + m3)**2)
-
-    M2_dd = 2.*y2*(c_th**4.)/m_X2 * m_X2*(2*m_X2 + 4*m_d**2)
-    M2_aa = 2.*y2*(s_th**4.) * (2*m_X2)
+    # M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+    # New matrix elements for X --> 23
+    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+    M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
     M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
     def C_n(T_a, T_d, xi_d, xi_phi):

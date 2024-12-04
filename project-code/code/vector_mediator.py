@@ -225,7 +225,7 @@ def sigma_gen(s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
     H(1/(4*s)*{[s - (m1 + m2)]^2 - 4*m1^2*m2^2}) = H([s - (m1 + m2)^2]^2 - 4*m1^2*m2^2)
     = H(s - m1 - m2 - 2*m1*m2) = H(s - (m1 + m2)^2) = H(E_cm - m1 - m2)
     Cross-section:
-    sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*p1cm^2) 
+    sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*E_cm^2*p1cm^2) 
           * int_{t_lower}^{t_upper} dt |M|^2
     Note: This function can not be vectorized using 'quad' or 'quad_vec' as boundaries also will be arrays. 
           Use np.vectorize(sigma_gen)(s, m1, ...) instead if array output is wanted.

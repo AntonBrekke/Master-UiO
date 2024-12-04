@@ -32,9 +32,15 @@ s_th = sin(th)
 y2 = y*y
 
 # Anton: Matrix elements added here for some reason
-M2_dd = 2. * y2 * (c_th**4.) * (m_X2 - 4.*m_d2)
-M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
-M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
+# M2_dd = 2. * y2 * (c_th**4.) * (m_X2 - 4.*m_d2)
+# M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
+# M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
+
+# M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+# New matrix elements for X --> 23
+M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
+M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
 vert_fi = y2*y2*(c_th**4.)*(s_th**4.)
 vert_tr = y2*y2*(c_th**6.)*(s_th**2.)
@@ -86,4 +92,4 @@ rho_ic = n_ic * cf.avg_mom_0_dw(m_d) / sf_ic_norm_0
 pan = pandemolator.Pandemolator(m_d, k_d, dof_d, m_X, k_phi, dof_phi, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, n_ic, rho_ic, i_end)
 pan.pandemolate()
 
-np.savetxt('sterile_test/md_1e-5_mphi_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat', np.column_stack((Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_phi_grid_sol, pan.n_chi_grid_sol, pan.n_phi_grid_sol)))
+np.savetxt('sterile_test/md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat', np.column_stack((Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_phi_grid_sol, pan.n_chi_grid_sol, pan.n_phi_grid_sol)))

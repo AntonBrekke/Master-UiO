@@ -25,9 +25,15 @@ def call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y, spin_facs=
     y2 = y*y
 
     # Anton: Matrix elements for 3 -> 12 added here for some reason 
-    M2_dd = 2. * y2 * (c_th**4.) * (m_X2 - 4.*m_d*m_d)
-    M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a*m_a)
-    M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
+    # M2_dd = 2. * y2 * (c_th**4.) * (m_X2 - 4.*m_d*m_d)
+    # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a*m_a)
+    # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
+
+    # M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+    # New matrix elements for X --> 23
+    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+    M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
+    M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
     vert_fi = y2*y2*(c_th**4.)*(s_th**4.)
     vert_tr = y2*y2*(c_th**6.)*(s_th**2.)
