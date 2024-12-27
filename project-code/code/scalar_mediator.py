@@ -7,26 +7,20 @@ from scipy.integrate import quad
 
 rtol_int = 1e-4
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def Gamma_phi(y, th, m_phi, m_d):
     y2 = y*y
-    sth = sin(th)
-    cth = cos(th)
+    sth = np.sin(th)
+    cth = np.cos(th)
 
     aa = y2*(sth**4.)*m_phi/(16.*np.pi) # decay to aa
-    if m_phi > 2.*m_d:
-        dd = y2*(cth**4.)*((m_phi*m_phi-4.*m_d*m_d)**1.5)/(16.*np.pi*m_phi*m_phi) # decay to dd
-    else:
-        dd = 0.
-    if m_phi > m_d:
-        ad = y2*((sth*cth)**2.)*((m_phi*m_phi-m_d*m_d)**2.)/(8.*np.pi*m_phi*m_phi*m_phi) # decay to ad
-    else:
-        ad = 0.
+    dd = y2*(cth**4.)*((m_phi*m_phi-4.*m_d*m_d)**1.5)/(16.*np.pi*m_phi*m_phi) * (m_phi > 2*m_d) # decay to dd
+    ad = y2*((sth*cth)**2.)*((m_phi*m_phi-m_d*m_d)**2.)/(8.*np.pi*m_phi*m_phi*m_phi) * (m_phi > m_d) # decay to ad
 
     return aa+dd+ad
 
 # sub indicates if s-channel on-shell resonance is subtracted
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def M2_gen(s, t, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
     m12 = m1*m1
     m22 = m2*m2
@@ -39,11 +33,26 @@ def M2_gen(s, t, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
 
     u = m12 + m22 + m32 + m42 - s - t
 
+    """
+    Anton: 
+    https://arxiv.org/pdf/2309.16615
+    Subtract on-shell contribution from Breit-Wigner propagator (RIS-subtraction) to 
+    avoid double counting decay processes
+    D_BW(s) = 1 / (s - m^2 + imG) = (s - m^2)/((s-m^2)^2 + (mG)^2) - imG/((s-m^2)^2 + (mG)^2)
+    |D_BW(s)|^2 = 1 / ((s-m^2)^2 + (mG)^2) := s_prop
+    The real part of D_BW is defined as the off-shell propagator 
+    D_off-shell(s) := Re(D_BW(s)) -- used for interference terms st, su
+    D_off-shell(t) := Re(D_BW(t)) -- used for interference term st
+    D_off-shell(u) := Re(D_BW(u)) -- used for interference term su
+    Need another expression for squared propagator:
+    |D_off-shell(s)|^2 := ((s - m^2)^2 - (mG)^2) / ((s-m^2)^2 + (mG)^2)^2 -- used in ss
+    """
+    # Anton: Squared BW-propagators, |D_BW|^2
     s_prop = 1. / ((s-m_phi2)*(s-m_phi2) + m_Gamma_phi2)
     t_prop = 1. / ((t-m_phi2)*(t-m_phi2) + m_Gamma_phi2)
     u_prop = 1. / ((u-m_phi2)*(u-m_phi2) + m_Gamma_phi2)
 
-    ss = ((m1+m2)*(m1+m2)-s)*((m3+m4)*(m3+m4)-s)*s_prop*(s_prop*(s-m_phi2)*(s-m_phi2) if sub else 1.)
+    ss = ((m1+m2)*(m1+m2)-s)*((m3+m4)*(m3+m4)-s)*s_prop*(s_prop*((s-m_phi2)*(s-m_phi2) - m_Gamma_phi2) if sub else 1.)
     tt = ((m1+m3)*(m1+m3)-t)*((m2+m4)*(m2+m4)-t)*t_prop
     uu = ((m1+m4)*(m1+m4)-u)*((m2+m3)*(m2+m3)-u)*u_prop
     st = -(m23*m3+m13*m4+m22*m3*(m3+m4)+m12*m4*(m2+m3+m4)-s*(m3*m4+t)
@@ -57,15 +66,15 @@ def M2_gen(s, t, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
      +m2*(m32*m4+m3*m42-m4*t-m3*u))
      *((t-m_phi2)*(u-m_phi2)+m_Gamma_phi2))*t_prop*u_prop
 
-    return 4.*vert*ss#(ss+tt+uu+st+su+tu)       # On-shell resonance from s-channel?
+    return 4.*vert*ss#(ss+tt+uu+st+su+tu)
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def M2_gen_ss(s, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2):
     s_prop = 1. / ((s-m_phi2)*(s-m_phi2) + m_Gamma_phi2)
     ss = (((m1+m2)**2.)-s)*(((m3+m4)**2.)-s)*s_prop
     return 4.*vert*ss
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def M2_fi(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
     u = 2.*m_d2 - s - t
 
@@ -82,7 +91,7 @@ def M2_fi(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
 
     return 4.*vert*(ss + tt + uu + st + su + tu)
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def M2_tr(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
     u = 3.*m_d2 - s - t
     s_prop = 1. / ((s-m_phi2)*(s-m_phi2) + m_Gamma_phi2)
@@ -97,11 +106,11 @@ def M2_tr(s, t, m_d2, vert, m_phi2, m_Gamma_phi2):
 
     return 4.*vert*(ss + tt + uu + st + su + tu)
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def M2_el(s, t, m_d, vert, m_phi2, m_Gamma_phi2):
-    return M2_gen(s, t, m_d, vert, m_phi2, m_Gamma_phi2)
+    return M2_gen(s, t, m_d, m_d, m_d, m_d, vert, m_phi2, m_Gamma_phi2)
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def ker_sigma_gen(t, s, p1cm, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub):
     return M2_gen(s, t, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=sub)/(64.*np.pi*s*p1cm*p1cm)
 
@@ -125,7 +134,7 @@ def sigma_gen(s, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, sub=False):
 
     return res
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def sigma_tr(s, m_d2, vert, m_phi2, m_Gamma_phi2):
     if s < 4.*m_d2:
         return 0.
@@ -157,7 +166,7 @@ def sigma_tr(s, m_d2, vert, m_phi2, m_Gamma_phi2):
     # factor 0.5 due to identical particles in final state
     return 0.5*vert*(sum_atan+sum_log+sum_3)/(4.*np.pi*(s-m_d2)*(s-m_d2)*(s-3.*m_d2+2.*m_phi2)*((s-m_phi2)*(s-m_phi2)+m_Gamma_phi2))
 
-@nb.jit(nopython=True, cache=True)
+# @nb.jit(nopython=True, cache=True)
 def sigma_el(s, m_d2, vert, m_phi2, m_Gamma_phi2):
     if s < 4.*m_d2:
         return 0.
@@ -180,3 +189,91 @@ def sigma_el(s, m_d2, vert, m_phi2, m_Gamma_phi2):
 
     # factor 0.5 due to identical particles in final state
     return 0.5*vert*(sum_atan+sum_log+sum_3)/(4.*np.pi*m_Gamma_phi*s*(s-4.*m_d2)*(s-4.*m_d2+2.*m_phi2)*(m_phi4+s2-2.*s*m_phi2+m_Gamma_phi2))
+
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt 
+
+    m_d = 1e-5      # GeV 
+    m_a = 0.
+    m_phi = 3*m_d
+    sin2_2th = 1e-12
+    th = 0.5*np.arcsin(np.sqrt(sin2_2th))
+    y = 2e-4
+
+    # fi = aa->dd, tr = ad->dd, el = ss->ss
+    # For small theta << 1, sin^2(theta) = 1/4*sin^2(2*theta)
+    vert_fi = y**4 * np.cos(th)**4*np.sin(th)**4
+    vert_tr = y**4 * np.cos(th)**6*np.sin(th)**2
+    vert_el = y**4 * np.cos(th)**8
+
+    th_arr = np.linspace(0, 2*np.pi, 1000)
+    Gamma = Gamma_phi(y=y, th=th_arr, m_phi=m_phi, m_d=m_d)
+    plt.plot(th_arr, Gamma)
+    plt.xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi], labels=[r'$0$',r'$\pi/2$',r'$\pi$',r'$3\pi/2$', r'$2\pi$'])
+    plt.show()
+
+    m1 = m_a
+    m2 = m_d
+    s_min = (m1 + m2)**2
+    S = 10**(np.linspace(np.log10(s_min), 0.1, int(1e3)))
+    # S = np.linspace(s_min, 1e2, int(1e3))
+    T = np.linspace(-1, 1, int(1e3))
+    s, t = np.meshgrid(S, T, indexing='ij')
+
+    Gamma = Gamma_phi(y=y, th=th, m_phi=m_phi, m_d=m_d)
+    m_Gamma_phi2 = (m_phi*Gamma)**2
+    print(Gamma)
+
+    sigma = np.vectorize(sigma_gen)(s=S, m1=m_a, m2=m_d, m3=m_d, m4=m_d, vert=vert_tr, m_phi2=m_phi**2, m_Gamma_phi2=m_Gamma_phi2, sub=False)
+    sigma_elast = np.vectorize(sigma_el)(s=S, m_d2=m_d**2, vert=vert_el, m_phi2=m_phi**2, m_Gamma_phi2=m_Gamma_phi2)
+    sigma_trans = np.vectorize(sigma_tr)(s=S, m_d2=m_d**2, vert=vert_tr, m_phi2=m_phi**2, m_Gamma_phi2=m_Gamma_phi2)
+
+    plt.loglog(S, sigma, 'r--', label='sigma_gen|tr')
+    # plt.loglog(S, 2*sigma_el, 'g', label='sigma_el')
+    plt.loglog(S, sigma_trans, 'g', label='sigma_tr')
+    plt.legend()
+    plt.show()
+
+    # 1
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot()
+
+    M2_trans = M2_tr(s, t, m_d2=m_d**2, vert=vert_tr, m_phi2=m_phi**2, m_Gamma_phi2=m_Gamma_phi2)
+    # M2_general_tHoft = M2_gen_tHoft(s, t, m1=m_a, m2=m_d, m3=m_d, m4=m_d, vert=vert_tr, m_phi2=m_phi**2, m_Gamma_phi2=m_Gamma_phi2)
+    M2_elast = np.vectorize(M2_el)(s, t, m_d=m_d, vert=vert_el, m_phi2=m_phi**2, m_Gamma_phi2=m_Gamma_phi2)
+    plot_M2 = ax1.contourf(s, t, np.log10(M2_elast), levels=300, cmap='jet')
+    fig1.colorbar(plot_M2)
+    ax1.set_xscale('log')
+
+    # 2 
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot()
+
+    M2_general = M2_gen(s, t, m1=m_d, m2=m_d, m3=m_d, m4=m_d, vert=vert_el, m_phi2=m_phi**2, m_Gamma_phi2=m_Gamma_phi2)
+    # They are equal up to ~ r decimals, where abs((a-b)/b) = C*10^(-r)
+    # print(-np.log10(np.max(abs((M2_general_tHoft - M2_general)/M2_general))))
+    plot_M2_gen = ax2.contourf(s, t, np.log10(M2_general), levels=300, cmap='jet')
+    cbar2 = fig2.colorbar(plot_M2_gen)
+    # plt.plot(S[::10], np.zeros_like(S[::10]), 'ko')
+    ax2.set_xscale('log')
+
+    # Can make colorbar interactive - see constant value that you click
+    from matplotlib import colors
+    highlight_cmap = colors.ListedColormap(['k'])
+    highlight = ax2.imshow(np.ma.masked_all_like(np.log10(M2_general)), interpolation='nearest', vmin=np.log10(M2_general).min(), vmax=np.log10(M2_general).max(), extent=[S.min(),S.max(),T.min(), T.max()], cmap=highlight_cmap, origin='lower', aspect='auto', zorder=10)
+
+    # highlight = [ax2.contour(s, t, (M2_general), colors='none')]
+
+    def on_pick(event):
+        val = event.mouseevent.ydata
+        selection = np.ma.masked_outside(np.log10(M2_general), val-0.2, val+0.2)
+        highlight.set_data(selection.T)
+        # highlight[0].remove()
+        # highlight[0] = ax2.contour(s, t, selection, colors='k')
+        fig2.canvas.draw()
+    cbar2.ax.set_picker(5)
+    fig2.canvas.mpl_connect('pick_event', on_pick)
+
+    fig1.tight_layout()
+    fig2.tight_layout()
+    plt.show()

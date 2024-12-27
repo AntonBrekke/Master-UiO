@@ -176,7 +176,7 @@ def rho_3P_diff_boson(T, m, dof, xi = 0.):
     if x - xi > 700.:
         return 0.
     if x > rho_3P_diff_red_boson[-1,0] or xi > 700.:
-        return dof*math.exp(xi-x)*(math.sqrt((m**5.)*((T/(2.*pi))**3.)) + (3./8.)*math.sqrt((T**5.)*((m/(2.*pi))**3.)))
+        return dof*math.exp(xi-x)*(math.sqrt((m**5.)*((T/(2.*np.pi))**3.)) + (3./8.)*math.sqrt((T**5.)*((m/(2.*np.pi))**3.)))
     if x < rho_3P_diff_red_boson[0,0]:
         return dof*math.exp(xi)*m*m*T*T/12.
     return dof*((m*T)**2.)*math.exp(xi)*rho_3P_diff_red_boson_interp(x)
@@ -188,7 +188,7 @@ def rho_3P_diff_fermion(T, m, dof, xi = 0.):
     if x - xi > 700.:
         return 0.
     if x > rho_3P_diff_red_fermion[-1,0] or xi > 700.:
-        return dof*math.exp(xi-x)*(math.sqrt((m**5.)*((T/(2.*pi))**3.)) + (3./8.)*math.sqrt((T**5.)*((m/(2.*pi))**3.)))
+        return dof*math.exp(xi-x)*(math.sqrt((m**5.)*((T/(2.*np.pi))**3.)) + (3./8.)*math.sqrt((T**5.)*((m/(2.*np.pi))**3.)))
     if x < rho_3P_diff_red_fermion[0,0]:
         return dof*math.exp(xi)*m*m*T*T/24.
     return dof*((m*T)**2.)*math.exp(xi)*rho_3P_diff_red_fermion_interp(x)

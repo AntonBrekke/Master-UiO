@@ -9,7 +9,6 @@ import vegas
 from scipy.special import kn
 import densities as dens
 from scipy.integrate import quad
-import scalar_mediator
 import vector_mediator
 
 max_exp_arg = 3e2
@@ -28,23 +27,23 @@ Updated matrix elements
     * M2_dd 
     * M2_aa 
     * M2_da
-which updates C_n_3_12
+which updates C_n_3_12 and C_rho_3_12.
 
-
-What must be done: 
+What needs to be done: 
 ------------------
-Change 3 --> 12:
 Gamma_scat (?, not called anywhere)
 
 Change 34 --> 12:
 ker_C_34_12_s_t_integral (difficult)
 ker_th_avg_sigma_v_33_11 (?, does not seem to be called anywhere)
 
--- Comment: 
-    To change C_n_3_12, update matrix elements in 
+-----------
+-- Comments: 
+    To change C_n_3_12, C_rho_3_12, update matrix elements in 
     * pandemolator.py 
     * sterile_caller.py 
     * sterile_pandemic.py 
+    * C_res_vector_no_spin_stat.py
     M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
     M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
     M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
@@ -82,7 +81,7 @@ def ker_C_n_3_12_E2(log_E2, E1, f1, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, type)
     elif type == 1:
         dist = f1*f2*(1.-k3*f3)
 
-    res = E2*dist
+    res = E2*dist           # Anton: Factor E2 comes from substitution v = ln(E2) in integral
     if not isfinite(res):
         return 0.
     return res
@@ -112,11 +111,12 @@ def ker_C_n_3_12_E1(log_E1, m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, t
 
     res_2, err = quad(ker_C_n_3_12_E2, log(E2_min), log(E2_max), args=(E1, f1, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, type), epsabs=0., epsrel=rtol_int)
 
-    res = E1*res_2
+    res = E1*res_2          # Anton: Factor E1 comes from substitution u = ln(E1) for integral
     if not isfinite(res):
         return 0.
     return res
 
+# Anton: This is never called ? 
 def Gamma_scat(p1, m1, m2, m3, k2, k3, T2, T3, xi2, xi3, M2):
     E1 = sqrt(p1*p1+m1*m1)
     m12 = m1*m1
@@ -138,7 +138,7 @@ def Gamma_scat(p1, m1, m2, m3, k2, k3, T2, T3, xi2, xi3, M2):
     return M2*res/(16.*pi*p1*E1)
 
 # type == -1: only 3 -> 1 2, type == 0: both reactions, type == 1: only 1 2 -> 3
-def C_n_3_12(m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, M2, type = 0):
+def C_n_3_12(m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, M2, type=0):
     E1_min = max(m1, 1e-200)
     E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)
 
@@ -169,7 +169,7 @@ def ker_C_rho_3_12_E2(log_E2, type, E1, f1, k1, k2, k3, T1, T2, T3, xi1, xi2, xi
     else:
         Etype = E3
 
-    res = E2*Etype*dist
+    res = E2*Etype*dist         # Anton: Factor E2 comes from substitution v = ln(E2) in integral
     if not isfinite(res):
         return 0.
     return res
@@ -200,7 +200,7 @@ def ker_C_rho_3_12_E1(log_E1, type, m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2
 
     res_2, err = quad(ker_C_rho_3_12_E2, log(E2_min), log(E2_max), args=(type, E1, f1, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3), epsabs=0., epsrel=rtol_int)
 
-    res = E1*res_2
+    res = E1*res_2          # Anton: Factor E1 comes from substitution u = ln(E1) in integral
     if not isfinite(res):
         return 0.
     return res
@@ -311,7 +311,7 @@ def ker_C_n_XX_dd_s(s, E1, E2, E3, p1, p3, m_d, m_X, s12_min, s12_max, s34_min, 
 
 # 3 4 -> 1 2 <=> X X -> d d
 @nb.jit(nopython=True, cache=True)
-def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert):
+def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert):
     """
     Anton: Seems like E1 <--> E3, E2 <--> E4 compared to article.
     Think it is because we now do XX --> dd instead of dd --> XX, 
@@ -342,8 +342,8 @@ def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert):
     exp_4 = np.exp(np.fmin(-exp_arg_4, max_exp_arg))
     f1 = exp_1/(1. + k_d*exp_1)
     f2 = exp_2/(1. + k_d*exp_2)
-    f3 = exp_3/(1. + k_phi*exp_3)
-    f4 = exp_4/(1. + k_phi*exp_4)
+    f3 = exp_3/(1. + k_X*exp_3)
+    f4 = exp_4/(1. + k_X*exp_4)
     dist = f3*f4*(1.-k_d*f1)*(1.-k_d*f2)
     # dist = f1*f2*(1.-k_phi*f3)*(1.-k_phi*f4)
 
@@ -369,7 +369,7 @@ def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_phi, T_d, xi_d, xi_X, vert):
     return res
 
 # type == -1: only phi phi -> d d, type == 0: both reactions, type == 1: only d d -> phi phi, type == 2: (phi phi -> d d, d d -> phi phi)
-def C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type = 0):
+def C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0):
     if m_X/T_d - xi_X > spin_stat_irr: # spin-statistics irrelevant here
         th_avg_s_v = th_avg_sigma_v_XX_dd(T_d, m_d, m_X, vert)
         if th_avg_s_v <= 0.:
@@ -423,7 +423,7 @@ def C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type = 0):
     
     return result.mean*chem_eq_fac/(256.*(pi**6.))
 
-
+# Just for comparison to XX --> dd
 @nb.jit(nopython=True, cache=True)
 def sigma_pp_dd(s, m_d, m_phi, vert):
     """
@@ -513,20 +513,20 @@ def sigma_XX_dd(s, m_d, m_X, vert):
     cross_section = ((int_t_M2_upper - int_t_M2_lower).real / (16.*np.pi*s*(s - 4*m_X2)))
     return cross_section
 
-def ker_th_avg_sigma_v_XX_dd(log_s, T_d, m_d, m_phi, vert):
+def ker_th_avg_sigma_v_XX_dd(log_s, T_d, m_d, m_X, vert):
     s = exp(log_s)
     sqrt_s = sqrt(s)
-    sigma = sigma_XX_dd(s, m_d, m_phi, vert)
-    return s*sigma*(s-4.*m_phi*m_phi)*sqrt_s*kn(1, sqrt_s/T_d)
+    sigma = sigma_XX_dd(s, m_d, m_X, vert)
+    return s*sigma*(s-4.*m_X*m_X)*sqrt_s*kn(1, sqrt_s/T_d)
 
 # only \int d^3 p3 d^3 p4 sigma v exp(-(E3+E4)/T)/(2 pi)^6
-def th_avg_sigma_v_XX_dd(T_d, m_d, m_phi, vert):
-    s_min = max(4.*m_d*m_d, 4.*m_phi*m_phi)
+def th_avg_sigma_v_XX_dd(T_d, m_d, m_X, vert):
+    s_min = max(4.*m_d*m_d, 4.*m_X*m_X)
     s_max = (5e2*T_d)**2.
     if s_max <= s_min:
         return 0.
 
-    res, err = quad(ker_th_avg_sigma_v_XX_dd, log(s_min), log(s_max), args=(T_d, m_d, m_phi, vert), epsabs=0., epsrel=rtol_int)
+    res, err = quad(ker_th_avg_sigma_v_XX_dd, log(s_min), log(s_max), args=(T_d, m_d, m_X, vert), epsabs=0., epsrel=rtol_int)
 
     return res*T_d/(32.*(pi**4.))
     # return res/(8.*(m_phi**4.)*T_d*(kn(2, m_phi/T_d)**2.))
@@ -626,7 +626,7 @@ def ker_C_34_12_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, s, E1, E3, p1, p3, m1
     t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
     t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
 
-    print(s.size, t_min.size, t_max.size, t_m.size, t_p.size)
+    # print(s.size, t_min.size, t_max.size, t_m.size, t_p.size)
     if s.size == 0:
         return 0. 
 
@@ -634,6 +634,7 @@ def ker_C_34_12_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, s, E1, E3, p1, p3, m1
     def ker_t_integral(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, t_m, t_p):
         return vector_mediator.M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2) * 1/np.sqrt((t - t_m)*(t - t_p))
     
+    # Anton: Returns a vector with integrated values for each (tmin, tmax)
     @np.vectorize
     def integrate(ker_t_integral, t_min, t_max, s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, t_m, t_p):
         return quad(ker_t_integral, t_min, t_max, args=(s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, t_m, t_p), epsabs=0., epsrel=rtol_int)
@@ -642,7 +643,7 @@ def ker_C_34_12_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, s, E1, E3, p1, p3, m1
     return res
 
 # @nb.jit(nopython=True, cache=True)
-def ker_C_34_12_s(s, E1, E2, E3, p1, p2, p3, s12_min, s12_max, s34_min, s34_max, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2, res_sub):
+def ker_C_34_12_s(s, E1, E2, E3, p1, p2, p3, s12_min, s12_max, s34_min, s34_max, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub):
     p12 = p1*p1
     p32 = p3*p3
     a = np.fmin(-4.*p32*((E1+E2)*(E1+E2) - s), -1e-200)
@@ -663,13 +664,13 @@ def ker_C_34_12_s(s, E1, E2, E3, p1, p2, p3, s12_min, s12_max, s34_min, s34_max,
     # t_int[in_res] = ker_C_34_12_s_t_integral(ct_min[in_res], ct_max[in_res], ct_p[in_res], ct_m[in_res], s[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2[in_res], res_sub)/np.sqrt(-a[in_res])
 
     # New
-    print(in_res)
-    t_int[in_res] = ker_C_34_12_s_t_integral_2(ct_min[in_res], ct_max[in_res], ct_p[in_res], ct_m[in_res], s[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2[in_res], res_sub)
+    # print(in_res)
+    t_int[in_res] = ker_C_34_12_s_t_integral_2(ct_min[in_res], ct_max[in_res], ct_p[in_res], ct_m[in_res], s[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_X2, m_Gamma_X2[in_res], res_sub)
 
     return t_int
 
 # @nb.jit(nopython=True, cache=True)
-def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_phi2, m_Gamma_phi2, res_sub, thermal_width):
+def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub, thermal_width):
     m12 = m1*m1
     m22 = m2*m2
     m32 = m3*m3
@@ -734,24 +735,24 @@ def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2,
     dist = Etype*(dist_FW+dist_BW)
 
     if thermal_width:
-        m_phi = sqrt(m_phi2)
-        sqrt_arg = (m_phi2-4.*m3*m3)*((E1+E2)**2.-m_phi2)
+        m_X = sqrt(m_X2)
+        sqrt_arg = (m_X2-4.*m3*m3)*((E1+E2)**2.-m_X2)
         sqrt_fac = np.sqrt(np.fmax(sqrt_arg, 1e-200))
-        E3p = 0.5*(E12+sqrt_fac/m_phi)
-        E3m = 0.5*(E12-sqrt_fac/m_phi)
+        E3p = 0.5*(E12+sqrt_fac/m_X)
+        E3m = 0.5*(E12-sqrt_fac/m_X)
         exp_3p_xi = np.exp(np.fmin(xi3-E3p/T3, max_exp_arg))
         exp_3m_xi = np.exp(np.fmin(xi3-E3m/T3, max_exp_arg))
-        E3_integral = sqrt_fac/(T3*m_phi) + np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))
-        m_Gamma_phi_T = sqrt(m_Gamma_phi2)*(1.+m_phi*T3*np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))/sqrt_fac)
-        m_Gamma_phi_T2 = m_Gamma_phi_T*m_Gamma_phi_T
+        E3_integral = sqrt_fac/(T3*m_X) + np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))
+        m_Gamma_X_T = sqrt(m_Gamma_X2)*(1.+m_X*T3*np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))/sqrt_fac)
+        m_Gamma_X_T2 = m_Gamma_X_T*m_Gamma_X_T
     else:
-        m_Gamma_phi_T2 = m_Gamma_phi2*np.ones(s.size)
+        m_Gamma_X_T2 = m_Gamma_X2*np.ones(s.size)
 
     s12_min = m12+m22+2.*E1*(E2-p1*p2/E1)
     s12_max = m12+m22+2.*E1*E2+2.*p1*p2
     s34_min = m32+m42+2.*E3*(E4-p3*p4/E3)
     s34_max = m32+m42+2.*E3*E4+2.*p3*p4
-    ker_s = ker_C_34_12_s(s, E1, E2, E3, p1, p2, p3, s12_min, s12_max, s34_min, s34_max, m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi_T2, res_sub)
+    ker_s = ker_C_34_12_s(s, E1, E2, E3, p1, p2, p3, s12_min, s12_max, s34_min, s34_max, m1, m2, m3, m4, vert, m_X2, m_Gamma_X_T2, res_sub)
 
     jac = E1*(log_E1_max-log_E1_min)*E2*(log_E2_max-log_E2_min)*E3*(log_E3_max-log_E3_min)*s*(log_s_max-log_s_min)
     res = jac*p3*dist*ker_s
@@ -762,7 +763,7 @@ def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2,
 # type indicates if for n (0) or rho (1 for E1, 2 for E2, 3 for E3, 4 for E4, 12 for E1+E2 = E3+E4)
 # note that when using thermal width it is assumed that m3 = m4 = md, T3 = T4 = Td, xi3 = xi4 = xid, xi_phi = 2 xi_d
 # and 3, 4 are fermions, phi is boson
-def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_phi2, m_Gamma_phi2, res_sub = False, thermal_width = True):
+def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub=False, thermal_width=True):
     s_min = max((m1+m2)**2., (m3+m4)**2.)*offset # to prevent accuracy problems
     E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)
     p1_max = sqrt((E1_max-m1)*(E1_max+m1))
@@ -775,7 +776,7 @@ def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1,
     s12_max = m1*m1+m2*m2+2.*E1_max*E2_max+2.*p1_max*p2_max
     s34_max = m3*m3+m4*m4+2.*E3_max*E4_max+2.*p3_max*p4_max
     s_max = max(s12_max, s34_max)
-    s_vals = np.sort(np.array([s_min, s_max, m_phi2-fac_res_width*sqrt(m_Gamma_phi2), m_phi2, m_phi2+fac_res_width*sqrt(m_Gamma_phi2)]))
+    s_vals = np.sort(np.array([s_min, s_max, m_X2-fac_res_width*sqrt(m_Gamma_X2), m_X2, m_X2+fac_res_width*sqrt(m_Gamma_X2)]))
     s_vals = s_vals[s_vals >= s_min]
     s_vals = s_vals[s_vals <= s_max]
 
@@ -784,7 +785,7 @@ def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1,
     for i in range(len(s_vals)-1):
         @vegas.batchintegrand
         def kernel(x):
-            return ker_C_34_12(x, log(s_vals[i]), log(s_vals[i+1]), type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_phi2, m_Gamma_phi2, res_sub, thermal_width)
+            return ker_C_34_12(x, log(s_vals[i]), log(s_vals[i+1]), type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub, thermal_width)
         integ = vegas.Integrator(4 * [[0., 1.]])
         result = integ(kernel, nitn=10, neval=1e5)
         # print(result.summary())
@@ -796,29 +797,207 @@ def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1,
 
     return res/(256.*(pi**6.))
 
-def ker_th_avg_sigma_v_33_11(log_s, m1, m2, m3, T, vert, m_phi2, m_Gamma_phi2, res_sub):
+def ker_th_avg_sigma_v_33_11(log_s, m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_sub):
     s = exp(log_s)
     sqrt_s = sqrt(s)
-    sigma = scalar_mediator.sigma_gen(s, m3, m3, m1, m2, vert, m_phi2, m_Gamma_phi2, sub=res_sub)
+    sigma = vector_mediator.sigma_gen(s, m3, m3, m1, m2, vert, m_X2, m_Gamma_X2, sub=res_sub)
     # print(log_s, s*sigma*(s-4.*m1*m1)*sqrt_s*kn(1, sqrt_s/T3))
     return s*sigma*(s-4.*m3*m3)*sqrt_s*kn(1, sqrt_s/T)
 
 # only \int d^3 p3 d^3 p4 sigma v exp(-(E3+E4)/T)/(2 pi)^6
-def th_avg_sigma_v_33_11(m1, m2, m3, T, vert, m_phi2, m_Gamma_phi2, res_sub = True):
+def th_avg_sigma_v_33_11(m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_sub = True):
     s_min = max((m1+m2)*(m1+m2), 4.*m3*m3)*offset
     s_max = (1e3*T)**2.
     if s_max <= s_min:
         return 0.
-    s_vals = np.sort(np.array([s_min, s_max, m_phi2-fac_res_width*sqrt(m_Gamma_phi2), m_phi2, m_phi2+fac_res_width*sqrt(m_Gamma_phi2)]))
+    s_vals = np.sort(np.array([s_min, s_max, m_X2-fac_res_width*sqrt(m_Gamma_X2), m_X2, m_X2+fac_res_width*sqrt(m_Gamma_X2)]))
     s_vals = s_vals[s_vals >= s_min]
     s_vals = s_vals[s_vals <= s_max]
 
     res = 0.
     for i in range(len(s_vals)-1):
-        cur_res, err = quad(ker_th_avg_sigma_v_33_11, log(s_vals[i]), log(s_vals[i+1]), args=(m1, m2, m3, T, vert, m_phi2, m_Gamma_phi2, res_sub), epsabs=0., epsrel=rtol_int, limit=100)
+        cur_res, err = quad(ker_th_avg_sigma_v_33_11, log(s_vals[i]), log(s_vals[i+1]), args=(m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_sub), epsabs=0., epsrel=rtol_int, limit=100)
         res += cur_res
 
     return res*T/(32.*(pi**4.))
+
+############################
+
+# @nb.jit(nopython=True, cache=True)
+def ker_C_34_12_s_t_integral_new(s, t, ct_m, ct_p, E1, E3, p1, p3, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub=False):
+    m12 = m1*m1
+    m32 = m3*m3
+    t_add = m12 + m32
+    t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
+    t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
+
+    # print(s.size, t.size, t_m.size, t_p.size)
+    # if s.size == 0:
+    #     return 0. 
+
+    integrand = vector_mediator.M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub) * 1/np.sqrt((t - t_m)*(t - t_p))
+    return integrand
+
+# @nb.jit(nopython=True, cache=True)
+def ker_C_34_12_s_new(s, E1, E2, E3, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub):
+    # t = E1**2 + E3**2 - p1**2 + p3**2 + 2*p1*p3*ct
+    t = (E1 - p1)*(E1 + p1) + (E3 - p3)*(E3 + p3) + 2*p1*p3*ct
+    in_res = (ct_max > ct_min)
+    # print(in_res)
+
+    t_int = np.zeros(s.size)
+    # t_int[in_res] = ker_C_34_12_s_t_integral(ct_min[in_res], ct_max[in_res], ct_p[in_res], ct_m[in_res], s[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2[in_res], res_sub)/np.sqrt(-a[in_res])
+
+    # New
+    t_int[in_res] = ker_C_34_12_s_t_integral_new(s[in_res], t[in_res], ct_m[in_res], ct_p[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_X2, m_Gamma_X2[in_res], res_sub)
+
+    return t_int
+
+# @nb.jit(nopython=True, cache=True)
+def ker_C_34_12_new(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub, thermal_width):
+    m12 = m1*m1
+    m22 = m2*m2
+    m32 = m3*m3
+    m42 = m4*m4
+
+    s = np.exp(np.fmin(log_s_min * (1.-x[:,0]) + log_s_max * x[:,0], 6e2))
+
+    log_E1_min = log(max(m1*offset, 1e-200))
+    log_E1_max = log(max((max_exp_arg + xi1)*T1, 1e1*m1))
+    E1 = np.exp(np.fmin(log_E1_min * (1.-x[:,1]) + log_E1_max * x[:,1], 6e2))
+    # if E1 <= m1:
+    #     return 0. # otherwise problems in computation (division by p1)
+    p1 = np.sqrt(np.fmax((E1-m1)*(E1+m1), 1e-200))
+
+    sqrt_fac_2 = np.sqrt(np.fmax(s*s-2.*(m12+m22)*s+((m1+m2)*(m1-m2))**2., 0.))
+    E2_min = np.fmax((E1*(s-m12-m22)-p1*sqrt_fac_2)/(2.*m12), max(m2*offset, 1e-200))
+    E2_max = (E1*(s-m12-m22)+p1*sqrt_fac_2)/(2.*m12)
+    log_E2_min = np.log(E2_min)
+    log_E2_max = np.log(E2_max)
+    E2 = np.exp(log_E2_min * (1.-x[:,2]) + log_E2_max * x[:,2])
+    p2 = np.sqrt(np.fmax((E2-m2)*(E2+m2), 1e-200))
+
+    E12 = E1+E2
+    E122 = E12*E12
+    sqrt_fac_3 = np.sqrt(np.fmax((E122-s)*(s*s-2.*(m32+m42)*s+((m3+m4)*(m3-m4))**2.), 0.))
+    E3_min = np.fmax((E12*(s+m32-m42)-sqrt_fac_3)/(2.*s), max(m3*offset, 1e-200))
+    E3_max = (E12*(s+m32-m42)+sqrt_fac_3)/(2.*s)
+    log_E3_min = np.log(E3_min)
+    log_E3_max = np.log(E3_max)
+    E3 = np.exp(np.fmin(log_E3_min * (1.-x[:,3]) + log_E3_max * x[:,3], 6e2))
+    p3 = np.sqrt(np.fmax((E3-m3)*(E3+m3), 1e-200))
+
+    E4 = E12 - E3
+    p4 = np.sqrt(np.fmax((E4-m4)*(E4+m4), 1e-200))
+
+    s12_min = m12+m22+2.*E1*(E2-p1*p2/E1)
+    s12_max = m12+m22+2.*E1*E2+2.*p1*p2
+    s34_min = m32+m42+2.*E3*(E4-p3*p4/E3)
+    s34_max = m32+m42+2.*E3*E4+2.*p3*p4
+
+    p12 = p1*p1
+    p32 = p3*p3
+    a = np.fmin(-4.*p32*((E1+E2)*(E1+E2) - s), -1e-200)
+    b = 2.*(p3/p1)*(s-2.*E1*(E1+E2)+(m1-m2)*(m1+m2))*(s-2.*E3*(E1+E2)+(m3-m4)*(m3+m4))
+    sqrt_arg = 4.*(p32/p12)*(s-s12_min)*(s-s12_max)*(s-s34_min)*(s-s34_max)
+    sqrt_fac = np.sqrt(np.fmax(sqrt_arg, 0.))
+    ct_p = (-b+sqrt_fac)/(2.*a)
+    ct_m = (-b-sqrt_fac)/(2.*a)
+    ct_min = np.fmin(np.fmax(-1., ct_p), 1.)
+    ct_max = np.fmax(np.fmin(1., ct_m), ct_min)
+    
+    log_ct_min = np.log(ct_min)
+    log_ct_max = np.log(ct_max)
+    ct = np.exp(np.fmin(log_ct_min * (1.-x[:,4]) + log_ct_max * x[:,4], 6e2))
+
+    exp_arg_1 = E1/T1 - xi1
+    exp_arg_2 = E2/T2 - xi2
+    exp_arg_3 = E3/T3 - xi3
+    exp_arg_4 = E4/T4 - xi4
+    exp_1 = np.exp(np.fmin(-exp_arg_1, max_exp_arg))
+    exp_2 = np.exp(np.fmin(-exp_arg_2, max_exp_arg))
+    exp_3 = np.exp(np.fmin(-exp_arg_3, max_exp_arg))
+    exp_4 = np.exp(np.fmin(-exp_arg_4, max_exp_arg))
+    f1 = exp_1/(1. + k1*exp_1)
+    f2 = exp_2/(1. + k2*exp_2)
+    f3 = exp_3/(1. + k3*exp_3)
+    f4 = exp_4/(1. + k4*exp_4)
+    dist_FW = nFW*f3*f4*(1.-k1*f1)*(1.-k2*f2)
+    dist_BW = nBW*f1*f2*(1.-k3*f3)*(1.-k4*f4)
+
+    if type == 0.:
+        Etype = np.ones(E1.size)
+    elif type == 1.:
+        Etype = E1
+    elif type == 2.:
+        Etype = E2
+    elif type == 3.:
+        Etype = E3
+    elif type == 4.:
+        Etype = E4
+    else:
+        Etype = E12
+    dist = Etype*(dist_FW+dist_BW)
+
+    if thermal_width:
+        m_X = sqrt(m_X2)
+        sqrt_arg = (m_X2-4.*m3*m3)*((E1+E2)**2.-m_X2)
+        sqrt_fac = np.sqrt(np.fmax(sqrt_arg, 1e-200))
+        E3p = 0.5*(E12+sqrt_fac/m_X)
+        E3m = 0.5*(E12-sqrt_fac/m_X)
+        exp_3p_xi = np.exp(np.fmin(xi3-E3p/T3, max_exp_arg))
+        exp_3m_xi = np.exp(np.fmin(xi3-E3m/T3, max_exp_arg))
+        E3_integral = sqrt_fac/(T3*m_X) + np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))
+        m_Gamma_X_T = sqrt(m_Gamma_X2)*(1.+m_X*T3*np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))/sqrt_fac)
+        m_Gamma_X_T2 = m_Gamma_X_T*m_Gamma_X_T
+    else:
+        m_Gamma_X_T2 = m_Gamma_X2*np.ones(s.size)
+
+    ker_s = ker_C_34_12_s_new(s, E1, E2, E3, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_X2, m_Gamma_X_T2, res_sub)
+
+    jac = E1*(log_E1_max-log_E1_min)*E2*(log_E2_max-log_E2_min)*E3*(log_E3_max-log_E3_min)*s*(log_s_max-log_s_min)*ct*(log_ct_max - log_ct_min)
+    res = jac*p3*dist*ker_s
+    res[np.logical_not(np.isfinite(res))] = 0.
+    return res
+
+# 3 4 -> 1 2 (all neutrinos); nFW (nBW): # of particle occurence in final - initial state for forward 3 4 -> 1 2 (backward 1 2 -> 3 4) reaction
+# type indicates if for n (0) or rho (1 for E1, 2 for E2, 3 for E3, 4 for E4, 12 for E1+E2 = E3+E4)
+# note that when using thermal width it is assumed that m3 = m4 = md, T3 = T4 = Td, xi3 = xi4 = xid, xi_phi = 2 xi_d
+# and 3, 4 are fermions, phi is boson
+# Alternatively - add Monte-Carlo integral
+def C_34_12_new(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub=False, thermal_width=True):
+    s_min = max((m1+m2)**2., (m3+m4)**2.)*offset # to prevent accuracy problems
+    E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)
+    p1_max = sqrt((E1_max-m1)*(E1_max+m1))
+    E2_max = max((max_exp_arg + xi2)*T2, 1e1*m2)
+    p2_max = sqrt((E2_max-m2)*(E2_max+m2))
+    E3_max = max((max_exp_arg + xi3)*T3, 1e1*m3)
+    p3_max = sqrt((E3_max-m3)*(E3_max+m3))
+    E4_max = max((max_exp_arg + xi4)*T4, 1e1*m4)
+    p4_max = sqrt((E4_max-m4)*(E4_max+m4))
+    s12_max = m1*m1+m2*m2+2.*E1_max*E2_max+2.*p1_max*p2_max
+    s34_max = m3*m3+m4*m4+2.*E3_max*E4_max+2.*p3_max*p4_max
+    s_max = max(s12_max, s34_max)
+    s_vals = np.sort(np.array([s_min, s_max, m_X2-fac_res_width*sqrt(m_Gamma_X2), m_X2, m_X2+fac_res_width*sqrt(m_Gamma_X2)]))
+    s_vals = s_vals[s_vals >= s_min]
+    s_vals = s_vals[s_vals <= s_max]
+
+    res = 0.
+    np.seterr(divide='ignore')
+    for i in range(len(s_vals)-1):
+        @vegas.batchintegrand
+        def kernel(x):
+            return ker_C_34_12_new(x, log(s_vals[i]), log(s_vals[i+1]), type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub, thermal_width)
+        integ = vegas.Integrator(5 * [[0., 1.]])
+        result = integ(kernel, nitn=10, neval=1e5)
+        # print(result.summary())
+        # if result.mean != 0.:
+        #     print("Vegas error 34 12: ", result.sdev/fabs(result.mean), result.mean/(256.*(pi**6.)), result.Q)
+        res += result.mean
+    np.seterr(divide='warn')
+    # print("34 12:", res/(256.*(pi**6.)), (th_avg_sigma_v_33_11(m3, m4, m1, T1, vert, m_phi2, m_Gamma_phi2)*(nBW*exp(xi1+xi2))))
+
+    return res/(256.*(pi**6.))
 
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
@@ -835,13 +1014,21 @@ if __name__ == '__main__':
     # vert = 1
 
     T = 0.6510550394714374
+    # xi = mu / T
     xi_d = -8.551301127056323
     xi_X = 0.
+    xi_a = 0.
+
+    # Fermion: 1, Boson: -1
+    k_d = 1.
+    k_a = 1.
+    k_X = -1.
+    T_d = T
+    T_a = T
 
     ########################################################################
     # Mostly plot things to check 
     x = np.linspace(0, 1, int(1e3))    # x = ln(s/s_min) / ln(s_max/s_min)
-    T_d = T
     # T_d = 1
 
     # Switched from E1, E2 --> E3, E4 to E3, E4 --> E1, E2 (dd --> XX to XX --> dd)
@@ -872,8 +1059,8 @@ if __name__ == '__main__':
     fig = plt.figure()
     ax = fig.add_subplot()
     E3 = E3_[int((x.size-1)*0.5)]
-    E4 = E4_[int((x.size-1)*0.2)]
-    E1 = E1_[int((x.size-1)*0.1)]
+    E4 = E4_[int((x.size-1)*0.1)]
+    E1 = E1_[int((x.size-1)*0.3)]
     E2 = E4 + E3 - E1
 
     p1 = np.sqrt(np.fmax((E1 - m_d)*(E1 + m_d), 1e-200))
@@ -928,16 +1115,47 @@ if __name__ == '__main__':
 
     time1 = time.time()
     m_Gamma_X2 = vector_mediator.Gamma_X(y, th, m_X, m_d)**2
+    time2 = time.time()
+    print(f'vector_mediator.Gamma_X ran in {time.time()-time1}s')
     m1 = m_d
-    m2 = m_a
-    m3 = m_d
-    m4 = m_d
-    # b = ker_C_34_12_s(s, E1, E2, E3, p1, p2, p3, s12_min, s12_max, s34_min, s34_max, m1, m2, m3, m4, vert, m_X**2, m_Gamma_X2, res_sub=False)
-    ker_C_34_12_s_t_integral_val_2 = ker_C_34_12_s_t_integral_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m1=m_d, m2=m2, m3=m3, m4=m4, vert=vert, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
-    print(f'ker_C_n_XX_dd_s_t_integral ran in {time.time()-time1}s')
+    k1 = k_d
+    T1 = T_d
+    xi1 = xi_d
 
-    ax.plot(s[in_res], ker_C_34_12_s_t_integral_val_2)
-    plt.show()
+    m2 = m_a
+    k2 = k_a
+    T2 = T_a
+    xi2 = xi_a
+
+    m3 = m_d
+    k3 = k_d
+    T3 = T_d
+    xi3 = xi_d
+
+    m4 = m_d
+    k4 = k_d
+    T4 = T_d
+    xi4 = xi_d
+
+    m_X2 = m_X*m_X
+    vert_da = y**4 * np.cos(th)**6*np.sin(th)**2
+    vert = vert_da
+
+    # type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub=False, thermal_width=True
+    # t1 = time.time()
+    # C_34_12_new_val = C_34_12_new(type=0, nFW=1., nBW=-1., m1=m1, m2=m2, m3=m3, m4=m4, k1=k1, k2=k2, k3=k3, k4=k4, T1=T1, T2=T2, T3=T3, T4=T4, xi1=xi1, xi2=xi2, xi3=xi3, xi4=xi4, vert=vert, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2)
+    # print(C_34_12_new_val, 'C_34_12_new_val', time.time()-t1)
+    # t1 = time.time()
+    # C_34_12_val = C_34_12(type=0, nFW=1., nBW=-1., m1=m1, m2=m2, m3=m3, m4=m4, k1=k1, k2=k2, k3=k3, k4=k4, T1=T1, T2=T2, T3=T3, T4=T4, xi1=xi1, xi2=xi2, xi3=xi3, xi4=xi4, vert=vert, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2)
+    # print(C_34_12_val, 'C_34_12_val', time.time()-t1)
+
+    # b = ker_C_34_12_s(s, E1, E2, E3, p1, p2, p3, s12_min, s12_max, s34_min, s34_max, m1, m2, m3, m4, vert, m_X**2, m_Gamma_X2, res_sub=False)
+    # time1 = time.time()
+    # ker_C_34_12_s_t_integral_val_2 = ker_C_34_12_s_t_integral_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m1=m_d, m2=m2, m3=m3, m4=m4, vert=vert, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
+    # print(f'ker_C_n_12_34_s_t_integral_2 ran in {time.time()-time1}s')
+
+    # ax.plot(s[in_res], ker_C_34_12_s_t_integral_val_2)
+    # plt.show()
 
     # time1 = time.time()
     # ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a, s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_X=m_X, vert=vert)
@@ -955,6 +1173,7 @@ if __name__ == '__main__':
 
     fig, ax = plt.subplots()
 
+    vert = y**4 * np.cos(th)**8
     sigma = np.vectorize(sigma_XX_dd)(s=s, m_d=m_d, m_X=m_X, vert=vert)
 
     # Color lines based on which index element has, for debugging purposes
@@ -974,5 +1193,5 @@ if __name__ == '__main__':
     ax.legend()
     plt.show()
 
-    res = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=-1., k_X=1., T_d=T, xi_d=xi_d, xi_X=xi_X, vert=vert, type=0)
-    print(res)
+    # res = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=-1., k_X=1., T_d=T, xi_d=xi_d, xi_X=xi_X, vert=vert, type=0)
+    # print(res)

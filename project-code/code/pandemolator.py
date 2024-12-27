@@ -22,6 +22,7 @@ xi_ratio_stop = 100.
 
 class TimeTempRelation(object):
     def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=300, m_psi=None, dof_psi=None, k_psi=None):
+        print('Initializing TimeTempRelation')
         if m_psi is None:
             self.psi_in_SM = True
         else:
@@ -32,6 +33,7 @@ class TimeTempRelation(object):
 
         t_start = 1./(2.*self.hubble_of_temps(T_start, T_start))
         grid_size_time = int( log10(t_end/t_start) * t_gp_pd )
+        print(f'Time grid size: {grid_size_time}')
         self.t_grid = np.logspace(log10(t_start), log10(t_end), num=grid_size_time)
         self.sqrt_t_grid = np.sqrt(self.t_grid)
 
@@ -361,6 +363,7 @@ class Pandemolator(object):
         sf0 = self.sf_grid[self.i_ic + i_max]
         print("Enter pandemolate while-loop ")
         while i_max < n_pts - 1:
+            print(f'Pandemolator while loop iteration i_max={i_max}')
             if i_max > 0:#self.event_xi_nonzero(self.log_x_pts[i_max], [rho0*(sf0**4.)]) > 0.: # xi = 0 at beginning of calculation
                 def event_xi(log_x, y):
                     return self.event_xi_nonzero(log_x, y)
@@ -408,7 +411,9 @@ class Pandemolator(object):
                     return self.event_abund_large(log_x, y)
                 event_abund.terminal = True
                 event_abund.direction = -1
+                print('Start solve_ivp for Y, rho')
                 sol = solve_ivp(self.der, [self.log_x_pts[i_xi_nonzero], self.log_x_pts[-1]], y0, t_eval=self.log_x_pts[i_xi_nonzero:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='RK45', first_step=self.log_x_pts[i_xi_nonzero+1]-self.log_x_pts[i_xi_nonzero], max_step=1.)
+                print('End solve_ivp for Y, rho')
                 i_max = i_xi_nonzero + sol.t.size - 1
 
                 self.T_chi_last = (rho0 / (cf.pi2*(dof_fac_chi+dof_fac_phi)/30.))**0.25
@@ -453,6 +458,7 @@ class Pandemolator(object):
 if __name__ == '__main__':
     from math import asin, cos, sin
     import C_res_scalar
+    import C_res_vector
     import matplotlib.pyplot as plt
 
     m_d = 1e-4
@@ -480,24 +486,24 @@ if __name__ == '__main__':
     # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
     # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
 
-    # M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+    # M2_X23 = 2*g**2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
     # New matrix elements for X --> 23
-    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
     M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
     M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
     def C_n(T_a, T_d, xi_d, xi_phi):
-        C_pp_dd = C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.)) / 4. # symmetry factor 1/4
-        C_da = C_res_scalar.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d,   0., xi_phi, M2_da)
-        C_aa = C_res_scalar.C_n_3_12(m_a, m_a, m_X, k_a, k_a, k_phi, T_a, T_a, T_d,   0.,   0., xi_phi, M2_aa) / 2.
+        C_pp_dd = C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.)) / 4. # symmetry factor 1/4
+        C_da = C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d,   0., xi_phi, M2_da)
+        C_aa = C_res_vector.C_n_3_12(m_a, m_a, m_X, k_a, k_a, k_phi, T_a, T_a, T_d,   0.,   0., xi_phi, M2_aa) / 2.
         print('C_ns:', C_pp_dd, C_da, C_aa)
         return C_da + 2.*C_aa + 2.*C_pp_dd
     def C_rho(T_a, T_d, xi_d, xi_phi):
-        C_da = C_res_scalar.C_rho_3_12(2, m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da)
-        C_aa = C_res_scalar.C_rho_3_12(3, m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d,   0., 0., xi_phi, M2_aa) / 2. # symmetry factor 1/2
+        C_da = C_res_vector.C_rho_3_12(2, m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da)
+        C_aa = C_res_vector.C_rho_3_12(3, m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d,   0., 0., xi_phi, M2_aa) / 2. # symmetry factor 1/2
         return C_da + C_aa
     def C_xi0(T_a, T_d, xi_d, xi_phi):
-        C_pp_dd = C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4.
+        C_pp_dd = C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4.
         return 2.*C_pp_dd
 
     Ttrel = TimeTempRelation()
@@ -518,7 +524,7 @@ if __name__ == '__main__':
     T_d = exp(root_sol.x[0])
     xi_d = min(root_sol.x[1] + m_d/T_d, (1.-1e-14)*0.5*m_X/T_d)
     print(T_d, xi_d)
-    exit(1)
+    # exit(1)
 
     pan.pandemolate()
 
@@ -535,14 +541,14 @@ if __name__ == '__main__':
     plt.show()
 
     i_skip = 100
-    C_dd = np.array([-C_res_scalar.C_n(m_d, m_d, m_X, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=-1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_dd = np.array([C_res_scalar.C_n(m_d, m_d, m_X, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_da = np.array([-C_res_scalar.C_n(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=-1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_da = np.array([C_res_scalar.C_n(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_aa = np.array([-C_res_scalar.C_n(m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=-1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_aa = np.array([C_res_scalar.C_n(m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_ann = np.array([-C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=-1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
-    C_inv_ann = np.array([C_res_scalar.C_n_pp_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_dd = np.array([-C_res_vector.C_n(m_d, m_d, m_X, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=-1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_dd = np.array([C_res_vector.C_n(m_d, m_d, m_X, k_d, k_d, k_phi, T_d, T_d, T_d, xi_d, xi_d, xi_phi, M2_dd, type=1) / 2. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_da = np.array([-C_res_vector.C_n(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=-1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_da = np.array([C_res_vector.C_n(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da, type=1) for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_aa = np.array([-C_res_vector.C_n(m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=-1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_aa = np.array([C_res_vector.C_n(m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d, 0., 0., xi_phi, M2_da, type=1) / 2. for T_d, T_a, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.T_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_ann = np.array([-C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=-1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
+    C_inv_ann = np.array([C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, y2*y2*(c_th**8.), type=1) / 4. for T_d, xi_d, xi_phi in zip(pan.T_chi_grid_sol[::i_skip], pan.xi_chi_grid_sol[::i_skip], pan.xi_phi_grid_sol[::i_skip])])
     plt.loglog(m_d/Ttrel.T_nu_grid[i_ic:i_end+1:i_skip], 2.*C_dd, color='dodgerblue')
     plt.loglog(m_d/Ttrel.T_nu_grid[i_ic:i_end+1:i_skip], 2.*C_inv_dd, color='dodgerblue', ls='--')
     plt.loglog(m_d/Ttrel.T_nu_grid[i_ic:i_end+1:i_skip], C_da, color='darkorange')

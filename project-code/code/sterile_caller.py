@@ -29,9 +29,9 @@ def call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y, spin_facs=
     # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a*m_a)
     # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
 
-    # M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+    # M2_X23 = 2*g**2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
     # New matrix elements for X --> 23
-    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
     M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
     M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
@@ -42,18 +42,18 @@ def call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y, spin_facs=
     Gamma_X = vector_mediator.Gamma_X(y, th, m_X, m_d)
     m_Gamma_X2 = m_X2*Gamma_X*Gamma_X
 
-    if spin_facs:
+    if spin_facs:       # Anton: If spin statistics is important
         import C_res_vector
         if m_X > 2.*m_d:
-            import C_res_scalar_no_spin_stat as C_res_vector_no_spin_stat
+            import C_res_vector_no_spin_stat as C_res_vector_no_spin_stat
             # n = n_d + 2.*n_phi
             def C_n(T_a, T_d, xi_d, xi_phi):
                 if T_a < m_X / 50.:
                     return 0.
                 C_XX_dd = C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, vert_el) / 4. # symmetry factor 1/4
                 if not off_shell:
-                    C_da = C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d,   0., xi_phi, M2_da)
-                    C_aa = 0.#C_res_vector.C_n_3_12(m_a, m_a, m_X, k_a, k_a, k_phi, T_a, T_a, T_d,   0.,   0., xi_phi, M2_aa) / 2.
+                    C_da = C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da)
+                    C_aa = 0.   #C_res_vector.C_n_3_12(m_a, m_a, m_X, k_a, k_a, k_phi, T_a, T_a, T_d,   0.,   0., xi_phi, M2_aa) / 2.
                     C_da_dd = 0.
                     C_aa_dd = 0.
                 else:
@@ -95,7 +95,7 @@ def call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y, spin_facs=
         else:
             print("Implementation needs to be updated...")
             exit(1)
-            import C_res_scalar_no_spin_stat as C_res_vector_no_spin_stat
+            import C_res_vector_no_spin_stat as C_res_vector_no_spin_stat
             # n = n_d + n_phi
             def C_n(T_a, T_d, xi_d, xi_phi):
                 C_da = 0.# vanishes since net number change is zero
@@ -126,7 +126,7 @@ def call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y, spin_facs=
         # def G_d(T_d, xi_d, xi_phi):
         #     return C_res_vector.Gamma_scat(T_d, m_d, m_d, m_X, k_d, k_phi, T_d, T_d, xi_d, xi_phi, M2_dd)
     else:
-        import C_res_scalar_no_spin_stat as C_res_vector
+        import C_res_vector_no_spin_stat as C_res_vector
         if m_X > 2.*m_d:
             # n = n_d + 2.*n_phi
             def C_n(T_a, T_d, xi_d, xi_phi):

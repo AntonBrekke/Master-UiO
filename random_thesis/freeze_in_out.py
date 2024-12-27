@@ -10,17 +10,19 @@ plt.rcParams.update({
 plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 N = int(1e5)
-x = np.linspace(1e-1, 1e2, N)
+# x = np.linspace(1e-1, 1e2, N)     # More natural to use exp when all log's are ln (forgot log is not log10)
+x = np.exp(np.linspace(-2, 4, N))
 xlog = np.log(x)
-BE = 1 / (np.exp(x) + 1)
+T = 4/5
+BE = 1 / (np.exp(x/T) + 1)
 
 def get_freeze_out(freeze_out=1e-6):
 
-    norm_factor = np.exp(x[0])*(1 / (np.exp(x[0]) + 1) - freeze_out)
+    norm_factor = np.exp(x[0]/T)*(1 / (np.exp(x[0]/T) + 1) - freeze_out)
 
-    chem_dec = np.log(np.log(1/2*((1-norm_factor)/freeze_out - 1 + np.sqrt((1 + (norm_factor-1)/freeze_out)**2 - 4*norm_factor/freeze_out))))
+    chem_dec = np.log(T*np.log(1/2*((1-norm_factor)/freeze_out - 1 + np.sqrt((1 + (norm_factor-1)/freeze_out)**2 - 4*norm_factor/freeze_out))))
 
-    FO = (norm_factor*np.exp(-x) + freeze_out)*(xlog > chem_dec) + BE*(xlog < chem_dec)
+    FO = (norm_factor*np.exp(-x/T) + freeze_out)*(xlog > chem_dec) + BE*(xlog < chem_dec)
 
     return FO
 
@@ -63,25 +65,24 @@ ax.plot(xlog, get_freeze_out(1e-6), color=fo_c, linestyle='--', alpha=0.8)
 fi_c = 'k'
 ax.plot(xlog, get_freeze_in(5e-6), color=fi_c, label=r'Freeze-in', linestyle=':')
 ax.plot(xlog, get_freeze_in(5e-7), color=fi_c, linestyle=':')
-# Pandemc 
+# Pandemic 
 pd_c = 'k'
 ax.plot(xlog, get_pandemic_dark_matter(2.5e-5), color=pd_c, label=r'Pandemic', linestyle='-.')
 
 ax.set_ylim(1e-8, 9)
-ax.set_xlim(-3)
 
 ax.text(-1.8, 3.5, r'$Y_{\chi}\propto a^3n_{\chi}$', fontsize=16)
-ax.text(3.8, 2e-8, r'$x=m_{\chi}/T$', fontsize=16)
+ax.text(3.3, 2e-8, r'$x=m_{\chi}/T$', fontsize=16)
 
-ax.arrow(x=3.5, y=1e-5, dx=0, dy=-(1e-5-1e-6), color='b', width=2.3e-2, head_width=1.2e-1, head_length=8e-7, length_includes_head=True)
-ax.text(3.7, 1.7e-6, r'$\boldsymbol{\langle\sigma v\rangle}$', color='b', fontsize=16)
+ax.arrow(x=3, y=1e-5, dx=0, dy=-(1e-5-1e-6), color='b', width=2.3e-2, head_width=1.2e-1, head_length=8e-7, length_includes_head=True)
+ax.text(3.2, 1.7e-6, r'$\boldsymbol{\langle\sigma v\rangle}$', color='b', fontsize=16)
 
 ax.arrow(x=1.5, y=4.7e-7, dx=0, dy=(3.77e-6-4.7e-7), color='b', width=2.3e-2, head_width=1.2e-1, head_length=1.5e-6, length_includes_head=True)
 ax.text(1.7, 9e-7, r'$\boldsymbol{\langle\sigma v\rangle}$', color='b', fontsize=16)
 
 ax.text(1.7, 1e-2, r'$n_{\chi, \rm eq}$', color='r', fontsize=18)
 
-ax.set_xticks([1], labels=[r'$\boldsymbol{1}$'], fontsize=16)
+ax.set_xticks([-2, -1, 0, 1, 2, 3, 4], labels=[r'$10^{-3}$', r'$10^{-2}$', r'$10^{-1}$', r'$\boldsymbol{1}$', r'$10^1$', r'$10^2$', r'$10^3$'], fontsize=16)
 ax.set_yticklabels([])
 ax.spines['left'].set_position(('data', -2))
 

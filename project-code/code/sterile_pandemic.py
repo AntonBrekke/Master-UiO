@@ -10,18 +10,44 @@ import vector_mediator
 # import resonant_pandemolator as pandemolator
 import pandemolator as pandemolator
 import C_res_vector
+import time
 
-m_d = 1e-5
+"""
+theta << 1
+cos(theta) ~ 1
+sin^2(2*theta) ~ 4*sin^2(theta)
+dd --> XX: ~ g^4, increase g ("y") to make process more important 
+da --> dd: ~ g^4 * sin^2(theta) = x^4*10^(4A) * z*10^B = x^4*z * 10^(4A + B)
+A --> A + 1 ==> B --> B - 4 
+x --> a*x ==> z --> z/a^4
+to keep same pandemic growth strength 
+
+m_d=2.0e-05
+m_X = 6.0e-05
+sin22th = 3.5e-15
+y = 1.5e-03
+seems relatively succesfull
+g^4*sin^2(theta) = C => sin^2(theta) = C / g^4 = 1/4*sin^2(2*theta)
+"""
+
+m_ratio = 3
+C = (1.5e-3)**4 * 3.5e-15       # Anton: Tested, this value gives close to Omega*h^2 = 0.12
+
+m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 m_a = 0.
-m_X = 2.5*m_d
-sin2_2th = 1e-12
-y = 5.6e-5
+m_X = m_ratio*m_d
+y = 2e-2
+sin2_2th = 4*C/y**4
 
+print(f'md: {m_d:.3e}, mX: {m_X:.3e}, y: {y:.3e}, sin22th: {sin2_2th:.3e}')
+
+# 1: fermion, -1: boson
 k_d = 1.
 k_a = 1.
-k_phi = -1.
+k_X = -1.
+
 dof_d = 2.
-dof_phi = 1.
+dof_X = 1.
 
 m_d2 = m_d*m_d
 m_a2 = m_a*m_a
@@ -36,9 +62,9 @@ y2 = y*y
 # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
 # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
 
-# M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+# M2_X23 = 2*g**2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
 # New matrix elements for X --> 23
-M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
 M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
 M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
@@ -49,47 +75,70 @@ vert_el = y2*y2*(c_th**8.)
 Gamma_X = vector_mediator.Gamma_X(y, th, m_X, m_d)
 m_Gamma_X2 = m_X2*Gamma_X*Gamma_X
 
-# n = n_d + 2.*n_phi
-def C_n(T_a, T_d, xi_d, xi_phi):
-    C_XX_dd = C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, vert_el) / 4. # symmetry factor 1/4
-    C_da = C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d,   0., xi_phi, M2_da)
-    C_aa = C_res_vector.C_n_3_12(m_a, m_a, m_X, k_a, k_a, k_phi, T_a, T_a, T_d,   0.,   0., xi_phi, M2_aa) / 2.
-    C_da_dd = C_res_vector.C_34_12(0, 1., -1., m_d, m_d, m_d, m_a, k_d, k_d, k_d, k_a, T_d, T_d, T_d, T_a, xi_d, xi_d, xi_d, 0., vert_tr, m_X2, m_Gamma_X2) / 2.
-    C_aa_da = C_res_vector.C_34_12(0, 1., -1., m_d, m_a, m_a, m_a, k_d, k_a, k_a, k_a, T_d, T_a, T_a, T_a, xi_d, 0., 0., 0., vert_fi, m_X2, m_Gamma_X2) / 2.
+"""
+Anton:
+res_sub = True: |D_off-shell|^2 is used -- on-shell contribution is subtracted, and decays should be included manually
+res_sub = False: |D_BW|^2 is used -- already counts decay/inverse decay contributions via s-channel resonance
+"""
+# n = n_d + 2.*n_X
+def C_n(T_a, T_d, xi_d, xi_X):
+    C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0) / 4. # symmetry factor 1/4
+    C_da = C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_da, type=0)
+    C_aa = C_res_vector.C_n_3_12(m1=m_a, m2=m_a, m3=m_X, k1=k_a, k2=k_a, k3=k_X, T1=T_a, T2=T_a, T3=T_d, xi1=0., xi2=0., xi3=xi_X, M2=M2_aa, type=0) / 2.
+    C_da_dd = C_res_vector.C_34_12_new(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    C_aa_da = C_res_vector.C_34_12_new(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
     print("C_ns:", C_da, 2.*C_aa, C_da_dd, C_aa_da, 2.*C_XX_dd)
     return C_da + 2.*C_aa + C_da_dd + C_aa_da + 2.*C_XX_dd
 
-# rho = rho_d + rho_phi
-def C_rho(T_a, T_d, xi_d, xi_phi):
-    C_da = C_res_vector.C_rho_3_12(2, m_d, m_a, m_X, k_d, k_a, k_phi, T_d, T_a, T_d, xi_d, 0., xi_phi, M2_da)
-    C_aa = C_res_vector.C_rho_3_12(3, m_a, m_a, m_X, k_d, k_a, k_phi, T_a, T_a, T_d,   0., 0., xi_phi, M2_aa) / 2. # symmetry factor 1/2
-    C_da_dd = C_res_vector.C_34_12(4, 1., -1., m_d, m_d, m_d, m_a, k_d, k_d, k_d, k_a, T_d, T_d, T_d, T_a, xi_d, xi_d, xi_d, 0., vert_tr, m_X2, m_Gamma_X2) / 2.
-    C_aa_da = C_res_vector.C_34_12(1, 1., -1., m_d, m_a, m_a, m_a, k_d, k_a, k_a, k_a, T_d, T_a, T_a, T_a, xi_d, 0., 0., 0., vert_fi, m_X2, m_Gamma_X2) / 2.
+# rho = rho_d + rho_X
+def C_rho(T_a, T_d, xi_d, xi_X):
+    C_da = C_res_vector.C_rho_3_12(type=2, m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_da)
+    C_aa = C_res_vector.C_rho_3_12(type=3, m1=m_a, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_a, T2=T_a, T3=T_d, xi1=0., xi2=0., xi3=xi_X, M2=M2_aa) / 2. # symmetry factor 1/2
+    C_da_dd = C_res_vector.C_34_12_new(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    C_aa_da = C_res_vector.C_34_12_new(type=1, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
     print("C_rhos:", C_da, C_aa, C_da_dd, C_aa_da)
     return C_da + C_aa + C_da_dd + C_aa_da
 
-def C_xi0(T_a, T_d, xi_d, xi_phi):
-    C_XX_dd = C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_phi, T_d, xi_d, xi_phi, vert_el, type=1) / 4.
+def C_xi0(T_a, T_d, xi_d, xi_X):
+    C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=1) / 4.
     return 2.*C_XX_dd
 
 Ttrel = pandemolator.TimeTempRelation()
 ent_grid = np.array([cf.s_SM_no_nu(T)+cf.s_nu(T_nu) for T, T_nu in zip(Ttrel.T_SM_grid, Ttrel.T_nu_grid)])
+# np.savetxt('sterile_test/ent_grid.dat', ent_grid)
 T_d_DW = 0.133*((1e6*m_d)**1./3.) # temperature of maximal d production by Dodelson-Widrow mechanism
 i_ic = np.argmax(Ttrel.T_nu_grid < T_d_DW)
 i_end = np.argmax(Ttrel.T_nu_grid < 0.01*m_d)
 sf_ic_norm_d_DW = (cf.s_SM_before_nu_dec(T_d_DW)/(cf.s_SM_no_nu(Ttrel.T_SM_grid[i_ic]) + cf.s_nu(Ttrel.T_nu_grid[i_ic])))**(1./3.)
 O_d_h2 = 0.3*1e10*sin2_2th*((1e4*m_d)**2.)
 norm_f_d_0 = 4.*cf.pi2*cf.s_SM_before_nu_dec(T_d_DW)*O_d_h2*cf.rho_crit0_h2/(3.*cf.zeta3*(T_d_DW**3.)*m_d*cf.s0)
-T_d_ic = ((norm_f_d_0/(1.+8.*dof_phi/(7.*dof_d)))**(1./3.))*T_d_DW/sf_ic_norm_d_DW
+T_d_ic = ((norm_f_d_0/(1.+8.*dof_X/(7.*dof_d)))**(1./3.))*T_d_DW/sf_ic_norm_d_DW
 xi_d_ic = 0.
-xi_phi_ic = 0.
+xi_X_ic = 0.
 
 sf_ic_norm_0 = (cf.s0/(cf.s_SM_no_nu(Ttrel.T_SM_grid[i_ic]) + cf.s_nu(Ttrel.T_nu_grid[i_ic])))**(1./3.)
 n_ic = cf.n_0_dw(m_d, th) / (sf_ic_norm_0**3.)
 rho_ic = n_ic * cf.avg_mom_0_dw(m_d) / sf_ic_norm_0
 
-# pan = pandemolator.Pandemolator(m_d, k_d, dof_d, m_X, k_phi, dof_phi, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, T_d_ic, xi_d_ic, xi_phi_ic, i_end)
-pan = pandemolator.Pandemolator(m_d, k_d, dof_d, m_X, k_phi, dof_phi, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, n_ic, rho_ic, i_end)
+# pan = pandemolator.Pandemolator(m_d, k_d, dof_d, m_X, k_X, dof_X, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, T_d_ic, xi_d_ic, xi_X_ic, i_end)
+# self, m_chi, k_chi, dof_chi, m_X, k_phi, dof_phi, m_psi, k_psi, C_n, C_rho, C_xi0, t_grid, T_grid, dT_dt_grid, ent_grid, hubble_grid, sf_grid, i_ic, n_ic, rho_ic, i_end
+print('sterile_pandemic.py start pandemolator')
+time_now = time.localtime()
+print(f'Estimated finish {(time_now.tm_hour + 1 + (time_now.tm_min + 30)//60)%24}:{(time_now.tm_min + 30)%60} -- {time_now.tm_hour + 2}:{time_now.tm_min}')
+pan = pandemolator.Pandemolator(m_d, k_d, dof_d, m_X, k_X, dof_X, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, n_ic, rho_ic, i_end)
+start = time.time()
 pan.pandemolate()
+end = time.time()
 
-np.savetxt('sterile_test/md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat', np.column_stack((Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_phi_grid_sol, pan.n_chi_grid_sol, pan.n_phi_grid_sol)))
+T = end - start
+print(f'pandemolator ran in {T//60//60}h, {T//60%60}m, {T%60:.0f}s')
+
+md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+sin22th_str = f'{sin2_2th:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+y_str = f'{y:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+
+file_str = f'sterile_test/md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str};full.dat'
+np.savetxt(file_str, np.column_stack((Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], ent_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_phi_grid_sol, pan.n_chi_grid_sol, pan.n_phi_grid_sol)))
+
+print(f'Saved data to {file_str}')

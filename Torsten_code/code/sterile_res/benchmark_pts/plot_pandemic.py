@@ -27,7 +27,8 @@ mY_relic = cf.rho_d0/cf.s0
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif', size=14)
-plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white", gridspec_kw={'height_ratios': [2, 1]})
 ax1.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)

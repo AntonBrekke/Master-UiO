@@ -19,14 +19,10 @@ sys.path.insert(0, grandparentdir)
 
 import constants_functions as cf
 
-md = 1e-5
-mX = 2.5*md
-mY_relic = cf.rho_d0/cf.s0
-
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif', size=14)
-# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif', size=14)
+# # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+# plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white", gridspec_kw={'height_ratios': [2, 1]})
 ax1.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
@@ -48,7 +44,8 @@ xMajorLocator = FixedLocator(xtMajor)
 xMinorLocator = FixedLocator(xtMinor)
 xMajorFormatter = FixedFormatter(xlMajor)
 
-ytMajor = np.array([np.log10(10**j) for j in np.linspace(-25, -9, 17)])
+# Anton: Formatting is to move y-tick scale from GeV to keV
+ytMajor = np.array([np.log10(10**j) for j in np.linspace(-25, 5, 25-(-5)+1)])
 ytMinor = np.array([np.log10(i*10**j) for j in ytMajor for i in range(10)[1:10]])
 ylMajor = [r"$10^{" + str(int(i+6)) + "}$" if i in ytMajor[::2] else "" for i in ytMajor]
 ytMajor = 10**ytMajor
@@ -58,33 +55,66 @@ yMinorLocator = FixedLocator(ytMinor)
 yMajorFormatter = FixedFormatter(ylMajor)
 
 """
+Had to fix: the right entropy 'ent' was not returned, which caused trouble in plots. 
+Should be fixes now. 
+
 data = np.loadtxt('./md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat')
 0: t_grid 
 1: T_SM_grid
 2: T_nu_grid
 3: hubble_grid
-4: sf_grid / sf_grid
-5: T_chi_grid_sol
-6: xi_chi_grid_sol
-7: xi_X_grid_sol (xi_phi_grid_sol)
-8: n_chi_grid_sol
-9: n_phi_grid_sol
+4: hubble_grid
+5: sf_grid / sf_grid
+6: T_chi_grid_sol
+7: xi_chi_grid_sol
+8: xi_X_grid_sol (xi_phi_grid_sol)
+9: n_chi_grid_sol
+10: n_X_grid_sol (n_phi_grid_sol)
 
 data: Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_phi_grid_sol, pan.n_chi_grid_sol, pan.n_phi_grid_sol
 """
-data = np.loadtxt('./md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat')
+load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-14;y_2.0e-04;full.dat'
+load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-12;y_2.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.5e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'
+load_str = './md_1.0e-05;mX_2.5e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-14;y_2.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-16;y_2.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-15;y_2.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_5.0e-05;sin22th_3.5e-14;y_1.5e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-15;y_1.5e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_1.5e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_1.5e-02;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_3.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.6e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_2.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.8e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_1.0e-15;y_3.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-16;y_4.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_6.0e-16;y_6.0e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_1.0e-17;y_1.0e-02;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.6e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.5e-15;y_2.0e-03;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_1.10742e-15;y_2e-03;full.dat'
+data = np.loadtxt(load_str)
 
 T_SM = data[:,1]
 T_nu = data[:,2]
 ent = data[:,3]
-Td = data[:,5]
-xid = data[:,6]
-xiX = data[:,7]
-nd = data[:,8]
-nX = data[:,9]
+Td = data[:,6]
+xid = data[:,7]
+xiX = data[:,8]
+nd = data[:,9]
+nX = data[:,10]
+
+# Mass: 1e-6 * X GeV = X keV
+var_list = load_str.split(';')[:-1]
+md, mX, sin22th, y = [eval(s.split('_')[-1]) for s in var_list]
+print(md, mX, sin22th, y)
+mY_relic = cf.omega_d0 * cf.rho_crit0_h2 / cf.s0        # m*Y = m*n/s = Omega * rho0 / s0
 
 T_grid_dw = np.logspace(np.log10(1.4e-3), 1, 400)
-mYd_dw = cf.O_h2_dw_Tevo(T_grid_dw, md, 0.5*np.arcsin(np.sqrt(2.5e-13)))*cf.rho_crit0_h2/cf.s0
+mYd_dw = cf.O_h2_dw_Tevo(T_grid_dw, md, 0.5*np.arcsin(np.sqrt(sin22th)))*cf.rho_crit0_h2 / cf.s0     # Anton: mY from Dodelson-Widrow
 
 if True:
 
@@ -92,7 +122,7 @@ if True:
     y1_dw = mYd_dw
 
     x1_tr = md/T_nu
-    y1_tr = md*nd/ent
+    y1_tr = md*nd/ent          
 
     x1_dw0, x1_tr0 = x1_dw[x1_dw < 1e-3], x1_tr[x1_tr > 1e-3]
     y1_dw0, y1_tr0 = y1_dw[x1_dw < 1e-3], y1_tr[x1_tr > 1e-3]
@@ -101,7 +131,7 @@ if True:
 
     ax1.loglog(x1, y1, color='#7bc043', zorder=-1)
 
-    ax1.fill_betweenx([1e-23, 1e-18], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+    ax1.fill_betweenx([1e-23, 1e5], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
     #ax1.fill_betweenx([1e-23, 1e-18], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 
     #ax1.text(8e-5, 2e-21, 'Thermalization', fontsize=10, color='darkorange')
@@ -124,8 +154,8 @@ if True:
     ax1.text(2.5, 1e-11, r'$\nu_s$', color='#7bc043', fontsize=11)
     ax1.text(2.0, 1e-16, r'$X$', color='#f37736', fontsize=11)
 
-    ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-' , color='black', label=r'$\textit{BP1}$')
-    ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\textit{BP2}$')
+    ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-' , color='black', label=r'$\text{BP1}$')
+    ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
 
     ax2.loglog(md/T_nu, Td/T_nu, color='0.4', ls='-', zorder=-4)
 
@@ -144,20 +174,20 @@ if True:
     ax2.yaxis.set_label_text(r"$T_\text{d}/T_\nu$")
 
 
-    #ax1.xaxis.set_major_locator(xMajorLocator)
-    #ax1.xaxis.set_minor_locator(xMinorLocator)
-    #ax1.xaxis.set_major_formatter(xMajorFormatter)
+    ax1.xaxis.set_major_locator(xMajorLocator)
+    ax1.xaxis.set_minor_locator(xMinorLocator)
+    ax1.xaxis.set_major_formatter(xMajorFormatter)
     ax1.yaxis.set_major_locator(yMajorLocator)
     ax1.yaxis.set_minor_locator(yMinorLocator)
     ax1.yaxis.set_major_formatter(yMajorFormatter)
 
     plt.xlim(2e-5, 20)
 
-    ax1.set_ylim(1e-25)
+    ax1.set_ylim(1e-25, 1e-9)
     ax2.set_ylim(1e-2, 2e0)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
-    plt.savefig('evo_test.pdf')
+    plt.savefig(f'evo_test_{load_str.replace("./", "").replace("_full.dat","")}.pdf')
     plt.show()
 elif False:
     plt.loglog(md1/T_nu1, 1e6*Td1, color='dodgerblue', ls='-')

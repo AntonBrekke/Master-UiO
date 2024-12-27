@@ -38,8 +38,8 @@ num_process = int(2.5*num_cpus) # cpu_count(), 48
 
 params_grid = np.array((np.repeat(m_d_grid, n_th), np.tile(sin2_2th_grid, n_m))).T
 
-spin_facs = True
-off_shell = False
+spin_facs = True        # Anton: If spin-statistics matter or not 
+off_shell = False       # Anton: If intermediate particle is off-shell or not
 
 dirname = './sterile_res/'
 i_max = 0      # 60
@@ -64,7 +64,7 @@ def find_y(params):
         try:
             time1 = time.time()
             print("Running sterile_caller.call ")
-            t_grid, T_SM_grid, T_nu_grid, ent_grid, hubble_grid, sf_grid, T_d_grid, xi_d_grid, xi_phi_grid, n_d_grid, n_phi_grid, C_therm_grid, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = sterile_caller.call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y_cur, spin_facs = spin_facs, off_shell = off_shell)
+            t_grid, T_SM_grid, T_nu_grid, ent_grid, hubble_grid, sf_grid, T_d_grid, xi_d_grid, xi_phi_grid, n_d_grid, n_phi_grid, C_therm_grid, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = sterile_caller.call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y_cur, spin_facs=spin_facs, off_shell=off_shell)
             print(f"sterile_caller.call ran in {time.time()-time1}s")
 
         except Exception as e:
