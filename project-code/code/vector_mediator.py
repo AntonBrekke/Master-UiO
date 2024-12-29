@@ -42,15 +42,26 @@ def Gamma_X(y, th, m_X, m_d):
     sth = np.sin(th)
     cth = np.cos(th)
 
+    m_d2 = m_d*m_d
+    m_X2 = m_X*m_X
     """
     Anton: 
     M2_X->23 = 2g^2/m_X^2 * (m_X^2 - (m2 - m3)^2) * [2*m_X^2 + (m2 + m3)^2]
+    X_23 = |p_f|/(2^M*8*pi*m_X2)*|M_X->23| * H(m_X - (m2 + m3))
+    |p_f| = 1/(2*m_X)*sqrt((m_X2 - m2^2 - m3^2)^2 - 4*m2^2*m3^2) 
     """
+    M2_aa = 2.*y2*(sth**4.)/m_X2 * (m_X2)*(2*m_X2)
+    M2_ad = 2.*y2*(sth**2.)*(cth**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
+    M2_dd = 2.*y2*(cth**4.)/m_X2 * (m_X2)*(2*m_X2 + 4*m_d2)
 
-    # Decay to aa, ad, and dd. Have used m_a = 0.
-    X_aa = y2*sth**4 * m_X/(8*np.pi)
-    X_ad = y2*cth**2*sth**2/(8*np.pi*m_X**5)*(2*m_X**4 - m_X**2*m_d**2 - m_d**4)*(m_X**2 - m_d**2) * (m_X**2 > m_d**2)
-    X_dd = y2*cth**4/(8*np.pi*m_X**2)*np.sqrt(m_X**2 - 4*m_d**2)*(m_X**2 + 2*m_d**2) * (m_X**2 > 2*m_d**2)
+    pf_aa = m_X/2 
+    pf_ad = 1/(2*m_X)*(m_X2 - m_d2) 
+    pf_dd = 1/(2*m_X)*sqrt((m_X2 - 2*m_d2)**2 - 4*m_d2*m_d2) 
+
+    # Anton: Decay to aa, ad, and dd. Have used m_a = 0.
+    X_aa = pf_aa/(16*np.pi*m_X2) * M2_aa * (m_X > 0)
+    X_ad = pf_ad/(8*np.pi*m_X2) * M2_ad * (m_X > m_d)
+    X_dd = pf_dd/(16*np.pi*m_X2) * M2_dd * (m_X > 2*m_d)
 
     return X_aa + X_ad + X_dd
 
@@ -286,13 +297,11 @@ def sigma_gen(s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
     Since sigma ~ int d(cos(theta)) |M|^2 for 2 to 2 process, we try to integrate |M|^2 analytically. 
     Switch integration to t = m_d^2 + m_phi^2 - 2E1*E3 + 2p1*p3*cos(theta), d(cos(theta)) = 1/(2*p1*p3)dt
     Since sigma is Lorentz invariant, calculate in CM-frame
-    t = (p1-p3)^2 = (E1cm - E3cm)^2 - (p1cm - p3cm)^2
-      = (E1cm - E3cm)^2 - (p1cm^2 + p3cm^2 - 2*p1cm*p3cm*cos(theta))
+    t = (p1-p3)^2 = (E1cm - E3cm)^2 - (p1cm - p3cm)^2 = (E1cm - E3cm)^2 - (p1cm^2 + p3cm^2 - 2*p1cm*p3cm*cos(theta))
     This gives upper and lower bounds (cos(theta)=1, cos(theta)=-1)
     t_upper = (E1cm - E3cm)^2 - (p1cm - p3cm)^2 = (E1cm-E3cm + (p1cm-p3cm))*(E1cm-E3cm - (p1cm-p3cm))
     t_lower = (E1cm - E3cm)^2 - (p1cm + p3cm)^2 = (E1cm-E3cm + (p1cm+p3cm))*(E1cm-E3cm - (p1cm+p3cm))
-    s = (p1/3 + p2/4)^2 = (E1/3cm + E2/4cm)^2 
-    sqrt(s) = E1/3cm + E2/4cm
+    s = (p1/3 + p2/4)^2 = (E1/3cm + E2/4cm)^2 --> CM: sqrt(s) = E1/3cm + E2/4cm
     Trick: E2/4^2 = E1/3^2 - m1/3^2 + m2/4^2 in CM-frame
     => (sqrt(s) - E1/3cm)^2 = E1/3cm^2 - m1/3^2 + m2/4^2
     => E1/3cm = (s + m1/3^2 - m2/4^2) / (2*sqrt(s))
@@ -301,13 +310,13 @@ def sigma_gen(s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
     for integration bounds. 
     Two heavysides - one from integration of phase-space: H(E_cm - (m3 + m4)), one from demanding p1/2cm positive: 
     H(1/(4*s)*{[s - (m1^2 + m2^2)]^2 - 4*m1^2*m2^2}) = H([s - (m1^2 + m2^2)]^2 - 4*m1^2*m2^2)
-    => [s - (m1^2 + m2^2)]^2 > 4*m1^2*m2^2
-    => s - (m1^2 + m2^2) > 2*m1*m2, s - (m1^2 + m2^2) < -2*m1*m2
+    => [s - (m1^2 + m2^2)]^2 > 4*m1^2*m2^2 => s - (m1^2 + m2^2) > 2*m1*m2, s - (m1^2 + m2^2) < -2*m1*m2
     => s > (m1 + m2)^2, s < (m1 - m2)^2, latter never satisfied -- omit last solution 
     = H(s - (m1 + m2)^2) = H(E_cm - m1 - m2)
     Cross-section:
-    sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*E_cm^2*p1cm^2) 
-          * int_{t_lower}^{t_upper} dt |M|^2
+    g1*g2*sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*E_cm^2*p1cm^2) * int_{t_lower}^{t_upper} dt |M|^2
+    g1, g2 spin factor from initial dof. in |M|^2. We use g1*g2*sigma and not sigma, as we use these for the 
+    thermally averaged cross-section
     Note: This function can not be vectorized using 'quad' or 'quad_vec' as boundaries also will be arrays. 
           Use np.vectorize(sigma_gen)(s, m1, ...) instead if array output is wanted.
     """
@@ -327,6 +336,7 @@ def sigma_gen(s, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
 
     M2_t_integrate, err = quad(ker_sigma_gen, t_lower, t_upper, args=(s, p1cm, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub))
 
+    # Anton: No symmetry-factors, as this is unkown at this level
     return 1e3*M2_t_integrate
 
 @nb.jit(nopython=True, cache=True)
@@ -358,7 +368,7 @@ def sigma_fi(s, m_d2, vert, m_X2, m_Gamma_X2):
     M2_t_integrate, err = quad(ker_sigma_fi, t_lower, t_upper, args=(s, p1cm, m_d2, vert, m_X2, m_Gamma_X2))
 
     # factor 0.5 due to identical particles in final state
-    return 0.5*M2_t_integrate
+    return M2_t_integrate / 2
 
 
 @nb.jit(nopython=True, cache=True)
@@ -390,7 +400,7 @@ def sigma_tr(s, m_d2, vert, m_X2, m_Gamma_X2):
     M2_t_integrate, err = quad(ker_sigma_tr, t_lower, t_upper, args=(s, p1cm, m_d2, vert, m_X2, m_Gamma_X2))
 
     # factor 0.5 due to identical particles in final state
-    return 0.5*M2_t_integrate
+    return M2_t_integrate / 2
 
 
 @nb.jit(nopython=True, cache=True)
@@ -425,7 +435,7 @@ def sigma_el(s, m_d2, vert, m_X2, m_Gamma_X2):
 
     M2_t_integrate, err = M2_t_integrate_1, err = quad(ker_sigma_el, t_lower, t_upper, args=(s, p1cm, m_d2, vert, m_X2, m_Gamma_X2))
     # factor 0.5 due to identical particles in final state
-    return 0.5*1e3*M2_t_integrate
+    return 1e3*M2_t_integrate / 2
 
 @nb.jit(nopython=True, cache=True)
 def M2_gen_tHoft(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
@@ -514,9 +524,10 @@ if __name__ == '__main__':
     m1 = m_a
     m2 = m_d
     s_min = (m1 + m2)**2
-    S = 10**(np.linspace(np.log10(s_min), 0.1, int(1e3)))
     # S = np.linspace(s_min, 1e2, int(1e3))
+    S = 10**(np.linspace(np.log10(s_min), 0.1, int(1e3)))
     T = np.linspace(-1, 1, int(1e3))
+    # T = np.concatenate((-10**(np.linspace(1, 0, int(1e3/2))), 10**(np.linspace(0, 1, int(1e3/2)))))
     s, t = np.meshgrid(S, T, indexing='ij')
 
     Gamma = Gamma_X(y=y, th=th, m_X=m_X, m_d=m_d)
@@ -535,18 +546,22 @@ if __name__ == '__main__':
     sigma_freezein = np.vectorize(sigma_fi)(s=s_sigma, m_d2=m_d**2, vert=vert_fi, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
 
     fig, (ax1, ax2, ax3) = plt.subplots(3,1, figsize=(10,6))
+    
     ax1.loglog(s_sigma, 2*sigma_trans, 'r', label='sigma_tr', lw=2.5)
     ax1.loglog(s_sigma, sigma_gen_tr, 'k--', label='sigma_gen|tr')
     ax1.loglog(s_sigma, np.max(2*sigma_trans)*s_min/s_sigma, 'grey', linestyle='--', zorder=-1)
+
     ax2.loglog(s_sigma, 2*sigma_elast, 'r', label='sigma_el', lw=2.5)
     ax2.loglog(s_sigma, sigma_gen_el, 'k--', label='sigma_gen|el')
     ax2.loglog(s_sigma, np.max(2*sigma_elast)*s_min/s_sigma, 'grey', linestyle='--', zorder=-1)
+
     ax3.loglog(s_sigma, 2*sigma_freezein, 'r', label='sigma_fi', lw=2.5)
     ax3.loglog(s_sigma, sigma_gen_fi, 'k--', label='sigma_gen|fi')
     ax3.loglog(s_sigma, np.max(2*sigma_freezein)*s_min/s_sigma, 'grey', linestyle='--', zorder=-1)
-    ax1.axvline(m_d**2, color='k', linestyle='--')
-    ax2.axvline(m_d**2, color='k', linestyle='--')
-    ax3.axvline(m_d**2, color='k', linestyle='--')
+
+    ax1.axvline(4*m_d**2, color='grey', linestyle='-.')
+    ax2.axvline(4*m_d**2, color='grey', linestyle='-.')
+    ax3.axvline(4*m_d**2, color='grey', linestyle='-.')
     ax1.legend()
     ax2.legend()
     ax3.legend()

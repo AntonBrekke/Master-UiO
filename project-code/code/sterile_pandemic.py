@@ -31,13 +31,13 @@ g^4*sin^2(theta) = C => sin^2(theta) = C / g^4 = 1/4*sin^2(2*theta)
 """
 
 m_ratio = 3
-C = (1.5e-3)**4 * 3.5e-15       # Anton: Tested, this value gives close to Omega*h^2 = 0.12
+# C = (1.5e-3)**4 * 3.5e-15       # Anton: Tested, this value gives close to Omega*h^2 = 0.12
 
 m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 m_a = 0.
 m_X = m_ratio*m_d
-y = 2e-2
-sin2_2th = 4*C/y**4
+sin2_2th = 3e-15
+y = 1.602e-3
 
 print(f'md: {m_d:.3e}, mX: {m_X:.3e}, y: {y:.3e}, sin22th: {sin2_2th:.3e}')
 
@@ -62,7 +62,7 @@ y2 = y*y
 # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
 # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
 
-# M2_X23 = 2*g**2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+# M2_X23 = 2*g^2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
 # New matrix elements for X --> 23
 M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
 M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
@@ -82,8 +82,8 @@ res_sub = False: |D_BW|^2 is used -- already counts decay/inverse decay contribu
 """
 # n = n_d + 2.*n_X
 def C_n(T_a, T_d, xi_d, xi_X):
-    C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0) / 4. # symmetry factor 1/4
-    C_da = C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_da, type=0)
+    C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0) / 4. # symmetry factor 1/4, type=0 include reaction both ways
+    C_da = C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_da, type=0)      # type=0 include reaction both ways 
     C_aa = C_res_vector.C_n_3_12(m1=m_a, m2=m_a, m3=m_X, k1=k_a, k2=k_a, k3=k_X, T1=T_a, T2=T_a, T3=T_d, xi1=0., xi2=0., xi3=xi_X, M2=M2_aa, type=0) / 2.
     C_da_dd = C_res_vector.C_34_12_new(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
     C_aa_da = C_res_vector.C_34_12_new(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.

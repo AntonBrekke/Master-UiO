@@ -62,7 +62,7 @@ data = np.loadtxt('./md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat')
 0: t_grid 
 1: T_SM_grid
 2: T_nu_grid
-3: hubble_grid
+3: ent_grid
 4: hubble_grid
 5: sf_grid / sf_grid
 6: T_chi_grid_sol
@@ -76,7 +76,6 @@ data: Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1],
 load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-14;y_2.0e-04;full.dat'
 load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-12;y_2.0e-03;full.dat'
 load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'
 load_str = './md_1.0e-05;mX_2.5e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'
 load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-14;y_2.0e-03;full.dat'
 load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-16;y_2.0e-03;full.dat'
@@ -96,6 +95,10 @@ load_str = './md_2.0e-05;mX_6.0e-05;sin22th_1.0e-17;y_1.0e-02;full.dat'
 load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.6e-03;full.dat'
 load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.5e-15;y_2.0e-03;full.dat'
 load_str = './md_2e-05;mX_6e-05;sin22th_1.10742e-15;y_2e-03;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_4.42969e-19;y_2e-02;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-16;y_2.67e-03;full.dat'
+load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'     # **
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'         # BP2 
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]
@@ -187,7 +190,7 @@ if True:
     ax2.set_ylim(1e-2, 2e0)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
-    plt.savefig(f'evo_test_{load_str.replace("./", "").replace("_full.dat","")}.pdf')
+    plt.savefig(f'evo_test_{load_str.replace("./", "").replace(".dat","")}.pdf')
     plt.show()
 elif False:
     plt.loglog(md1/T_nu1, 1e6*Td1, color='dodgerblue', ls='-')

@@ -55,9 +55,14 @@ C_dd_da2 = data2[:,12]
 C_aa_dd2 = data2[:,13]
 C_dd_aa2 = data2[:,14]
 
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif', size=14)
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif', size=14)
-plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig = plt.figure(figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white")
 ax = fig.add_subplot(1,1,1)
