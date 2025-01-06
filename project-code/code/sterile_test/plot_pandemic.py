@@ -44,7 +44,7 @@ xMajorLocator = FixedLocator(xtMajor)
 xMinorLocator = FixedLocator(xtMinor)
 xMajorFormatter = FixedFormatter(xlMajor)
 
-# Anton: Formatting is to move y-tick scale from GeV to keV
+# Anton: Formatting is to move y-tick scale from GeV to keV (str(int(i+6)))
 ytMajor = np.array([np.log10(10**j) for j in np.linspace(-25, 5, 25-(-5)+1)])
 ytMinor = np.array([np.log10(i*10**j) for j in ytMajor for i in range(10)[1:10]])
 ylMajor = [r"$10^{" + str(int(i+6)) + "}$" if i in ytMajor[::2] else "" for i in ytMajor]
@@ -67,38 +67,34 @@ data = np.loadtxt('./md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat')
 5: sf_grid / sf_grid
 6: T_chi_grid_sol
 7: xi_chi_grid_sol
-8: xi_X_grid_sol (xi_phi_grid_sol)
+8: xi_X_grid_sol
 9: n_chi_grid_sol
-10: n_X_grid_sol (n_phi_grid_sol)
+10: n_X_grid_sol
 
-data: Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_phi_grid_sol, pan.n_chi_grid_sol, pan.n_phi_grid_sol
+data: Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_X_grid_sol, pan.n_chi_grid_sol, pan.n_X_grid_sol
 """
-load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-14;y_2.0e-04;full.dat'
-load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-12;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.5e-03;full.dat'
-load_str = './md_1.0e-05;mX_2.5e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-14;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-16;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-15;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_5.0e-05;sin22th_3.5e-14;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-15;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_1.5e-02;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_3.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.6e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.8e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_1.0e-15;y_3.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-16;y_4.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_6.0e-16;y_6.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_1.0e-17;y_1.0e-02;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.6e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.5e-15;y_2.0e-03;full.dat'
-load_str = './md_2e-05;mX_6e-05;sin22th_1.10742e-15;y_2e-03;full.dat'
-load_str = './md_2e-05;mX_6e-05;sin22th_4.42969e-19;y_2e-02;full.dat'
-load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-16;y_2.67e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'     # **
-load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'         # BP2 
+
+load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-15;y_1.7e-03;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_2e-03;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-17;y_2e-02;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-17;y_2e-02;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-19;y_2e-01;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-15;y_1.7e-03;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'       # BP2, overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-15;y_1.3e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_2e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1e-03;full.dat'       # Undershoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.5e-03;full.dat'       # Undershoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.6e-03;full.dat'       # Undershoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.8e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.7e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.74e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.3e-03;full.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.745e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.75e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.747e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.7475e-03;full.dat'       # Perfect
+
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]
@@ -135,12 +131,12 @@ if True:
     ax1.loglog(x1, y1, color='#7bc043', zorder=-1)
 
     ax1.fill_betweenx([1e-23, 1e5], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
-    #ax1.fill_betweenx([1e-23, 1e-18], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
+    # ax1.fill_betweenx([1e-23, 1e-18], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 
     #ax1.text(8e-5, 2e-21, 'Thermalization', fontsize=10, color='darkorange')
     #ax1.text(5e-4, 1.3e-19, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
     #ax1.text(5e-4, 1e-22, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
-    ax1.plot([1e-3]*2, [1e-25, 1e-9], ls=':', color='0', zorder=-2)
+    ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
     ax2.plot([1e-3]*2, [1e-2, 2e0], ls=':', color='0', zorder=-2)
 
     ax1.text(1.5e-4, 8e-21, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
@@ -166,9 +162,9 @@ if True:
 
     props = dict(boxstyle='round', facecolor='white', alpha=0.8, linewidth=1, edgecolor="0.8")
 
-    #plt.text(2e-2, 1e-11, r'$m_\phi = 2.5m_\chi$', fontsize=9, horizontalalignment='center', bbox=props)
-    #plt.text(1e0, 3e-23, r'$m_\phi = 2.5m_\chi$', fontsize=9, horizontalalignment='center', bbox=props, zorder=5)
-    #ax1.text(1e0, 8e-25, r'$m_\phi = 2.5m_\chi$', fontsize=10, horizontalalignment='center', zorder=5)
+    #plt.text(2e-2, 1e-11, r'$m_X = 2.5m_\chi$', fontsize=9, horizontalalignment='center', bbox=props)
+    #plt.text(1e0, 3e-23, r'$m_X = 2.5m_\chi$', fontsize=9, horizontalalignment='center', bbox=props, zorder=5)
+    #ax1.text(1e0, 8e-25, r'$m_X = 2.5m_\chi$', fontsize=10, horizontalalignment='center', zorder=5)
 
 
     ax2.legend(fontsize=10, framealpha=0.8, edgecolor='1')
@@ -186,11 +182,12 @@ if True:
 
     plt.xlim(2e-5, 20)
 
-    ax1.set_ylim(1e-25, 1e-9)
+    # ylim + 6 will be shown
+    ax1.set_ylim(1e-25, 2e-8)
     ax2.set_ylim(1e-2, 2e0)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
-    plt.savefig(f'evo_test_{load_str.replace("./", "").replace(".dat","")}.pdf')
+    plt.savefig(f'dens_evo_{load_str.replace("./", "").replace(".dat","")}_final.pdf')
     plt.show()
 elif False:
     plt.loglog(md1/T_nu1, 1e6*Td1, color='dodgerblue', ls='-')

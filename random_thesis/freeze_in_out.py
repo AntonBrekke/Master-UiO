@@ -83,7 +83,9 @@ ax.text(1.7, 9e-7, r'$\boldsymbol{\langle\sigma v\rangle}$', color='b', fontsize
 ax.text(1.7, 1e-2, r'$n_{\chi, \rm eq}$', color='r', fontsize=18)
 
 ax.set_xticks([-2, -1, 0, 1, 2, 3, 4], labels=[r'$10^{-3}$', r'$10^{-2}$', r'$10^{-1}$', r'$\boldsymbol{1}$', r'$10^1$', r'$10^2$', r'$10^3$'], fontsize=16)
-ax.set_yticklabels([])
+# ax.set_yticklabels([])
+plt.rc('ytick', labelsize=16)
+ax.set_yticks([1e0, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7], labels=[r'$10^{-4}$', r'$10^{-5}$', r'$10^{-6}$', r'$10^{-7}$', r'$10^{-8}$', r'$10^{-9}$', r'$10^{-10}$', r'$10^{-11}$'])
 ax.spines['left'].set_position(('data', -2))
 
 ax.spines["top"].set_visible(False)

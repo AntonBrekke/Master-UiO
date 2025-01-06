@@ -8,38 +8,44 @@ import sys, os
 import constants_functions as cf
 import sterile_caller
 
-r_m = 5.
-m_a = 0.
-k_d = 1.
-k_a = 1.
-k_phi = -1.
-dof_d = 2.
-dof_phi = 1.
+"""
+Anton:
+Finds coupling y that satisfies Omega*h^2 = 0.12 by
+using midpoint method (I think) to pick y and solve 
+with sterile-caller --> pandemolator. 
+"""
+
+r_m = 3.        # Anton: Mass ratio m_X/m_d
+m_a = 0.        # Anton: Take SM-neutrino mass to be zero
+k_d = 1.        # Anton: Fermi-statistics for fermion
+k_a = 1.        
+k_X = -1.       # Anton: Bose-statistics for boson
+dof_d = 2.      # Anton: Fermion 2 spin dof.
+dof_X = 3.      # Anton: Massive vector boson 3 polarization dof.
 
 # n_m = 21
 # n_th = 81
-# m_d_grid = np.logspace(-6, -3.7, n_m)
+# m_d_grid = np.logspace(-6, -3.7, n_m)         # ~ 1 keV - 100 keV
 # sin2_2th_grid = np.logspace(-17, -8, n_th)
 
 # The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
 n_m = 1         # 21
 n_th = 1        # 81
-m_d_grid = 1e-6*np.logspace(1.7, 2.5, n_m)          # 1e-6*m_d = 1e-6 * GeV = keV, plotted values: (10^0 - 10^2) keV
-sin2_2th_grid = np.logspace(-17, -15, n_th)
+# Anton: Search for keV-scale sterile neutrinos. Input is in GeV, so (m_d keV) = (1e-6*m_d GeV)
+m_d_grid = 1e-6*np.logspace(1, 100, n_m)    # ~ 1 keV - 100 keV
+sin2_2th_grid = np.logspace(-17, -8, n_th)
 # m_d_grid = 1e-6*10**(np.array([1.7, 2.24, 1.15, 2.3, 1.5]))         
 # sin2_2th_grid = 10**(np.array([-16.0762, -15.6541, -16.5350, -15.6037, -16.2373]))
-# m_d_grid = 1e-6*10**(np.array([1.7, 1.15, 2.3, 1.5]))         
-# sin2_2th_grid = 10**(np.array([-16.0762, -16.5350, -15.6037, -16.2373]))
-# m_d_grid = 1e-6*10**(np.array([2.00, 2.23, 2.41, 2.3, 1.15]))
-# sin2_2th_grid = 10**(np.array([-17.9334, -17.7420, -17.5984, -15.6037, -16.5345]))
 
 num_cpus = cpu_count()
 num_process = int(2.5*num_cpus) # cpu_count(), 48
 
 params_grid = np.array((np.repeat(m_d_grid, n_th), np.tile(sin2_2th_grid, n_m))).T
 
-spin_facs = True        # Anton: If spin-statistics matter or not 
-off_shell = False       # Anton: If intermediate particle is off-shell or not
+# Anton: If spin-statistics should be included (True) or not (False)
+spin_facs = True
+# Anton: If intermediate particle is of-shell (True) or on-shell (False)
+off_shell = False
 
 dirname = './sterile_res/'
 i_max = 0      # 60
@@ -64,7 +70,7 @@ def find_y(params):
         try:
             time1 = time.time()
             print("Running sterile_caller.call ")
-            t_grid, T_SM_grid, T_nu_grid, ent_grid, hubble_grid, sf_grid, T_d_grid, xi_d_grid, xi_phi_grid, n_d_grid, n_phi_grid, C_therm_grid, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = sterile_caller.call(m_d, m_X, m_a, k_d, k_phi, k_a, dof_d, dof_phi, sin2_2th, y_cur, spin_facs=spin_facs, off_shell=off_shell)
+            t_grid, T_SM_grid, T_nu_grid, ent_grid, hubble_grid, sf_grid, T_d_grid, xi_d_grid, xi_X_grid, n_d_grid, n_X_grid, C_therm_grid, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = sterile_caller.call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y_cur, spin_facs=spin_facs, off_shell=off_shell)
             print(f"sterile_caller.call ran in {time.time()-time1}s")
 
         except Exception as e:
@@ -85,7 +91,7 @@ def find_y(params):
             y_old = y_cur
             O_d_h2_old = O_d_h2_cur
             max_y = min(y_cur, max_y)
-            y_cur = 0.5*(min_y+max_y)
+            y_cur = 0.5*(min_y + max_y)
             print('freeze-out regime or very large abundance, reducing y', m_d, sin2_2th, O_d_h2_dw, y_old, y_cur)
         elif i < i_max:
             log_enhance_cur = np.log(O_d_h2_cur/O_d_h2_dw)
@@ -102,8 +108,8 @@ def find_y(params):
             # print(m_d, sin2_2th, O_d_h2_dw, log_enhance_req, log_enhance_cur, y_old, y_cur)
 
     print('find_y.py for-loop done ')
-    filename = f'md_{m_d:.4e}_mphi_{m_X:.4e}_sin22th_{sin2_2th:.4e}_y_{y_cur:.4e}.dat'
-    np.savetxt(dirname+'benchmark_pts/'+filename, np.column_stack((t_grid[::-i_skip][::-1], T_SM_grid[::-i_skip][::-1], T_nu_grid[::-i_skip][::-1], ent_grid[::-i_skip][::-1], hubble_grid[::-i_skip][::-1], sf_grid[::-i_skip][::-1], T_d_grid[::-i_skip][::-1], xi_d_grid[::-i_skip][::-1], xi_phi_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1], n_phi_grid[::-i_skip][::-1], C_therm_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1]*m_d*cf.s0/(ent_grid[::-i_skip][::-1]*cf.rho_crit0_h2))))
+    filename = f'md_{m_d:.4e}_mX_{m_X:.4e}_sin22th_{sin2_2th:.4e}_y_{y_cur:.4e}.dat'
+    np.savetxt(dirname+'benchmark_pts/'+filename, np.column_stack((t_grid[::-i_skip][::-1], T_SM_grid[::-i_skip][::-1], T_nu_grid[::-i_skip][::-1], ent_grid[::-i_skip][::-1], hubble_grid[::-i_skip][::-1], sf_grid[::-i_skip][::-1], T_d_grid[::-i_skip][::-1], xi_d_grid[::-i_skip][::-1], xi_X_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1], n_X_grid[::-i_skip][::-1], C_therm_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1]*m_d*cf.s0/(ent_grid[::-i_skip][::-1]*cf.rho_crit0_h2))))
 
     therm_ratio = C_therm_grid / (3.*hubble_grid*n_d_grid)
     x_therm = m_d/T_nu_grid[np.argmax(therm_ratio > 1.)]

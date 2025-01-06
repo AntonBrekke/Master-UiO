@@ -22,6 +22,7 @@ sys.path.insert(0, grandparentdir)
 
 import constants_functions as cf
 import C_res_vector
+import C_res_scalar
 import C_res_vector_no_spin_stat
 import vector_mediator
 
@@ -30,34 +31,14 @@ import vector_mediator
 # # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 # plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
-load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-14;y_2.0e-04;full.dat'
-load_str = './md_1.0e-05;mX_3.0e-05;sin22th_1.0e-12;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.5e-03;full.dat'
-load_str = './md_1.0e-05;mX_2.5e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-14;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-16;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-15;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-15;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_1.5e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_1.5e-02;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.0e-15;y_3.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.6e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_2.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.0e-15;y_1.8e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_5.0e-16;y_4.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_6.0e-16;y_6.0e-03;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_1.0e-17;y_1.0e-02;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_2.5e-15;y_2.0e-03;full.dat'
-load_str = './md_2e-05;mX_6e-05;sin22th_4.42969e-19;y_2e-02;full.dat'
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_1.0e-15;y_3.0e-03;full.dat'     # *
-load_str = './md_2.0e-05;mX_5.0e-05;sin22th_3.5e-14;y_1.5e-03;full.dat'     # overshoot 
-load_str = './md_2e-05;mX_6e-05;sin22th_1.10742e-15;y_2e-03;full.dat'       # undershoot
-load_str = './md_2.0e-05;mX_6.0e-05;sin22th_3.5e-15;y_1.5e-03;full.dat'     # **
-load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'     # BP2 
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'       # BP2, overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.75e-03;full.dat'       # Near
 
 var_list = load_str.split(';')[:-1]
 m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
 m_a = 0.
+
+print(m_d, m_X, sin2_2th, y)
 
 md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1].rstrip('0').rstrip('.')
@@ -68,7 +49,7 @@ k_d = 1.
 k_a = 1.
 k_X = -1.
 dof_d = 2.
-dof_X = 1.
+dof_X = 3.
 
 m_d2 = m_d*m_d
 m_a2 = m_a*m_a
@@ -78,11 +59,13 @@ c_th = cos(th)
 s_th = sin(th)
 y2 = y*y
 
-# M2_X23 = 2*g**2/m_X^5 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+# M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
 # New matrix elements for X --> 23
-M2_dd = 2.*y2*(c_th**4.)/m_X**5 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
-M2_aa = 2.*y2*(s_th**4.)/m_X**5 * (m_X2)*(2*m_X2)
-M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X**5 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
+M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+
+print(f'M2_dd: {M2_dd:3e}, M2_da: {M2_da:3e}, M2_aa: {M2_aa:3e}')
 
 vert_fi = y2*y2*(c_th**4.)*(s_th**4.)
 vert_tr = y2*y2*(c_th**6.)*(s_th**2.)
@@ -106,7 +89,7 @@ data_evo = np.loadtxt(load_str)
 10: n_X_grid_sol (n_phi_grid_sol)
 """
 
-i_skip = 25
+i_skip = 10
 t_grid = data_evo[::i_skip,0]
 T_SM_grid = data_evo[::i_skip,1]
 T_nu_grid = data_evo[::i_skip,2]
@@ -122,8 +105,8 @@ n_nu_grid = 2.*0.75*(cf.zeta3/cf.pi2)*(T_nu_grid**3.)
 
 filename = f'rates_md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str};full.dat'
 # Anton: Check if file exists -- if not, create it 
-# if not os.path.isfile('./' + filename):
-if True:
+if not os.path.isfile('./' + filename):
+# if True:
     time_start = time.time()
     print('Get C_X_dd')
     C_X_dd = np.array([-2.*C_res_vector.C_n_3_12(m_d, m_d, m_X, k_d, k_d, k_X, T_d, T_d, T_d, xi_d, xi_d, xi_X, M2_dd, type=-1) / 2. for T_d, xi_d, xi_X in zip(T_d_grid, xi_d_grid, xi_X_grid)])
@@ -191,7 +174,7 @@ ax.yaxis.set_ticks_position('both')
 for axis in ['top','bottom','left','right']:
     ax.spines[axis].set_linewidth(0.5)
 
-ytMajor = np.array([np.log10(10**j) for j in np.linspace(-28, -5, 24)])
+ytMajor = np.array([np.log10(10**j) for j in np.linspace(-28, 3, 32)])
 ytMinor = np.array([np.log10(i*10**j) for j in ytMajor for i in range(10)[1:10]])
 ylMajor = [r"$10^{" + str(int(i)) + "}$" if i in ytMajor[::2] else "" for i in ytMajor]
 ytMajor = 10**ytMajor
@@ -208,10 +191,11 @@ c5 = '#1e2f97' #'#f0944d'
 
 c4 = '#ffa62b'
 
+# Anton: 1e6 to make GeV to keV 
 plt.loglog(x_grid, 1e6*H, color=ch, ls='-', zorder=0) #83781B
 plt.loglog(x_grid, 1e6*abs(C_dd_X), color=c1, ls='-', zorder=-4) #114B5F
 plt.loglog(x_grid, 1e6*abs(C_da_X), color=c2, ls='-', zorder=-4) #458751
-# plt.loglog(x_grid, 1e6*abs(C_X_da), color='#53A262', ls='-')
+# plt.loglog(x_grid, 1e6*abs(C_aa_X), color='brown', ls='-')
 plt.loglog(x_grid, 1e6*abs(C_dd_XX), color=c3, ls='-', zorder=-4) #95190C
 plt.loglog(x_grid, 1e6*abs(C_XX_dd), color=c5, ls='-', zorder=-4) #D02411
 
@@ -222,17 +206,17 @@ plt.text(1.5e-4, 8e-23, r'$\rightarrow$', fontsize=8, color='0', horizontalalign
 
 
 ax.text(2e-4, 3e-14, r"$H$", color=ch, fontsize=10, rotation=0)
-ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow \phi$", color=c1, fontsize=10, rotation=0)
-ax.text(1.5e-3, 3e-25, r"$\nu_s \nu_\alpha \to \phi$", color=c2, fontsize=10, rotation=0)
-ax.text(1.5e-3, 0.3e-19, r"$\nu_s \nu_s \to \phi \phi$", color=c3, fontsize=10, rotation=0)
-ax.text(2.2e-3, 8e-28, r"$\phi \phi \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
+ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow X$", color=c1, fontsize=10, rotation=0)
+ax.text(1.5e-3, 3e-25, r"$\nu_s \nu_\alpha \to X$", color=c2, fontsize=10, rotation=0)
+ax.text(1.5e-3, 0.3e-19, r"$\nu_s \nu_s \to X X$", color=c3, fontsize=10, rotation=0)
+ax.text(2.2e-3, 8e-28, r"$X X \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
 
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-', color='black', label=r'$\text{BP1}$')
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
 
 
-plt.fill_betweenx([1e-28, 1e-8], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
-plt.loglog([1e-3]*2, [1e-28, 1e-8], ls=':', color='0', zorder=-2)
+plt.fill_betweenx([1e-28, 1e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+plt.loglog([1e-3]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
 #plt.fill_betweenx([1e-28, 1e-8], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 
 # N = 1000
@@ -259,7 +243,8 @@ ax.yaxis.set_major_formatter(yMajorFormatter)
 plt.xlim(2e-5, 20)
 ax.set_ylim(1e-28, 1e-8)
 plt.tight_layout()
-fig_str = f'rates_md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str}.pdf'
+fig_str = f'rates_evo_md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str}.pdf'
+print(f'saved {fig_str}')
 plt.savefig(fig_str)
 plt.show()
 

@@ -37,7 +37,7 @@ Change 34 --> 12:
 ker_C_34_12_s_t_integral (difficult)
 ker_th_avg_sigma_v_33_11 (?, does not seem to be called anywhere)
 
------------
+------------
 -- Comments: 
     To change C_n_3_12, C_rho_3_12, update matrix elements in 
     * pandemolator.py 
@@ -139,8 +139,12 @@ def Gamma_scat(p1, m1, m2, m3, k2, k3, T2, T3, xi2, xi3, M2):
 
 # type == -1: only 3 -> 1 2, type == 0: both reactions, type == 1: only 1 2 -> 3
 def C_n_3_12(m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, M2, type=0):
+    """
+    Anton: Momentum 3 has been eliminated in this collision operator. 
+    p1_vec = p1(0,0,1), p2_vec = p2(sin(th), 0, cos(th))
+    """
     E1_min = max(m1, 1e-200)
-    E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)
+    E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)    # Infinity, could use np.inf in quad 
 
     res, err = quad(ker_C_n_3_12_E1, log(E1_min), log(E1_max), args=(m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, type), epsabs=0., epsrel=rtol_int)
 
@@ -215,6 +219,115 @@ def C_rho_3_12(type, m1, m2, m3, k1, k2, k3, T1, T2, T3, xi1, xi2, xi3, M2):
 
 # For XX --> dd (for some reason, instead of dd --> XX)
 @nb.jit(nopython=True, cache=True)
+def ker_C_n_XX_dd_s_t_integral_2(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3, m_d, m_X, vert):
+
+    n = s.size
+    s2 = s*s
+    m_d2 = m_d*m_d
+    m_d4 = m_d2*m_d2
+    m_d6 = m_d2*m_d4
+    m_d8 = m_d4*m_d4
+    m_X2 = m_X*m_X
+    m_X4 = m_X2*m_X2
+    m_X6 = m_X2*m_X4
+    m_X8 = m_X4*m_X4
+
+    t_add = m_d2 + m_X2
+    t_min = t_add - 2.*E1*(E3 - p1*p3/E1*ct_min)
+    t_max = t_add - 2.*E1*(E3 - p1*p3/E1*ct_max)
+    t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
+    t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
+
+    sqrt_fac_tmin = np.zeros(n)
+    sqrt_fac_tmax = np.zeros(n)
+    X_max = t_max - t_m
+    Y_max = t_max - t_p
+    X_min = t_min - t_m
+    Y_min = t_min - t_p
+
+
+    sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max >= 0)] = 1
+    sqrt_fac_tmax[np.logical_and(X_max <= 0, Y_max >= 0)] = 1
+    sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max <= 0)] = 1
+    sqrt_fac_tmax[np.logical_and(X_max < 0, Y_max < 0)] = -1
+    
+    sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min >= 0)] = 1
+    sqrt_fac_tmin[np.logical_and(X_min <= 0, Y_min >= 0)] = 1
+    sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min <= 0)] = 1
+    sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min < 0)] = -1
+
+    # Anton: Trick to make numpy evaluate negative numbers in sqrt, log etc.
+    t_min = t_min.astype(np.complex128)
+    t_max = t_max.astype(np.complex128)
+    t_m = t_m.astype(np.complex128)
+    t_p = t_p.astype(np.complex128)
+    s = s.astype(np.complex128)
+    s2 = s2.astype(np.complex128)
+    a = a.astype(np.complex128)
+
+    in_min_neq = (ct_min != ct_p)
+    in_max_neq = (ct_max != ct_m)
+    in_any_neq = np.logical_or(in_min_neq, in_max_neq)
+    n = s.size
+
+    term1_max = np.zeros(n)
+    term1_min = np.zeros(n)
+
+    term2_max = np.zeros(n)
+    term2_min = np.zeros(n)
+
+    prefac3_max = -(1/(a*(t_m-m_d2)**(3/2)*(m_d2-t_p)**(3/2)*(s-2*m_X2)))*sqrt_fac_tmax*8*np.sqrt(a)*(16*m_d8-16*m_d6*(t_m+t_p)-2*m_d4*(12*m_X4+4*m_X2*(-s+t_m+t_p)+s2-2*s*(t_m+t_p)-8*t_m*t_p)+2*m_d2*(-2*m_X6+m_X4*(s+8*(t_m+t_p))-2*m_X2*(s*(t_m+t_p)-4*t_m*t_p)+s*(s*(t_m+t_p)-4*t_m*t_p))+2*m_X6*(t_m+t_p)-m_X4*(s*(t_m+t_p)+8*t_m*t_p)-2*s2*t_m*t_p)
+
+    prefac3_min = -(1/(a*(t_m-m_d2)**(3/2)*(m_d2-t_p)**(3/2)*(s-2*m_X2)))*sqrt_fac_tmin*8*np.sqrt(a)*(16*m_d8-16*m_d6*(t_m+t_p)-2*m_d4*(12*m_X4+4*m_X2*(-s+t_m+t_p)+s2-2*s*(t_m+t_p)-8*t_m*t_p)+2*m_d2*(-2*m_X6+m_X4*(s+8*(t_m+t_p))-2*m_X2*(s*(t_m+t_p)-4*t_m*t_p)+s*(s*(t_m+t_p)-4*t_m*t_p))+2*m_X6*(t_m+t_p)-m_X4*(s*(t_m+t_p)+8*t_m*t_p)-2*s2*t_m*t_p)
+
+    term3_max = np.zeros(n)
+    term3_min = np.pi/2 * prefac3_min
+
+    prefac4_max = (8*np.sqrt(a)*sqrt_fac_tmax*(16*m_d8+16*m_d6*(6*m_X2-3*s-t_m-t_p)+2*m_d4*(84*m_X4-28*m_X2*(3*s+t_m+t_p)+19*s2+14*s*(t_m+t_p)+8*t_m*t_p)+2*m_d2*(34*m_X6-m_X4*(57*s+16*(t_m+t_p))+2*m_X2*(12*s2+9*s*(t_m+t_p)+4*t_m*t_p)-s*(2*s2+3*s*(t_m+t_p)+4*t_m*t_p))-24*m_X8+2*m_X6*(12*s+7*(t_m+t_p))-m_X4*(14*s2+7*s*(t_m+t_p)+8*t_m*t_p)+4*m_X2*s2*(2*s+t_m+t_p)-2*s2*(s+t_m)*(s+t_p)))/(a*(s-2*m_X2)*(-m_d2-2*m_X2+s+t_m)**(3/2)*(m_d2+2*m_X2-s-t_p)**(3/2))
+
+    prefac4_min = (8*np.sqrt(a)*sqrt_fac_tmin*(16*m_d8+16*m_d6*(6*m_X2-3*s-t_m-t_p)+2*m_d4*(84*m_X4-28*m_X2*(3*s+t_m+t_p)+19*s2+14*s*(t_m+t_p)+8*t_m*t_p)+2*m_d2*(34*m_X6-m_X4*(57*s+16*(t_m+t_p))+2*m_X2*(12*s2+9*s*(t_m+t_p)+4*t_m*t_p)-s*(2*s2+3*s*(t_m+t_p)+4*t_m*t_p))-24*m_X8+2*m_X6*(12*s+7*(t_m+t_p))-m_X4*(14*s2+7*s*(t_m+t_p)+8*t_m*t_p)+4*m_X2*s2*(2*s+t_m+t_p)-2*s2*(s+t_m)*(s+t_p)))/(a*(s-2*m_X2)*(-m_d2-2*m_X2+s+t_m)**(3/2)*(m_d2+2*m_X2-s-t_p)**(3/2))
+
+    term4_max = np.zeros(n)
+    term4_min = np.pi/2 * prefac4_min
+
+    term5_max = -32*sqrt_fac_tmax*np.log(np.sqrt(t_max-t_m)+np.sqrt(t_max-t_p))/np.sqrt(a)
+    term5_min = -32*sqrt_fac_tmin*np.log(np.sqrt(t_min-t_m)+np.sqrt(t_min-t_p))/np.sqrt(a)
+
+    if np.any(in_max_neq):
+        in_tmax_neq = np.logical_and(in_max_neq, (t_max != t_m))
+        term1_max[in_tmax_neq] = -((8*(2*m_d2+m_X2)**2*np.sqrt(a[in_tmax_neq]*(t_max[in_tmax_neq]-t_m[in_tmax_neq])*(t_max[in_tmax_neq]-t_p[in_tmax_neq])))/(a[in_tmax_neq]*(m_d2-t_max[in_tmax_neq])*(m_d2-t_m[in_tmax_neq])*(m_d2-t_p[in_tmax_neq]))).real
+
+        term2_max[in_tmax_neq] = -((8*(2*m_d2+m_X2)**2*np.sqrt(a[in_tmax_neq]*(t_max[in_tmax_neq]-t_m[in_tmax_neq])*(t_max[in_tmax_neq]-t_p[in_tmax_neq])))/(a[in_tmax_neq]*(m_d2+2*m_X2-s[in_tmax_neq]-t_max[in_tmax_neq])*(m_d2+2*m_X2-s[in_tmax_neq]-t_m[in_tmax_neq])*(m_d2+2*m_X2-s[in_tmax_neq]-t_p[in_tmax_neq]))).real
+
+        atan_arg3_tmax = np.divide((np.sqrt(m_d2-t_p[in_tmax_neq])*np.sqrt(t_max[in_tmax_neq]-t_m[in_tmax_neq])), (np.sqrt(t_m[in_tmax_neq]-m_d2)*np.sqrt(t_max[in_tmax_neq]-t_p[in_tmax_neq])))
+        
+        term3_max[in_tmax_neq] = (prefac3_max[in_tmax_neq] * np.arctan(atan_arg3_tmax)).real
+
+        atan_arg4_max = np.divide((np.sqrt(t_max[in_tmax_neq]-t_m[in_tmax_neq])*np.sqrt(m_d2+2*m_X2-s[in_tmax_neq]-t_p[in_tmax_neq])), (np.sqrt(t_max[in_tmax_neq]-t_p[in_tmax_neq])*np.sqrt(-m_d2-2*m_X2+s[in_tmax_neq]+t_m[in_tmax_neq])))
+
+        term4_max[in_tmax_neq] = (prefac4_max[in_tmax_neq] * np.arctan(atan_arg4_max)).real
+
+    if np.any(in_min_neq):
+        in_tmin_neq = np.logical_and(in_min_neq, (t_min != t_p))
+        term1_min[in_tmin_neq] = -((8*(2*m_d2+m_X2)**2*np.sqrt(a[in_tmin_neq]*(t_min[in_tmin_neq]-t_m[in_tmin_neq])*(t_min[in_tmin_neq]-t_p[in_tmin_neq])))/(a[in_tmin_neq]*(m_d2-t_min[in_tmin_neq])*(m_d2-t_m[in_tmin_neq])*(m_d2-t_p[in_tmin_neq]))).real
+
+        term2_min[in_tmin_neq] = -((8*(2*m_d2+m_X2)**2*np.sqrt(a[in_tmin_neq]*(t_min[in_tmin_neq]-t_m[in_tmin_neq])*(t_min[in_tmin_neq]-t_p[in_tmin_neq])))/(a[in_tmin_neq]*(m_d2+2*m_X2-s[in_tmin_neq]-t_min[in_tmin_neq])*(m_d2+2*m_X2-s[in_tmin_neq]-t_m[in_tmin_neq])*(m_d2+2*m_X2-s[in_tmin_neq]-t_p[in_tmin_neq]))).real
+
+        atan_arg3_tmin = np.divide((np.sqrt(m_d2-t_p[in_tmin_neq])*np.sqrt(t_min[in_tmin_neq]-t_m[in_tmin_neq])), (np.sqrt(t_m[in_tmin_neq]-m_d2)*np.sqrt(t_min[in_tmin_neq]-t_p[in_tmin_neq])))
+        
+        term3_min[in_tmin_neq] = (prefac3_min[in_tmin_neq] * np.arctan(atan_arg3_tmin)).real
+
+        atan_arg4_min = np.divide((np.sqrt(t_min[in_tmin_neq]-t_m[in_tmin_neq])*np.sqrt(m_d2+2*m_X2-s[in_tmin_neq]-t_p[in_tmin_neq])), (np.sqrt(t_min[in_tmin_neq]-t_p[in_tmin_neq])*np.sqrt(-m_d2-2*m_X2+s[in_tmin_neq]+t_m[in_tmin_neq])))
+
+        term4_min[in_tmin_neq] = (prefac4_min[in_tmin_neq] * np.arctan(atan_arg4_min)).real
+
+    int_tmax = term1_max + term2_max + term3_max + term4_max + term5_max
+    int_tmin = term1_min + term2_min + term3_min + term4_min + term5_min
+
+    return vert*(int_tmax - int_tmin).real
+
+# For XX --> dd (for some reason, instead of dd --> XX)
+@nb.jit(nopython=True, cache=True)
 def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3, m_d, m_X, vert):
     """
     Solved for matrix-element and integrated over variable t in collision
@@ -232,6 +345,7 @@ def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     m_X6 = m_X2*m_X4
     m_X8 = m_X4*m_X4
 
+    # t_max,min - t_m,p = 2p1*p3*(ct_max - ct_m)
     t_add = m_d2 + m_X2
     t_min = t_add - 2.*E1*(E3 - p1*p3/E1*ct_min)
     t_max = t_add - 2.*E1*(E3 - p1*p3/E1*ct_max)
@@ -240,8 +354,15 @@ def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     
     # Anton: Write each term of t-integrated matrix element sorted by denominators, evaluated at t_min and t_max. 
     """
+    x = t-tm, y = t-tp 
     sqrt(x)*sqrt(y) / sqrt(x*y) makes trouble. 
-    This is either 1 for (x>=0, y>=0), (x>=0, y<0), (x<0, y>=0) and -1 for (x<0, y<0).
+    This is either 1 for (x>0, y>0), (x>0, y<0), (x<0, y>0) and -1 for (x<0, y<0).
+    ill-defined for x->0, y->0 wrt. limit to 0+ or 0-.
+    x>=0 & y>=0 -> 1
+    x>=0 & y<=0 -> 1
+    x<=0 & y>=0 -> 1
+    x<=0 & y<=0 -> -1
+    I ignore x->0- & y->0- lim (don't not how to test)
     """
     sqrt_fac_tmin = np.zeros(n)
     sqrt_fac_tmax = np.zeros(n)
@@ -251,40 +372,48 @@ def ker_C_n_XX_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3,
     Y_min = t_min - t_p
 
     sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max >= 0)] = 1
-    sqrt_fac_tmax[np.logical_and(X_max < 0, Y_max >= 0)] = 1
-    sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max < 0)] = 1
+    sqrt_fac_tmax[np.logical_and(X_max <= 0, Y_max >= 0)] = 1
+    sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max <= 0)] = 1
     sqrt_fac_tmax[np.logical_and(X_max < 0, Y_max < 0)] = -1
     
     sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min >= 0)] = 1
-    sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min >= 0)] = 1
-    sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min < 0)] = 1
+    sqrt_fac_tmin[np.logical_and(X_min <= 0, Y_min >= 0)] = 1
+    sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min <= 0)] = 1
     sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min < 0)] = -1
     
-    # Anton: Trick to make numpy evaluate negative numbers 
-    t_min = t_min + 0j
-    t_max = t_max + 0j
-    t_m = t_m + 0j
-    t_p = t_p + 0j
-    s = s + 0j
-    s2 = s2 + 0j
-    
+    # Anton: Trick to make numpy evaluate negative numbers in sqrt
+    t_min = t_min.astype(np.complex128)
+    t_max = t_max.astype(np.complex128)
+    t_m = t_m.astype(np.complex128)
+    t_p = t_p.astype(np.complex128)
+    s = s.astype(np.complex128)
+    s2 = s2.astype(np.complex128)
+    a = a.astype(np.complex128)
+
     # Anton: When t_max = t_m, t_min = t_p, max - min always cancel ... 
-    term1_max = -((8*(2*m_d2+m_X2)**2*np.sqrt((t_max-t_m)*(t_max-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_max+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_max+t_m+t_p)+3*s2+2*s*(t_max+t_m+t_p)+2*t_p*(t_max+t_m)+2*t_max*t_m)+(2*m_X2-s)*(2*m_X2-s-t_max)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_max+t_m)+s2+s*(t_max+t_m)+2*t_max*t_m)))/((t_max-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_max)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
+    term1_max = -((8*(2*m_d2+m_X2)**2*np.sqrt(a*(t_max-t_m)*(t_max-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_max+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_max+t_m+t_p)+3*s2+2*s*(t_max+t_m+t_p)+2*t_p*(t_max+t_m)+2*t_max*t_m)+(2*m_X2-s)*(2*m_X2-s-t_max)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_max+t_m)+s2+s*(t_max+t_m)+2*t_max*t_m)))/(a*(t_max-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_max)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
 
-    term1_min = -((8*(2*m_d2+m_X2)**2*np.sqrt((t_min-t_m)*(t_min-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_min+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_min+t_m+t_p)+3*s2+2*s*(t_min+t_m+t_p)+2*t_p*(t_min+t_m)+2*t_min*t_m)+(2*m_X2-s)*(2*m_X2-s-t_min)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_min+t_m)+s2+s*(t_min+t_m)+2*t_min*t_m)))/((t_min-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_min)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
+    term1_min = -((8*(2*m_d2+m_X2)**2*np.sqrt(a*(t_min-t_m)*(t_min-t_p))*(2*m_d6+m_d4*(6*m_X2-3*s-2*(t_min+t_m+t_p))+m_d2*(12*m_X4-4*m_X2*(3*s+t_min+t_m+t_p)+3*s2+2*s*(t_min+t_m+t_p)+2*t_p*(t_min+t_m)+2*t_min*t_m)+(2*m_X2-s)*(2*m_X2-s-t_min)*(2*m_X2-s-t_m)-t_p*(4*m_X4-2*m_X2*(2*s+t_min+t_m)+s2+s*(t_min+t_m)+2*t_min*t_m)))/(a*(t_min-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-m_d2-2*m_X2+s+t_min)*(-m_d2-2*m_X2+s+t_m)*(-m_d2-2*m_X2+s+t_p)))
 
-    term2_max = -(4*sqrt_fac_tmax*1/((m_d2-t_m)**(3/2)*(m_d2-t_p)**(3/2)*(2*m_X2-s)))*(16*m_d8-16*m_d6*(t_m+t_p)-2*m_d4*(12*m_X4+4*m_X2*(-s+t_m+t_p)+s2-2*s*(t_m+t_p)-8*t_m*t_p)+2*m_d2*(-2*m_X6+m_X4*(s+8*(t_m+t_p))-2*m_X2*(s*(t_m+t_p)-4*t_m*t_p)+s*(s*(t_m+t_p)-4*t_m*t_p))+2*m_X6*(t_m+t_p)-m_X4*(s*(t_m+t_p)+8*t_m*t_p)-2*s2*t_m*t_p)*(np.log(m_d2-t_max)-np.log(m_d2*(2*t_max-t_m-t_p)+2*np.sqrt(m_d2-t_m)*np.sqrt(m_d2-t_p)*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)-t_max*(t_m+t_p)+2*t_m*t_p))
+    term2_max = -((4*np.sqrt(a)*sqrt_fac_tmax*(16*m_d8-16*m_d6*(t_m+t_p)-2*m_d4*(12*m_X4+4*m_X4*(-s+t_m+t_p)+s2-2*s*(t_m+t_p)-8*t_m*t_p)+2*m_d2*(-2*m_X6+m_X4*(s+8*(t_m+t_p))-2*m_X2*(s*(t_m+t_p)-4*t_m*t_p)+s*(s*(t_m+t_p)-4*t_m*t_p))+2*m_X6*(t_m+t_p)-m_X4*(s*(t_m+t_p)+8*t_m*t_p)-2*s2*t_m*t_p)*(np.log(m_d2-t_max)-np.log(m_d2*(2*t_max-t_m-t_p)+2*np.sqrt(m_d2-t_m)*np.sqrt(m_d2-t_p)*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)-t_max*(t_m+t_p)+2*t_m*t_p)))/(a*(m_d2-t_m)**(3/2)*(m_d2-t_p)**(3/2)*(2*m_X2-s)))
 
-    term2_min = -(4*sqrt_fac_tmin*1/((m_d2-t_m)**(3/2)*(m_d2-t_p)**(3/2)*(2*m_X2-s)))*(16*m_d8-16*m_d6*(t_m+t_p)-2*m_d4*(12*m_X4+4*m_X2*(-s+t_m+t_p)+s2-2*s*(t_m+t_p)-8*t_m*t_p)+2*m_d2*(-2*m_X6+m_X4*(s+8*(t_m+t_p))-2*m_X2*(s*(t_m+t_p)-4*t_m*t_p)+s*(s*(t_m+t_p)-4*t_m*t_p))+2*m_X6*(t_m+t_p)-m_X4*(s*(t_m+t_p)+8*t_m*t_p)-2*s2*t_m*t_p)*(np.log(m_d2-t_min)-np.log(m_d2*(2*t_min-t_m-t_p)+2*np.sqrt(m_d2-t_m)*np.sqrt(m_d2-t_p)*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)-t_min*(t_m+t_p)+2*t_m*t_p))
+    term2_min = -((4*np.sqrt(a)*sqrt_fac_tmin*(16*m_d8-16*m_d6*(t_m+t_p)-2*m_d4*(12*m_X4+4*m_X4*(-s+t_m+t_p)+s2-2*s*(t_m+t_p)-8*t_m*t_p)+2*m_d2*(-2*m_X6+m_X4*(s+8*(t_m+t_p))-2*m_X2*(s*(t_m+t_p)-4*t_m*t_p)+s*(s*(t_m+t_p)-4*t_m*t_p))+2*m_X6*(t_m+t_p)-m_X4*(s*(t_m+t_p)+8*t_m*t_p)-2*s2*t_m*t_p)*(np.log(m_d2-t_min)-np.log(m_d2*(2*t_min-t_m-t_p)+2*np.sqrt(m_d2-t_m)*np.sqrt(m_d2-t_p)*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)-t_min*(t_m+t_p)+2*t_m*t_p)))/(a*(m_d2-t_m)**(3/2)*(m_d2-t_p)**(3/2)*(2*m_X2-s)))
 
-    term3_max = (4*sqrt_fac_tmax*(16*m_d8+16*m_d6*(6*m_X2-3*s-t_m-t_p)+2*m_d4*(84*m_X4-28*m_X2*(3*s+t_m+t_p)+19*s2+14*s*(t_m+t_p)+8*t_m*t_p)+2*m_d2*(34*m_X6-m_X4*(57*s+16*(t_m+t_p))+2*m_X2*(12*s2+9*s*(t_m+t_p)+4*t_m*t_p)-s*(2*s2+3*s*(t_m+t_p)+4*t_m*t_p))-24*m_X8+2*m_X6*(12*s+7*(t_m+t_p))-m_X4*(14*s2+7*s*(t_m+t_p)+8*t_m*t_p)+4*m_X2*s2*(2*s+t_m+t_p)-2*s2*(s+t_m)*(s+t_p))*(np.log(m_d2+2*m_X2-s-t_max)-np.log(2*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)*np.sqrt(m_d2+2*m_X2-s-t_m)*np.sqrt(m_d2+2*m_X2-s-t_p)+m_d2*(2*t_max-t_m-t_p)+m_X2*(4*t_max-2*(t_m+t_p))+t_p*(s-t_max+2*t_m)-2*s*t_max+s*t_m-t_max*t_m)))/((2*m_X2-s)*(m_d2+2*m_X2-s-t_m)**(3/2)*(m_d2+2*m_X2-s-t_p)**(3/2))
+    term3_max = (4*np.sqrt(a)*sqrt_fac_tmax*(16*m_d8+16*m_d6*(6*m_X2-3*s-t_m-t_p)+2*m_d4*(84*m_X4-28*m_X2*(3*s+t_m+t_p)+19*s2+14*s*(t_m+t_p)+8*t_m*t_p)+2*m_d2*(34*m_X6-m_X4*(57*s+16*(t_m+t_p))+2*m_X2*(12*s2+9*s*(t_m+t_p)+4*t_m*t_p)-s*(2*s2+3*s*(t_m+t_p)+4*t_m*t_p))-24*m_X8+2*m_X6*(12*s+7*(t_m+t_p))-m_X4*(14*s2+7*s*(t_m+t_p)+8*t_m*t_p)+4*m_X2*s2*(2*s+t_m+t_p)-2*s2*(s+t_m)*(s+t_p))*(np.log(m_d2+2*m_X2-s-t_max)-np.log(2*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)*np.sqrt(m_d2+2*m_X2-s-t_m)*np.sqrt(m_d2+2*m_X2-s-t_p)+m_d2*(2*t_max-t_m-t_p)+m_X2*(4*t_max-2*(t_m+t_p))+t_p*(s-t_max+2*t_m)-2*s*t_max+s*t_m-t_max*t_m)))/(a*(2*m_X2-s)*(m_d2+2*m_X2-s-t_m)**(3/2)*(m_d2+2*m_X2-s-t_p)**(3/2))
+    # print(np.any(np.isnan(term3_max)))
 
-    term3_min = (4*sqrt_fac_tmin*(16*m_d8+16*m_d6*(6*m_X2-3*s-t_m-t_p)+2*m_d4*(84*m_X4-28*m_X2*(3*s+t_m+t_p)+19*s2+14*s*(t_m+t_p)+8*t_m*t_p)+2*m_d2*(34*m_X6-m_X4*(57*s+16*(t_m+t_p))+2*m_X2*(12*s2+9*s*(t_m+t_p)+4*t_m*t_p)-s*(2*s2+3*s*(t_m+t_p)+4*t_m*t_p))-24*m_X8+2*m_X6*(12*s+7*(t_m+t_p))-m_X4*(14*s2+7*s*(t_m+t_p)+8*t_m*t_p)+4*m_X2*s2*(2*s+t_m+t_p)-2*s2*(s+t_m)*(s+t_p))*(np.log(m_d2+2*m_X2-s-t_min)-np.log(2*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)*np.sqrt(m_d2+2*m_X2-s-t_m)*np.sqrt(m_d2+2*m_X2-s-t_p)+m_d2*(2*t_min-t_m-t_p)+m_X2*(4*t_min-2*(t_m+t_p))+t_p*(s-t_min+2*t_m)-2*s*t_min+s*t_m-t_min*t_m)))/((2*m_X2-s)*(m_d2+2*m_X2-s-t_m)**(3/2)*(m_d2+2*m_X2-s-t_p)**(3/2))
+    term3_min = (4*np.sqrt(a)*sqrt_fac_tmin*(16*m_d8+16*m_d6*(6*m_X2-3*s-t_m-t_p)+2*m_d4*(84*m_X4-28*m_X2*(3*s+t_m+t_p)+19*s2+14*s*(t_m+t_p)+8*t_m*t_p)+2*m_d2*(34*m_X6-m_X4*(57*s+16*(t_m+t_p))+2*m_X2*(12*s2+9*s*(t_m+t_p)+4*t_m*t_p)-s*(2*s2+3*s*(t_m+t_p)+4*t_m*t_p))-24*m_X8+2*m_X6*(12*s+7*(t_m+t_p))-m_X4*(14*s2+7*s*(t_m+t_p)+8*t_m*t_p)+4*m_X2*s2*(2*s+t_m+t_p)-2*s2*(s+t_m)*(s+t_p))*(np.log(m_d2+2*m_X2-s-t_min)-np.log(2*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)*np.sqrt(m_d2+2*m_X2-s-t_m)*np.sqrt(m_d2+2*m_X2-s-t_p)+m_d2*(2*t_min-t_m-t_p)+m_X2*(4*t_min-2*(t_m+t_p))+t_p*(s-t_min+2*t_m)-2*s*t_min+s*t_m-t_min*t_m)))/(a*(2*m_X2-s)*(m_d2+2*m_X2-s-t_m)**(3/2)*(m_d2+2*m_X2-s-t_p)**(3/2))
 
-    term4_max = -((16*sqrt_fac_tmax*np.log(2*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)+2*t_max-t_m-t_p)))
-    term4_min = -((16*sqrt_fac_tmin*np.log(2*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)+2*t_min-t_m-t_p)))
+    term4_max = -((16*sqrt_fac_tmax*np.log(2*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)+2*t_max-t_m-t_p))/np.sqrt(a))
+    term4_min = -((16*sqrt_fac_tmin*np.log(2*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)+2*t_min-t_m-t_p))/np.sqrt(a))
 
-    return vert*(term1_max + term2_max + term3_max + term4_max - term1_min - term2_min - term3_min - term4_min).real
+    int_tmax = term1_max + term2_max + term3_max + term4_max
+    int_tmin = term1_min + term2_min + term3_min + term4_min
+
+    # print(np.max(np.abs(int_tmax - int_tmin).imag))     # Should be 0.0
+
+    return vert*(int_tmax - int_tmin).real
+    # return vert*(term2_max).real
 
 @nb.jit(nopython=True, cache=True)
 def ker_C_n_XX_dd_s(s, E1, E2, E3, p1, p3, m_d, m_X, s12_min, s12_max, s34_min, s34_max, vert):
@@ -296,7 +425,7 @@ def ker_C_n_XX_dd_s(s, E1, E2, E3, p1, p3, m_d, m_X, s12_min, s12_max, s34_min, 
     sqrt_arg = 4.*(p32/p12)*(s-s12_min)*(s-s12_max)*(s-s34_min)*(s-s34_max)
     sqrt_fac = np.sqrt(np.fmax(sqrt_arg, 0.))
 
-    # Anton: ct_p, ct_m solutions of a*cos^2 + b*cos + c = 0 for cos
+    # Anton: ct_p, ct_m solutions of a*cos^2 + b*cos + c = 0 for cos. ct_m > ct_p
     ct_p = (-b + sqrt_fac)/(2.*a)
     ct_m = (-b - sqrt_fac)/(2.*a)
     # Anton: R_theta integration region {-1 <= cos <= 1 | c_p <= cos <= c_m}
@@ -315,9 +444,7 @@ def ker_C_n_XX_dd_s(s, E1, E2, E3, p1, p3, m_d, m_X, s12_min, s12_max, s34_min, 
 def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert):
     """
     Anton: Seems like E1 <--> E3, E2 <--> E4 compared to article.
-    Think it is because we now do XX --> dd instead of dd --> XX, 
-    where 1,2 = d,d and 3,4 = X,X as someone once wrote in comment 
-    above the function (3 4 -> 1 2 <=> phi phi -> d d). 
+    Set up for production of X. 
     """
     log_E3_min = log(m_X*offset)
     log_E3_max = log(max((max_exp_arg + xi_X)*T_d, 1e1*m_X))
@@ -345,6 +472,7 @@ def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert):
     f2 = exp_2/(1. + k_d*exp_2)
     f3 = exp_3/(1. + k_X*exp_3)
     f4 = exp_4/(1. + k_X*exp_4)
+    # Anton: For X initial, d final
     dist = f3*f4*(1.-k_d*f1)*(1.-k_d*f2)
     # dist = f1*f2*(1.-k_phi*f3)*(1.-k_phi*f4)
 
@@ -371,6 +499,26 @@ def ker_C_n_XX_dd(x, m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert):
 
 # type == -1: only phi phi -> d d, type == 0: both reactions, type == 1: only d d -> phi phi, type == 2: (phi phi -> d d, d d -> phi phi)
 def C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0):
+    """
+    Anton: 
+    Collision operator C[X]_XX_dd for X, C[X]_XX_dd = -C[d]_XX_dd.
+    1,2 = d,d, 3,4 = X,X
+    
+    dist = f3*f4*f1t*f2t
+    type = -1, XX --> dd
+    -f3*f4*f1t*f2t = -1*dist
+    --> chem_eq_fac = -1
+
+    type = 0, XX <--> dd
+    f1*f2*f3t*f4t - f1t*f2t*f3*f4 = (exp(xi1 + xi2 - xi3 - x4) - 1)*dist
+    --> chem_eq_fac = (exp(2*(xi_d - xi_X)) - 1)
+
+    type = 1, dd --> XX
+    f1*f2*f3t*f4t = exp(xi1 + xi - xi3 - xi4)*dist
+    --> chem_eq_fac = exp(2*(xi_d - xi_X))
+
+    and same procedure in the spin_stat_irr case. 
+    """
     if m_X/T_d - xi_X > spin_stat_irr: # spin-statistics irrelevant here
         th_avg_s_v = th_avg_sigma_v_XX_dd(T_d, m_d, m_X, vert)
         if th_avg_s_v <= 0.:
@@ -380,13 +528,14 @@ def C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0):
         if type == 0:
             chem_eq_fac = exp(2.*xi_d) - exp(2.*xi_X)
         elif type == -1:
-            chem_eq_fac = - exp(2.*xi_X)
+            chem_eq_fac = -exp(2.*xi_X)
         elif type == 1:
             chem_eq_fac = exp(2.*xi_d)
         elif type == 2:
             return np.array([-exp(2.*xi_X), exp(2.*xi_d)])*th_avg_s_v
         return chem_eq_fac*th_avg_s_v
 
+    # Anton: Factors to get correct 'dist' in ker_C_n_XX_dd for different types
     if type == 0:
         chem_eq_fac = exp(2.*(xi_d-xi_X)) - 1.
     elif type == -1:
@@ -446,17 +595,31 @@ def sigma_pp_dd(s, m_d, m_phi, vert):
     m_phi4 = m_phi2*m_phi2
     if s <= 4.*m_phi2 or s <= 4.*m_d2:
         return 0.
+    
     p3cm = sqrt(0.25*s - m_phi2)
     p1cm = sqrt(0.25*s - m_d2)
-    t0 = -((p1cm-p3cm)**2.)
-    t1 = -((p1cm+p3cm)**2.)
+    t_upper = -(p1cm - p3cm)**2 + 0j
+    t_lower = -(p1cm + p3cm)**2 + 0j
 
-    int0 = 4*(t0-m_d2) + m_phi4*(1./(m_d2-t0)+1./(m_d2+2.*m_phi2-s-t0))
-    int1 = 4*(t1-m_d2) + m_phi4*(1./(m_d2-t1)+1./(m_d2+2.*m_phi2-s-t1))
-    log_part = (6.*m_phi4-4.*m_phi2*s+s*s)*log((m_d2+2.*m_phi2-s-t0)*(m_d2-t1)/((m_d2-t0)*(m_d2+2.*m_phi2-s-t1)))/(2.*m_phi2-s)
+    # Anton: Result from Depta, with switched propagator momentum 
+    M2_int_upper_Depta = -2*(-(((6*m_phi4-4*m_phi2*s+s**2)*(np.log(m_d2-t_upper)-np.log(2*m_phi2+m_d2-s-t_upper)))/(2*m_phi2-s))+m_phi4*(1/(2*m_phi2+m_d2-s-t_upper)+1/(m_d2-t_upper))-4*m_d2+4*t_upper)
+    
+    M2_int_lower_Depta = -2*(-(((6*m_phi4-4*m_phi2*s+s**2)*(np.log(m_d2-t_lower)-np.log(2*m_phi2+m_d2-s-t_lower)))/(2*m_phi2-s))+m_phi4*(1/(2*m_phi2+m_d2-s-t_lower)+1/(m_d2-t_lower))-4*m_d2+4*t_lower)
 
-    # return vert*(int0-int1+log_part)/(8.*pi*s*(4.*m_phi2-s))
-    return 4*vert*(int1-int0-log_part)/(2*64.*pi*s*p1cm*p1cm)     # By comparison of what previously was there
+    M2_int_Depta = M2_int_upper_Depta - M2_int_lower_Depta
+    sigma_Depta = vert*M2_int_Depta.real/(2*64.*pi*s*p1cm*p1cm) 
+
+    # Anton: Same calculation as above, with propagator momentum the correct order (relative minus sign)
+    M2_int_upper = 2*((m_phi2-4*m_d2)**2/(-2*m_phi2-m_d2+s+t_upper)-(m_phi2-4*m_d2)**2/(m_d2-t_upper)+((6*m_phi4-4*m_phi2*(4*m_d2+s)-32*m_d2**2+16*m_d2*s+s**2)*(np.log(t_upper-m_d2)-np.log(-2*m_phi2-m_d2+s+t_upper)))/(2*m_phi2-s)-4*t_upper)
+
+    M2_int_lower = 2*((m_phi2-4*m_d2)**2/(-2*m_phi2-m_d2+s+t_lower)-(m_phi2-4*m_d2)**2/(m_d2-t_lower)+((6*m_phi4-4*m_phi2*(4*m_d2+s)-32*m_d2**2+16*m_d2*s+s**2)*(np.log(t_lower-m_d2)-np.log(-2*m_phi2-m_d2+s+t_lower)))/(2*m_phi2-s)-4*t_lower)
+
+    M2_int = M2_int_upper - M2_int_lower
+    sigma = vert*M2_int.real/(64.*pi*s*p1cm*p1cm) 
+
+    # Anton: Divide by 2 for identical particles in final state
+    return sigma / 2
+    return sigma_Depta / 2
 
 @nb.jit(nopython=True, cache=True)
 def M2_XX_dd(s, t, m_d2, vert, m_X2):
@@ -470,7 +633,7 @@ def M2_XX_dd(s, t, m_d2, vert, m_X2):
     u2 = u*u
     u3 = u*u2
 
-    M2 = -((8*(6*m_d8-m_d4*(6*m_X4-4*m_X2*(t+u)+3*t2+14*t*u+3*u2)+m_d2*(6*m_X4*(t+u)-16*m_X2*t*u+t3+7*t2*u+7*t*u2+u3)+m_X4*(t2-8*t*u+u2)+4*m_X2*t*u*(t+u)-t*u*(t2+u2)))/((m_d2-t)**2*(m_d2-u)**2))
+    M2 = -(8*(6*m_d8-m_d4*(6*m_X4-4*m_X2*(t+u)+3*t2+14*t*u+3*u2)+m_d2*(6*m_X4*(t+u)-16*m_X2*t*u+t3+7*t2*u+7*t*u2+u3)+m_X4*(t2-8*t*u+u2)+4*m_X2*t*u*(t+u)-t*u*(t2+u2)))/((m_d2-t)**2*(m_d2-u)**2)
 
     return vert*M2 
 
@@ -509,8 +672,8 @@ def sigma_XX_dd(s, m_d, m_X, vert):
     m_X4 = m_X2*m_X2
 
     # Anton: Heavyside-functions
-    # if s < 4*m_d**2 or s < 4*m_X**2:
-    #     return 0. 
+    if s < 4*m_d**2 or s < 4*m_X**2:
+        return 0. 
 
     s2 = s*s
 
@@ -529,9 +692,9 @@ def sigma_XX_dd(s, m_d, m_X, vert):
 
     int_t_M2_lower = 8*vert*((2*m_d2+m_X2)**2/(-m_d2-2*m_X2+s+t_lower) + (2*m_d2+m_X2)**2/(t_lower-m_d2) + ((-8*m_d4+4*m_d2*(s-2*m_X2)+4*m_X4+s2)*(np.log(t_lower-m_d2)-np.log(-m_d2-2*m_X2+s+t_lower)))/(2*m_X2-s) - 2*t_lower)
 
-    cross_section = ((int_t_M2_upper - int_t_M2_lower).real / (64.*np.pi*s*p1cm*p1cm))
+    sigma = ((int_t_M2_upper - int_t_M2_lower).real / (64.*np.pi*s*p1cm*p1cm))
     # Anton: divide by symmetry factor 2 for identical particles in phase space integral
-    return cross_section / 2
+    return sigma / 2
 
 def ker_th_avg_sigma_v_XX_dd(log_s, T_d, m_d, m_X, vert):
     s = exp(log_s)
@@ -825,7 +988,7 @@ def ker_th_avg_sigma_v_33_11(log_s, m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_s
     return s*sigma*(s-4.*m3*m3)*sqrt_s*kn(1, sqrt_s/T)
 
 # only \int d^3 p3 d^3 p4 sigma v exp(-(E3+E4)/T)/(2 pi)^6
-def th_avg_sigma_v_33_11(m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_sub = True):
+def th_avg_sigma_v_33_11(m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_sub=True):
     s_min = max((m1+m2)*(m1+m2), 4.*m3*m3)*offset
     s_max = (1e3*T)**2.
     if s_max <= s_min:
@@ -841,35 +1004,29 @@ def th_avg_sigma_v_33_11(m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_sub = True):
 
     return res*T/(32.*(pi**4.))
 
-############################
+########################################################
 
 # @nb.jit(nopython=True, cache=True)
-def ker_C_34_12_s_t_integral_new(s, t, ct_m, ct_p, E1, E3, p1, p3, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub=False):
+def ker_C_34_12_s_t_integral_new(s, t, a, ct_m, ct_p, E1, E3, p1, p3, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub=False):
     m12 = m1*m1
     m32 = m3*m3
     t_add = m12 + m32
     t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
     t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
 
-    # print(s.size, t.size, t_m.size, t_p.size)
-    # if s.size == 0:
-    #     return 0. 
-
-    integrand = vector_mediator.M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub) * 1/np.sqrt((t - t_m)*(t - t_p))
+    integrand = vector_mediator.M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub) * 1/np.sqrt(a*(t - t_m)*(t - t_p))
     return integrand
 
 # @nb.jit(nopython=True, cache=True)
 def ker_C_34_12_s_new(s, E1, E2, E3, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, res_sub):
     # t = E1**2 + E3**2 - p1**2 + p3**2 + 2*p1*p3*ct
-    t = (E1 - p1)*(E1 + p1) + (E3 - p3)*(E3 + p3) + 2*p1*p3*ct
+    t = (E1-p1)*(E1+p1) + (E3-p3)*(E3+p3) + 2*p1*p3*ct
     in_res = (ct_max > ct_min)
-    # print(in_res)
 
     t_int = np.zeros(s.size)
-    # t_int[in_res] = ker_C_34_12_s_t_integral(ct_min[in_res], ct_max[in_res], ct_p[in_res], ct_m[in_res], s[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_phi2, m_Gamma_phi2[in_res], res_sub)/np.sqrt(-a[in_res])
 
-    # New
-    t_int[in_res] = ker_C_34_12_s_t_integral_new(s[in_res], t[in_res], ct_m[in_res], ct_p[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_X2, m_Gamma_X2[in_res], res_sub)
+    # Anton: New
+    t_int[in_res] = ker_C_34_12_s_t_integral_new(s[in_res], t[in_res], a[in_res], ct_m[in_res], ct_p[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_X2, m_Gamma_X2[in_res], res_sub)
 
     return t_int
 
@@ -880,10 +1037,13 @@ def ker_C_34_12_new(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1,
     m32 = m3*m3
     m42 = m4*m4
 
+    # Anton: Integration order is switched, now it is s, E1, E2, E3, t
     s = np.exp(np.fmin(log_s_min * (1.-x[:,0]) + log_s_max * x[:,0], 6e2))
 
-    log_E1_min = log(max(m1*offset, 1e-200))
-    log_E1_max = log(max((max_exp_arg + xi1)*T1, 1e1*m1))
+    E1_min = m1
+    E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)
+    log_E1_min = log(E1_min)
+    log_E1_max = log(E1_max)
     E1 = np.exp(np.fmin(log_E1_min * (1.-x[:,1]) + log_E1_max * x[:,1], 6e2))
     # if E1 <= m1:
     #     return 0. # otherwise problems in computation (division by p1)
@@ -907,13 +1067,13 @@ def ker_C_34_12_new(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1,
     E3 = np.exp(np.fmin(log_E3_min * (1.-x[:,3]) + log_E3_max * x[:,3], 6e2))
     p3 = np.sqrt(np.fmax((E3-m3)*(E3+m3), 1e-200))
 
-    E4 = E12 - E3
+    E4 = E1 + E2 - E3
     p4 = np.sqrt(np.fmax((E4-m4)*(E4+m4), 1e-200))
 
-    s12_min = m12+m22+2.*E1*(E2-p1*p2/E1)
-    s12_max = m12+m22+2.*E1*E2+2.*p1*p2
-    s34_min = m32+m42+2.*E3*(E4-p3*p4/E3)
-    s34_max = m32+m42+2.*E3*E4+2.*p3*p4
+    s12_min = m12 + m22 + 2.*E1*(E2 - p1*p2/E1)
+    s12_max = m12 + m22 + 2.*E1*(E2 + p1*p2/E1)
+    s34_min = m32 + m42 + 2.*E3*(E4 - p3*p4/E3)
+    s34_max = m32 + m42 + 2.*E3*(E4 + p3*p4/E3)
 
     p12 = p1*p1
     p32 = p3*p3
@@ -926,9 +1086,7 @@ def ker_C_34_12_new(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1,
     ct_min = np.fmin(np.fmax(-1., ct_p), 1.)
     ct_max = np.fmax(np.fmin(1., ct_m), ct_min)
     
-    log_ct_min = np.log(ct_min)
-    log_ct_max = np.log(ct_max)
-    ct = np.exp(np.fmin(log_ct_min * (1.-x[:,4]) + log_ct_max * x[:,4], 6e2))
+    ct = x[:,4]
 
     exp_arg_1 = E1/T1 - xi1
     exp_arg_2 = E2/T2 - xi2
@@ -975,17 +1133,18 @@ def ker_C_34_12_new(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1,
 
     ker_s = ker_C_34_12_s_new(s, E1, E2, E3, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_X2, m_Gamma_X_T2, res_sub)
 
-    jac = E1*(log_E1_max-log_E1_min)*E2*(log_E2_max-log_E2_min)*E3*(log_E3_max-log_E3_min)*s*(log_s_max-log_s_min)*ct*(log_ct_max - log_ct_min)
+    jac = E1*(log_E1_max-log_E1_min)*E2*(log_E2_max-log_E2_min)*E3*(log_E3_max-log_E3_min)*s*(log_s_max-log_s_min)
     res = jac*p3*dist*ker_s
     res[np.logical_not(np.isfinite(res))] = 0.
     return res
 
-# 3 4 -> 1 2 (all neutrinos); nFW (nBW): # of particle occurence in final - initial state for forward 3 4 -> 1 2 (backward 1 2 -> 3 4) reaction
+# 3 4 -> 1 2 (all neutrinos); nFW (nBW): # of particle occurence in final-initial state for forward 3 4 -> 1 2 (backward 1 2 -> 3 4) reaction
 # type indicates if for n (0) or rho (1 for E1, 2 for E2, 3 for E3, 4 for E4, 12 for E1+E2 = E3+E4)
 # note that when using thermal width it is assumed that m3 = m4 = md, T3 = T4 = Td, xi3 = xi4 = xid, xi_phi = 2 xi_d
 # and 3, 4 are fermions, phi is boson
-# Alternatively - add Monte-Carlo integral
+# Anton: Alternatively for t-integration - add Monte-Carlo integral
 def C_34_12_new(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub=False, thermal_width=True):
+    # Anton: Integration order is now s, E1, E2, E3, t
     s_min = max((m1+m2)**2., (m3+m4)**2.)*offset # to prevent accuracy problems
     E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)
     p1_max = sqrt((E1_max-m1)*(E1_max+m1))
@@ -1008,7 +1167,7 @@ def C_34_12_new(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, 
         @vegas.batchintegrand
         def kernel(x):
             return ker_C_34_12_new(x, log(s_vals[i]), log(s_vals[i+1]), type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, res_sub, thermal_width)
-        integ = vegas.Integrator(5 * [[0., 1.]])
+        integ = vegas.Integrator(4 * [[0., 1.]] + [[-1, 1]])
         result = integ(kernel, nitn=10, neval=1e5)
         # print(result.summary())
         # if result.mean != 0.:
@@ -1020,7 +1179,7 @@ def C_34_12_new(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, 
     return res/(256.*(pi**6.))
 
 # Anton: As alternative (and comparison) to analytical result, can perform t-integral as MC-integral
-def ker_C_n_XX_dd_s_t_integral_new(s, t, ct_p, ct_m, E1, E3, p1, p3, m_d, m_X, vert):
+def ker_C_n_XX_dd_s_t_integral_new(s, t, a, ct_p, ct_m, E1, E3, p1, p3, m_d, m_X, vert):
     m_d2 = m_d*m_d
     m_X2 = m_X*m_X
 
@@ -1028,18 +1187,18 @@ def ker_C_n_XX_dd_s_t_integral_new(s, t, ct_p, ct_m, E1, E3, p1, p3, m_d, m_X, v
     t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
     t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
 
-    integrand = M2_XX_dd(s, t, m_d2, vert, m_X2) * 1/np.sqrt((t - t_m)*(t - t_p))
+    integrand = M2_XX_dd(s, t, m_d2, vert, m_X2) * 1/np.sqrt(a*(t - t_m)*(t - t_p))
     return integrand
 
 # @nb.jit(nopython=True, cache=True)
-def ker_C_n_XX_dd_s_new(s, E1, E2, E3, ct, p1, p3, ct_min, ct_max, ct_m, ct_p, m_d, m_X, s12_min, s12_max, s34_min, s34_max, vert):
+def ker_C_n_XX_dd_s_new(s, E1, E2, E3, a, ct, p1, p3, ct_min, ct_max, ct_m, ct_p, m_d, m_X, s12_min, s12_max, s34_min, s34_max, vert):
     t = (E1 - p1)*(E1 + p1) + (E3 - p3)*(E3 + p3) + 2*p1*p3*ct
     in_res = (ct_max > ct_min)
 
     # Anton: return zero for integral if it is not inside defined region.
     # x = [0,0,0], x[[True,False,True]] = [1,2,3] => x = [1,0,3]
     t_int = np.zeros(s.size)
-    t_int[in_res] = ker_C_n_XX_dd_s_t_integral_new(s[in_res], t[in_res], ct_p[in_res], ct_m[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m_d, m_X, vert)
+    t_int[in_res] = ker_C_n_XX_dd_s_t_integral_new(s[in_res], t[in_res], a[in_res], ct_p[in_res], ct_m[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m_d, m_X, vert)
     return t_int
 
 # 3 4 -> 1 2 <=> X X -> d d
@@ -1055,13 +1214,13 @@ def ker_C_n_XX_dd_new(x, m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert):
     log_E3_max = log(max((max_exp_arg + xi_X)*T_d, 1e1*m_X))
     E3 = np.exp(np.fmin(log_E3_min * (1.-x[:,0]) + log_E3_max * x[:,0], 6e2))
 
-    E4_min = np.fmax(2.*m_d-E3, m_X*offset)
+    E4_min = np.fmax(2.*m_d-E3, m_X)
     log_E4_min = np.log(E4_min)
     log_E4_max = np.log(np.fmax(1e1*E4_min, (max_exp_arg + xi_X)*T_d))
     E4 = np.exp(np.fmin(log_E4_min * (1.-x[:,1]) + log_E4_max * x[:,1], 6e2))
 
-    log_E1_min = np.log(m_d*offset)
-    log_E1_max = np.log(np.fmax(E3+E4-m_d, m_d*offset))
+    log_E1_min = np.log(m_d)
+    log_E1_max = np.log(np.fmax(E3+E4-m_d, m_d))
     E1 = np.exp(np.fmin(log_E1_min * (1.-x[:,2]) + log_E1_max * x[:,2], 6e2))
     E2 = E3 + E4 - E1
 
@@ -1105,18 +1264,17 @@ def ker_C_n_XX_dd_new(x, m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert):
     ct_min = np.fmin(np.fmax(-1., ct_p), 1.)
     ct_max = np.fmax(np.fmin(1., ct_m), ct_min)
 
-    log_ct_min = np.log(ct_min)
-    log_ct_max = np.log(ct_max)
-    ct = np.exp(np.fmin(log_ct_min * (1.-x[:,4]) + log_ct_max * x[:,4], 6e2))
-    ker_s = ker_C_n_XX_dd_s_new(s, E1, E2, E3, ct, p1, p3, ct_min, ct_max, ct_m, ct_p, m_d, m_X, s12_min, s12_max, s34_min, s34_max, vert)
+    ct = x[:,4]
+    ker_s = ker_C_n_XX_dd_s_new(s, E1, E2, E3, a, ct, p1, p3, ct_min, ct_max, ct_m, ct_p, m_d, m_X, s12_min, s12_max, s34_min, s34_max, vert)
 
-    jac = E3*(log_E3_max-log_E3_min)*E4*(log_E4_max-log_E4_min)*E1*(log_E1_max-log_E1_min)*s*(log_s_max-log_s_min)*ct*(log_ct_max - log_ct_min)
+    jac = E3*(log_E3_max-log_E3_min)*E4*(log_E4_max-log_E4_min)*E1*(log_E1_max-log_E1_min)*s*(log_s_max-log_s_min)
     res = jac*p3*dist*ker_s
     res[np.logical_not(np.isfinite(res))] = 0.
     return res
 
 # type == -1: only phi phi -> d d, type == 0: both reactions, type == 1: only d d -> phi phi, type == 2: (phi phi -> d d, d d -> phi phi)
 def C_n_XX_dd_new(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0):
+    # Anton: Integration order is E3, E4, E1, s 
     if m_X/T_d - xi_X > spin_stat_irr: # spin-statistics irrelevant here
         th_avg_s_v = th_avg_sigma_v_XX_dd(T_d, m_d, m_X, vert)
         if th_avg_s_v <= 0.:
@@ -1126,7 +1284,7 @@ def C_n_XX_dd_new(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0):
         if type == 0:
             chem_eq_fac = exp(2.*xi_d) - exp(2.*xi_X)
         elif type == -1:
-            chem_eq_fac = - exp(2.*xi_X)
+            chem_eq_fac = -exp(2.*xi_X)
         elif type == 1:
             chem_eq_fac = exp(2.*xi_d)
         elif type == 2:
@@ -1159,7 +1317,7 @@ def C_n_XX_dd_new(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0):
     """
 
     # Monte-Carlo integration of the 4 integrals from 0 to 1 
-    integ = vegas.Integrator(5 * [[0., 1.]])        # Sends one and one value at a time 
+    integ = vegas.Integrator(4 * [[0., 1.]] + [[-1, 1]])        # Sends one and one value at a time 
     result = integ(kernel, nitn=10, neval=2e5)
     # if result.mean != 0.:
     #     print("Vegas error pp dd: ", result.sdev/fabs(result.mean), result.mean, result.Q)
@@ -1232,10 +1390,10 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
     import time
 
-    m_d = 1e-5      # 1e-5 GeV = 10 kev 
+    m_d = 2e-5      # 1e-5 GeV = 10 kev 
     m_a = 0.
     m_X = 3*m_d
-    sin2_2th = 1e-12
+    sin2_2th = 1e-15
     th = 0.5*np.arcsin(np.sqrt(sin2_2th))
     y = 2e-3
 
@@ -1293,9 +1451,9 @@ if __name__ == '__main__':
     # ax = fig.add_subplot(int(row), int(col), int(row)*iidx+jidx+1)
     # fig = plt.figure()
     # ax = fig.add_subplot()
-    E3 = E3_[int((x.size-1)*0.5)]
-    E4 = E4_[int((x.size-1)*0.1)]
-    E1 = E1_[int((x.size-1)*0.3)]
+    E3 = E3_[int((x.size-1)*0.9)]
+    E4 = E4_[int((x.size-1)*0.5)]
+    E1 = E1_[int((x.size-1)*0.1)]
     E2 = E4 + E3 - E1
 
     p1 = np.sqrt(np.fmax((E1 - m_d)*(E1 + m_d), 1e-200))
@@ -1376,6 +1534,9 @@ if __name__ == '__main__':
     vert_da = y**4 * np.cos(th)**6*np.sin(th)**2
     vert = vert_da
 
+    # fig = plt.figure()
+    # ax = fig.add_subplot()
+
     # t1 = time.time()
     # C_34_12_new_val = C_34_12_new(type=0, nFW=1., nBW=-1., m1=m1, m2=m2, m3=m3, m4=m4, k1=k1, k2=k2, k3=k3, k4=k4, T1=T1, T2=T2, T3=T3, T4=T4, xi1=xi1, xi2=xi2, xi3=xi3, xi4=xi4, vert=vert, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2)
     # print(C_34_12_new_val, 'C_34_12_new_val', time.time()-t1)
@@ -1389,21 +1550,296 @@ if __name__ == '__main__':
     # print(f'ker_C_n_12_34_s_t_integral_2 ran in {time.time()-time1}s')
 
     # ax.plot(s[in_res], ker_C_34_12_s_t_integral_val_2)
+    # fig.tight_layout()
     # plt.show()
 
-    # time1 = time.time()
-    # ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a, s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_X=m_X, vert=vert)
-    # print(f'ker_C_n_XX_dd_s_t_integral ran in {time.time()-time1}s')
-    # # print(ker_C_n_XX_dd_s_t_integral_val)
+    from C_res_scalar import C_n_pp_dd
+
+    # N = int(1e1)
+    # T_d_arr = 10**np.linspace(-3, np.log10(1.3), N)
+    # xi_d_arr = np.linspace(-2e1, 2e8, N)
+    # xi_X_arr = np.linspace(-4e1, 4e8, N)
+    # C_pp_dd_arr = np.array([C_n_pp_dd(m_d=m_d, m_phi=m_X, k_d=k_d, k_phi=k_X, T_d=T_di, xi_d=xi_di, xi_phi=xi_Xi, vert=vert_el, type=0) for T_di, xi_di, xi_Xi in zip(T_d_arr, xi_d_arr, xi_X_arr)])
+    # C_XX_dd_arr = np.array([C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_di, xi_d=xi_di, xi_X=xi_Xi, vert=vert_el, type=0) for T_di, xi_di, xi_Xi in zip(T_d_arr, xi_d_arr, xi_X_arr)])
+    # plt.plot(m_d/T_d_arr, abs(C_pp_dd_arr))
+    # plt.plot(m_d/T_d_arr, abs(C_XX_dd_arr))
+    # plt.show()
+
+    # Anton: Want to compare XX to dd 
+    @nb.jit(nopython=True, cache=True)
+    def ker_C_n_pp_dd_s_t_integral(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3, m_d, m_phi, vert):
+        """
+        Solved for matrix-element and integrated over variable t in collision
+        operator using Mathematica, int_Rt |M|^2/sqrt((t-tm)*(t-tp)). 
+        These expressions can be found in nu_s_nu_s_to_XX.nb
+        """
+        n = s.size
+        s2 = s*s
+        m_d2 = m_d*m_d
+        m_d4 = m_d2*m_d2
+        m_d6 = m_d2*m_d4
+        m_d8 = m_d4*m_d4
+        m_phi2 = m_phi*m_phi
+        m_phi4 = m_phi2*m_phi2
+        m_phi6 = m_phi2*m_phi4
+        m_phi8 = m_phi4*m_phi4
+
+        t_add = m_d2 + m_X2
+        t_min = t_add - 2.*E1*(E3 - p1*p3/E1*ct_min)
+        t_max = t_add - 2.*E1*(E3 - p1*p3/E1*ct_max)
+        t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
+        t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
+        
+        # Anton: Write each term of t-integrated matrix element sorted by denominators, evaluated at t_min and t_max. 
+        """
+        sqrt(x)*sqrt(y) / sqrt(x*y) makes trouble. 
+        This is either 1 for (x>=0, y>=0), (x>=0, y<0), (x<0, y>=0) and -1 for (x<0, y<0).
+        """
+        sqrt_fac_tmin = np.zeros(n)
+        sqrt_fac_tmax = np.zeros(n)
+        X_max = t_max - t_m
+        Y_max = t_max - t_p
+        X_min = t_min - t_m
+        Y_min = t_min - t_p
+
+        sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max >= 0)] = 1
+        sqrt_fac_tmax[np.logical_and(X_max < 0, Y_max >= 0)] = 1
+        sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max < 0)] = 1
+        sqrt_fac_tmax[np.logical_and(X_max < 0, Y_max < 0)] = -1
+        
+        sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min >= 0)] = 1
+        sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min >= 0)] = 1
+        sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min < 0)] = 1
+        sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min < 0)] = -1
+        
+        # Anton: Trick to make numpy evaluate negative numbers 
+        t_min = t_min + 0j
+        t_max = t_max + 0j
+        t_m = t_m + 0j
+        t_p = t_p + 0j
+        s = s + 0j
+        s2 = s2 + 0j
+        
+        a = -a
+
+        # Anton: When t_max = t_m, t_min = t_p, max - min always cancel ... 
+        term1_max = -((2*(m_phi2-4*m_d2)**2*np.sqrt(a*(t_max-t_m)*(t_max-t_p))*(8*m_phi6+4*m_phi4*(3*m_d2-3*s-t_max-t_m-t_p)+2*m_phi2*(3*m_d4-2*m_d2*(3*s+t_max+t_m+t_p)+3*s2+2*s*(t_max+t_m+t_p)+t_p*(t_max+t_m)+t_max*t_m)+2*m_d6-m_d4*(3*s+2*(t_max+t_m+t_p))+m_d2*(3*s2+2*s*(t_max+t_m+t_p)+2*t_max*(t_m+t_p)+2*t_m*t_p)-t_p*(s2+s*(t_max+t_m)+2*t_max*t_m)-s*(s+t_max)*(s+t_m)))/(a*(t_max-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-2*m_phi2-m_d2+s+t_max)*(-2*m_phi2-m_d2+s+t_m)*(-2*m_phi2-m_d2+s+t_p)))
+
+        term1_min = -((2*(m_phi2-4*m_d2)**2*np.sqrt(a*(t_min-t_m)*(t_min-t_p))*(8*m_phi6+4*m_phi4*(3*m_d2-3*s-t_min-t_m-t_p)+2*m_phi2*(3*m_d4-2*m_d2*(3*s+t_min+t_m+t_p)+3*s2+2*s*(t_min+t_m+t_p)+t_p*(t_min+t_m)+t_min*t_m)+2*m_d6-m_d4*(3*s+2*(t_min+t_m+t_p))+m_d2*(3*s2+2*s*(t_min+t_m+t_p)+2*t_min*(t_m+t_p)+2*t_m*t_p)-t_p*(s2+s*(t_min+t_m)+2*t_min*t_m)-s*(s+t_min)*(s+t_m)))/(a*(t_min-m_d2)*(t_m-m_d2)*(t_p-m_d2)*(-2*m_phi2-m_d2+s+t_min)*(-2*m_phi2-m_d2+s+t_m)*(-2*m_phi2-m_d2+s+t_p)))
+
+        term2_max = (1/(a*(2*m_phi2-s)*(m_d2-t_m)**(3/2)*(m_d2-t_p)**(3/2)))*np.sqrt(a)*sqrt_fac_tmax*(m_phi6*(4*m_d2-2*(t_m+t_p))+m_phi4*(-20*m_d4+m_d2*(4*(t_m+t_p)-2*s)+s*(t_m+t_p)+12*t_m*t_p)+8*m_phi2*(4*m_d2+s)*(m_d4-t_m*t_p)-64*m_d8+64*m_d6*(t_m+t_p)+2*m_d4*(s2-8*s*(t_m+t_p)-32*t_m*t_p)-2*m_d2*s*(s*(t_m+t_p)-16*t_m*t_p)+2*s2*t_m*t_p)*(np.log(m_d2-t_max)-np.log(m_d2*(2*t_max-t_m-t_p)+2*np.sqrt(m_d2-t_m)*np.sqrt(m_d2-t_p)*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)-t_max*(t_m+t_p)+2*t_m*t_p))
+
+        term2_min = (1/(a*(2*m_phi2-s)*(m_d2-t_m)**(3/2)*(m_d2-t_p)**(3/2)))*np.sqrt(a)*sqrt_fac_tmin*(m_phi6*(4*m_d2-2*(t_m+t_p))+m_phi4*(-20*m_d4+m_d2*(4*(t_m+t_p)-2*s)+s*(t_m+t_p)+12*t_m*t_p)+8*m_phi2*(4*m_d2+s)*(m_d4-t_m*t_p)-64*m_d8+64*m_d6*(t_m+t_p)+2*m_d4*(s2-8*s*(t_m+t_p)-32*t_m*t_p)-2*m_d2*s*(s*(t_m+t_p)-16*t_m*t_p)+2*s2*t_m*t_p)*(np.log(m_d2-t_min)-np.log(m_d2*(2*t_min-t_m-t_p)+2*np.sqrt(m_d2-t_m)*np.sqrt(m_d2-t_p)*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)-t_min*(t_m+t_p)+2*t_m*t_p))
+
+        term3_max = -((np.sqrt(a)*sqrt_fac_tmax*(40*m_phi8-2*m_phi6*(10*m_d2+36*s+11*(t_m+t_p))+m_phi4*(-468*m_d4+6*m_d2*(23*s+6*(t_m+t_p))+50*s2+27*s*(t_m+t_p)+12*t_m*t_p)-4*m_phi2*(88*m_d6-6*m_d4*(23*s+8*(t_m+t_p))+m_d2*(30*s2+20*s*(t_m+t_p)+8*t_m*t_p)+s*(4*s2+3*s*(t_m+t_p)+2*t_m*t_p))+2*(-32*m_d8+32*m_d6*(3*s+t_m+t_p)-m_d4*(79*s2+56*s*(t_m+t_p)+32*t_m*t_p)+m_d2*s*(14*s2+15*s*(t_m+t_p)+16*t_m*t_p)+s2*(s+t_m)*(s+t_p)))*(np.log(2*m_phi2+m_d2-s-t_max)-np.log(2*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)*np.sqrt(2*m_phi2+m_d2-s-t_m)*np.sqrt(2*m_phi2+m_d2-s-t_p)+m_phi2*(4*t_max-2*(t_m+t_p))+m_d2*(2*t_max-t_m-t_p)+t_p*(s-t_max+2*t_m)-2*s*t_max+s*t_m-t_max*t_m)))/(a*(2*m_phi2-s)*(2*m_phi2+m_d2-s-t_m)**(3/2)*(2*m_phi2+m_d2-s-t_p)**(3/2)))
+
+        term3_min = -((np.sqrt(a)*sqrt_fac_tmin*(40*m_phi8-2*m_phi6*(10*m_d2+36*s+11*(t_m+t_p))+m_phi4*(-468*m_d4+6*m_d2*(23*s+6*(t_m+t_p))+50*s2+27*s*(t_m+t_p)+12*t_m*t_p)-4*m_phi2*(88*m_d6-6*m_d4*(23*s+8*(t_m+t_p))+m_d2*(30*s2+20*s*(t_m+t_p)+8*t_m*t_p)+s*(4*s2+3*s*(t_m+t_p)+2*t_m*t_p))+2*(-32*m_d8+32*m_d6*(3*s+t_m+t_p)-m_d4*(79*s2+56*s*(t_m+t_p)+32*t_m*t_p)+m_d2*s*(14*s2+15*s*(t_m+t_p)+16*t_m*t_p)+s2*(s+t_m)*(s+t_p)))*(np.log(2*m_phi2+m_d2-s-t_min)-np.log(2*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)*np.sqrt(2*m_phi2+m_d2-s-t_m)*np.sqrt(2*m_phi2+m_d2-s-t_p)+m_phi2*(4*t_min-2*(t_m+t_p))+m_d2*(2*t_min-t_m-t_p)+t_p*(s-t_min+2*t_m)-2*s*t_min+s*t_m-t_min*t_m)))/(a*(2*m_phi2-s)*(2*m_phi2+m_d2-s-t_m)**(3/2)*(2*m_phi2+m_d2-s-t_p)**(3/2)))
+
+        term4_max = -(8*sqrt_fac_tmax*np.log(2*np.sqrt(t_max-t_m)*np.sqrt(t_max-t_p)+2*t_max-t_m-t_p))/np.sqrt(a)
+
+        term4_min = -(8*sqrt_fac_tmin*np.log(2*np.sqrt(t_min-t_m)*np.sqrt(t_min-t_p)+2*t_min-t_m-t_p))/np.sqrt(a)
+
+        int_max = term1_max + term2_max + term3_max + term4_max
+        int_min = term1_min + term2_min + term3_min + term4_min
+
+        # print(np.max(np.abs(int_max - int_min).imag))     # Should be 0.0
+
+        # Term2 makes noise 
+        return vert*(int_max - int_min).real
+
+
+    # Anton: Also want to compare with Depta
+    # @nb.jit(nopython=True, cache=True)
+    def ker_C_n_pp_dd_s_t_integral_Depta(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3, m_d, m_phi, vert):
+        """
+        Solved for matrix-element and integrated over variable t in collision
+        operator using Mathematica, int_Rt |M|^2/sqrt((t-tm)*(t-tp)). 
+        These expressions can be found in nu_s_nu_s_to_XX.nb
+        """
+        n = s.size
+        s2 = s*s
+        m_d2 = m_d*m_d
+        m_d4 = m_d2*m_d2
+        m_d6 = m_d2*m_d4
+        m_d8 = m_d4*m_d4
+        m_phi2 = m_phi*m_phi
+        m_phi4 = m_phi2*m_phi2
+        m_phi6 = m_phi2*m_phi4
+        m_phi8 = m_phi4*m_phi4
+
+        t_add = m_d2 + m_X2
+        t_min = t_add - 2.*E1*(E3 - p1*p3/E1*ct_min)
+        t_max = t_add - 2.*E1*(E3 - p1*p3/E1*ct_max)
+        t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
+        t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
+
+        # Anton: Trick to make numpy evaluate negative numbers 
+        t_min = t_min + 0j
+        t_max = t_max + 0j
+        t_m = t_m + 0j
+        t_p = t_p + 0j
+        s = s + 0j
+        s2 = s2 + 0j
+        
+        # Anton: Write each term of t-integrated matrix element sorted by denominators, evaluated at t_min and t_max. 
+        """
+        sqrt(x)*sqrt(y) / sqrt(x*y) makes trouble. 
+        This is either 1 for (x>=0, y>=0), (x>=0, y<0), (x<0, y>=0) and -1 for (x<0, y<0).
+        """
+        sqrt_fac_tmin = np.zeros(n)
+        sqrt_fac_tmax = np.zeros(n)
+        X_max = t_max - t_m
+        Y_max = t_max - t_p
+        X_min = t_min - t_m
+        Y_min = t_min - t_p
+
+        sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max >= 0)] = 1
+        sqrt_fac_tmax[np.logical_and(X_max < 0, Y_max >= 0)] = 1
+        sqrt_fac_tmax[np.logical_and(X_max >= 0, Y_max < 0)] = 1
+        sqrt_fac_tmax[np.logical_and(X_max < 0, Y_max < 0)] = -1
+
+        sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min >= 0)] = 1
+        sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min >= 0)] = 1
+        sqrt_fac_tmin[np.logical_and(X_min >= 0, Y_min < 0)] = 1
+        sqrt_fac_tmin[np.logical_and(X_min < 0, Y_min < 0)] = -1
+
+        atan_fac_tmin = np.zeros(n)
+        atan_fac_tmax = np.zeros(n)
+
+        atan_fac_tmax[np.where(t_max==t_p)] = np.pi/2
+        atan_fac_tmax[np.where(t_max==t_m)] = 0
+        neq_max = np.logical_and(t_max!=t_p, t_max!=t_m)
+        atan_fac_tmax[neq_max] = np.arctan((np.sqrt(m_d2-t_p[neq_max])*np.sqrt(t_max[neq_max]-t_m[neq_max]))/(np.sqrt(t_m[neq_max]-m_d2)*np.sqrt(t_max[neq_max]-t_p[neq_max])))
+
+        atan_fac_tmin[np.where(t_min==t_p)] = np.pi/2
+        atan_fac_tmin[np.where(t_min==t_m)] = 0
+        neq_min = np.logical_and(t_min!=t_p, t_min!=t_m)
+        atan_fac_tmin[neq_min] = np.arctan((np.sqrt(m_d2-t_p[neq_min])*np.sqrt(t_min[neq_min]-t_m[neq_min]))/(np.sqrt(t_m[neq_min]-m_d2)*np.sqrt(t_min[neq_min]-t_p[neq_min])))
+
+        # Anton: When t_max = t_m, t_min = t_p, max - min always cancel ... 
+        term1_max = -2*m_phi4*np.sqrt((t_max-t_m)*(t_max-t_p))/((m_d2-t_max)*(m_d2-t_m)*(m_d2-t_p))
+
+        term1_min = -2*m_phi4*np.sqrt((t_min-t_m)*(t_min-t_p))/((m_d2-t_min)*(m_d2-t_m)*(m_d2-t_p))
+
+        term2_max = -((2*m_phi4*np.sqrt((t_max-t_m)*(t_max-t_p)))/((2*m_phi2+m_d2-s-t_max)*(2*m_phi2+m_d2-s-t_m)*(2*m_phi2+m_d2-s-t_p)))
+
+        term2_min = -((2*m_phi4*np.sqrt((t_min-t_m)*(t_min-t_p)))/((2*m_phi2+m_d2-s-t_min)*(2*m_phi2+m_d2-s-t_m)*(2*m_phi2+m_d2-s-t_p)))
+
+        term3_max = (2*sqrt_fac_tmax*(m_phi6*(4*m_d2-2*(t_m+t_p))+m_phi4*(12*m_d4-2*m_d2*(s+6*(t_m+t_p))+s*(t_m+t_p)+12*t_m*t_p)-8*m_phi2*s*(m_d2-t_m)*(m_d2-t_p)+2*s2*(m_d2-t_m)*(m_d2-t_p))*atan_fac_tmax)/((s-2*m_phi2)*(t_m-m_d2)**(3/2)*(m_d2-t_p)**(3/2))
+
+        term3_min = (2*sqrt_fac_tmin*(m_phi6*(4*m_d2-2*(t_m+t_p))+m_phi4*(12*m_d4-2*m_d2*(s+6*(t_m+t_p))+s*(t_m+t_p)+12*t_m*t_p)-8*m_phi2*s*(m_d2-t_m)*(m_d2-t_p)+2*s2*(m_d2-t_m)*(m_d2-t_p))*atan_fac_tmin)/((s-2*m_phi2)*(t_m-m_d2)**(3/2)*(m_d2-t_p)**(3/2))
+
+        term4_max = -((2*sqrt_fac_tmax*(40*m_phi8+m_phi6*(44*m_d2-72*s-22*(t_m+t_p))+m_phi4*(12*m_d4-6*m_d2*(9*s+2*(t_m+t_p))+50*s2+27*s*(t_m+t_p)+12*t_m*t_p)-4*m_phi2*s*(2*m_d4-2*m_d2*(3*s+t_m+t_p)+4*s2+3*s*(t_m+t_p)+2*t_m*t_p)+2*s2*(-m_d2+s+t_m)*(-m_d2+s+t_p))*atan_fac_tmax)/((s-2*m_phi2)*(-2*m_phi2-m_d2+s+t_m)**(3/2)*(2*m_phi2+m_d2-s-t_p)**(3/2)))
+
+        term4_min = -((2*sqrt_fac_tmin*(40*m_phi8+m_phi6*(44*m_d2-72*s-22*(t_m+t_p))+m_phi4*(12*m_d4-6*m_d2*(9*s+2*(t_m+t_p))+50*s2+27*s*(t_m+t_p)+12*t_m*t_p)-4*m_phi2*s*(2*m_d4-2*m_d2*(3*s+t_m+t_p)+4*s2+3*s*(t_m+t_p)+2*t_m*t_p)+2*s2*(-m_d2+s+t_m)*(-m_d2+s+t_p))*atan_fac_tmin)/((s-2*m_phi2)*(-2*m_phi2-m_d2+s+t_m)**(3/2)*(2*m_phi2+m_d2-s-t_p)**(3/2)))
+
+        term5_max = -16*sqrt_fac_tmax*np.log(np.sqrt(t_max-t_m)+np.sqrt(t_max-t_p))
+        term5_min = -16*sqrt_fac_tmin*np.log(np.sqrt(t_min-t_m)+np.sqrt(t_min-t_p))
+
+        return vert*(term1_max + term2_max + term3_max + term4_max + term5_max - term1_min - term2_min - term3_min - term4_min - term5_min).real
+
+    # @nb.jit(nopython=True, cache=True)
+    def ker_C_n_pp_dd_s_t_integral_previous(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p1, p3, m_d, m_phi, vert):
+        s2 = s*s
+        m_phi2 = m_phi*m_phi
+        m_phi4 = m_phi2*m_phi2
+        m_phi6 = m_phi4*m_phi2
+        m_d2 = m_d*m_d
+        m_d4 = m_d2*m_d2
+
+        t_add = m_d2 + m_phi2
+        t_min = t_add - 2.*E1*(E3 - p1*p3*ct_min/E1)
+        t_max = t_add - 2.*E1*(E3 - p1*p3*ct_max/E1)
+        t_m = t_add - 2.*E1*(E3 - p1*p3*ct_m/E1)
+        t_p = t_add - 2.*E1*(E3 - p1*p3*ct_p/E1)
+        t_mp = 2.*t_add - 2.*E1*(2.*E3 - p1*p3*(ct_m+ct_p)/E1)
+        u_add = 2.*(m_d2+m_phi2) - s
+        u_min = u_add - t_min
+        u_max = u_add - t_max
+        u_m = u_add - t_m
+        u_p = u_add - t_p
+        u_mp = u_m + u_p
+
+        in_min_neq = (ct_min != ct_p)
+        in_max_neq = (ct_max != ct_m)
+        in_any_neq = np.logical_or(in_min_neq, in_max_neq)
+        n = s.size
+
+        min_1 = np.zeros(n)
+        max_1 = np.zeros(n)
+
+        prefac_2 = -(2.*m_d4*(6.*m_phi4-4.*m_phi2*s+s2)-8.*m_phi2*s*t_m*t_p+2.*s2*t_m*t_p-2.*m_phi6*t_mp
+        +m_phi4*(12.*t_m*t_p+s*t_mp)+2.*m_d2*(2.*m_phi6+4.*m_phi2*s*t_mp-s2*t_mp-m_phi4*(s+6.*t_mp))) / \
+        (2.*(s-2.*m_phi2)*np.sqrt(a * ((t_m-m_d2)**3.) * ((-t_p+m_d2)**3.)))
+        min_2 = 0.5 * prefac_2 * pi
+        max_2 = np.zeros(n)
+
+        prefac_3 = -(2.*m_d4*(6.*m_phi4-4.*m_phi2*s+s2)-8.*m_phi2*s*u_m*u_p+2.*s2*u_m*u_p-2.*m_phi6*u_mp
+        +m_phi4*(12.*u_m*u_p+s*u_mp)+2.*m_d2*(2.*m_phi6+4.*m_phi2*s*u_mp-s2*u_mp-m_phi4*(s+6.*u_mp))) / \
+        (2.*(s-2.*m_phi2)*np.sqrt(a * ((-u_m+m_d2)**3.) * ((u_p-m_d2)**3.)))
+        min_3 = 0.5 * prefac_3 * pi
+        max_3 = np.zeros(n)
+
+        log_part = -2.*pi/np.sqrt(-a)
+
+        if np.any(in_min_neq):
+            in_t_min_neq = np.logical_and(in_min_neq, (t_min != t_p))
+            in_u_min_neq = np.logical_and(in_min_neq, (u_min != u_p))
+            min_1[in_t_min_neq] = (m_phi4/(2.*a[in_t_min_neq]))*np.sqrt(a[in_t_min_neq]*(t_min[in_t_min_neq]-t_m[in_t_min_neq])*(t_min[in_t_min_neq]-t_p[in_t_min_neq]))*(1./((t_min[in_t_min_neq]-m_d2)*(t_m[in_t_min_neq]-m_d2)*(t_p[in_t_min_neq]-m_d2)) - 1./((u_min[in_t_min_neq]-m_d2)*(u_m[in_t_min_neq]-m_d2)*(u_p[in_t_min_neq]-m_d2)))
+            min_2[in_t_min_neq] = prefac_2[in_t_min_neq] * np.arctan(np.sqrt((t_min[in_t_min_neq]-t_m[in_t_min_neq])*(m_d2-t_p[in_t_min_neq])/((t_min[in_t_min_neq]-t_p[in_t_min_neq])*(t_m[in_t_min_neq]-m_d2))))
+            min_3[in_u_min_neq] = prefac_3[in_u_min_neq] * np.arctan(np.sqrt((u_min[in_u_min_neq]-u_m[in_u_min_neq])*(m_d2-u_p[in_u_min_neq])/((u_min[in_u_min_neq]-u_p[in_u_min_neq])*(u_m[in_u_min_neq]-m_d2))))
+        if np.any(in_max_neq):
+            in_t_max_neq = np.logical_and(in_max_neq, (t_max != t_m))
+            in_u_max_neq = np.logical_and(in_max_neq, (u_max != u_m))
+            max_1[in_t_max_neq] = (m_phi4/(2.*a[in_t_max_neq]))*np.sqrt(a[in_t_max_neq]*(t_max[in_t_max_neq]-t_m[in_t_max_neq])*(t_max[in_t_max_neq]-t_p[in_t_max_neq]))*(1./((t_max[in_t_max_neq]-m_d2)*(t_m[in_t_max_neq]-m_d2)*(t_p[in_t_max_neq]-m_d2)) - 1./((u_max[in_t_max_neq]-m_d2)*(u_m[in_t_max_neq]-m_d2)*(u_p[in_t_max_neq]-m_d2)))
+            max_2[in_t_max_neq] = prefac_2[in_t_max_neq] * np.arctan(np.sqrt((t_max[in_t_max_neq]-t_m[in_t_max_neq])*(m_d2-t_p[in_t_max_neq])/((t_max[in_t_max_neq]-t_p[in_t_max_neq])*(t_m[in_t_max_neq]-m_d2))))
+            max_3[in_u_max_neq] = prefac_3[in_u_max_neq] * np.arctan(np.sqrt((u_max[in_u_max_neq]-u_m[in_u_max_neq])*(m_d2-u_p[in_u_max_neq])/((u_max[in_u_max_neq]-u_p[in_u_max_neq])*(u_m[in_u_max_neq]-m_d2))))
+        if np.any(in_any_neq):
+            c_zero = complex(0.,0.)
+            log_part[in_any_neq] = -(-4.*np.log((np.sqrt(ct_max[in_any_neq]-ct_m[in_any_neq]+c_zero)+np.sqrt(ct_max[in_any_neq]-ct_p[in_any_neq]+c_zero))/(np.sqrt(ct_min[in_any_neq]-ct_m[in_any_neq]+c_zero)+np.sqrt(ct_min[in_any_neq]-ct_p[in_any_neq]+c_zero)))/np.sqrt(a[in_any_neq]+c_zero)).real
+
+        # def kernel(ct):
+        #     Epdiff = E1*(E3-p1*p3*ct/E1)
+        #     num = -((s-4.*Epdiff)**2.)*(4.*Epdiff*Epdiff+s*(m_phi2-2.*Epdiff))
+        #     den = 2.*sqrt(a*(ct-ct_m)*(ct-ct_p))*((m_phi2-2.*Epdiff)**2.)*((m_phi2+2.*Epdiff-s)**2.)
+        #     return num/den if den != 0. else 0.
+        # res, err = quad(kernel, ct_min, ct_max, points=(ct_m, ct_p), epsabs=0., epsrel=1e-3)
+        # print(res/ct_int)
+
+        return 4.*vert*(max_1 + max_2 + max_3 - min_1 - min_2 - min_3 + log_part)
+
+    time1 = time.time()
+    ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_X=m_X, vert=1)
+    ker_C_n_XX_dd_s_t_integral_val_2 = ker_C_n_XX_dd_s_t_integral_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_X=m_X, vert=1)
+
+    # ker_C_n_pp_dd_s_t_integral_val = ker_C_n_pp_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=1)
+
+    # ker_C_n_pp_dd_s_t_integral_val_Depta = ker_C_n_pp_dd_s_t_integral_Depta(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=1)
+
+    ker_C_n_pp_dd_s_t_integral_val_previous = ker_C_n_pp_dd_s_t_integral_previous(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=1)
+    print(f'ker_C_n_XX_dd_s_t_integral ran in {time.time()-time1}s')
+    # print(ker_C_n_XX_dd_s_t_integral_val)
     # C_n_XX_dd_val = C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0)
     # print(C_n_XX_dd_val)
 
+    fig = plt.figure()
+    ax = fig.add_subplot(121)
+    ax2 = fig.add_subplot(122)
+
     # x = ln(s/s_min) / ln(s_max/s_min)
-    # ax.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val, 'r')
-    # ax.set_xscale('log')
+    ax.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val, 'r', label='XX_dd')
+    # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val, 'tab:blue', label='pp_dd')
+    ax.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_2, 'k--', label='XX_dd_2')
+    # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val + ker_C_n_XX_dd_s_t_integral_val_2)
+    # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_Depta, 'tab:green', label='pp_dd_Depta')
+    ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_previous, 'tab:orange', label='pp_dd_previous')
+    ax.set_xscale('log')
+    ax2.set_xscale('log')
             
-    # fig.tight_layout()
-    # plt.show()
+    ax.legend()
+    ax2.legend()
+    fig.tight_layout()
+    plt.show()
 
     s_min = 4*m_d**2
     S = 10**(np.linspace(np.log10(s_min), 4, int(1e3)))
@@ -1419,7 +1855,7 @@ if __name__ == '__main__':
 
     E13diff = (m1*m1 - m2*m2 - m3*m3 + m4*m4) / (2*np.sqrt(S))
     # Anton: This is the restricted kinematical region for t.
-    # Outsidde this region, |M|^2 may become negative 
+    # Outside this region, |M|^2 may become negative 
     T_min = (E13diff + (p1cm + p3cm))*(E13diff - (p1cm + p3cm))
     T_max = (E13diff + (p1cm - p3cm))*(E13diff - (p1cm - p3cm))
     # T = np.linspace(np.nanmin(T_min), np.nanmax(T_max), int(1e3))
@@ -1451,25 +1887,53 @@ if __name__ == '__main__':
         m_d8 = m_d4*m_d4
         M2 = -((8*(6*m_d8-m_d4*(3*t2+14*t*u+3*u2)+m_d2*(t3+7*t2*u+7*t*u2+u3)-t*u*(t2+u2)))/((m_d2-t)**2*(m_d2-u)**2))
         return vert*M2
+    
+    def M2_pp_dd(s, t, m_d2, vert, m_phi2):
+        m_d4 = m_d2*m_d2
+        m_d6 = m_d2*m_d4
+        m_d8 = m_d4*m_d4
+        m_phi4 = m_phi2*m_phi2
+        m_phi6 = m_phi2*m_phi4
+        s2 = s*s
+        s3 = s*s2
+        t2 = t*t
+        t3 = t*t2
+        # Anton: M2 found by Mathematica
+        M2 = -(1/((m_d2-t)**2*(-m_d2-2*m_phi2+s+t)**2))*2*(4*m_d8+8*m_d6*(-2*m_phi2+s-2*t)+m_d4*(24*m_phi4+4*m_phi2*(4*t-5*s)+5*s2-8*s*t+24*t2)-m_d2*(16*m_phi6-16*m_phi4*(s+t)+2*m_phi2*(s2+12*s*t-8*t2)+s3-6*s2*t+8*s*t2+16*t3)+(-2*m_phi2+s+2*t)**2*(m_phi4-2*m_phi2*t+t*(s+t)))
+        # Anton: Analytical calculation, is equal to M2, M2me = M2 
+        M2me = (4*(4*m_d2*(s-2*m_phi2)*((t-m_d2)*(m_phi2+3*m_d2-s-t)+(-m_phi2+m_d2+t)*(2*m_phi2+m_d2-s-t))+1/2*(2*m_phi2+2*m_d2-s-2*t)**2*((t-m_d2)*(2*m_phi2+m_d2-s-t)-m_phi4)))/((t-m_d2)**2*(2*m_phi2+m_d2-s-t)**2)
+        # Anton: Found by Depta -- propagator momentum wrong 
+        M2Depta = (4*(1/2*(2*m_phi2+2*m_d2-s-2*t)**2*((t-m_d2)*(2*m_phi2+m_d2-s-t)-m_phi4)))/((t-m_d2)**2*(2*m_phi2+m_d2-s-t)**2)
+        return vert*M2
+        return vert*M2Depta
+        return vert*(M2me - M2Depta)
 
-    S_fixed = 1e5
+    S_fixed = 1.5e2
     plt.plot(T, M2_XX_dd(S_fixed, T, m_d2=m_d**2, vert=vert_el, m_X2=m_X**2), 'k')
     plt.plot(T, M2_electron_positron_to_2photon(S_fixed, T, m_d2=m_d**2, vert=vert_el), 'r--')
+    plt.plot(T, M2_pp_dd(S_fixed, T, m_d2=m_d**2, vert=vert_el, m_phi2=m_X**2), 'tab:green')
     plt.show()
 
-    fig = plt.figure()
-    ax = fig.add_subplot()
+    fig1 = plt.figure()
+    fig2 = plt.figure()
+    ax1 = fig1.add_subplot()
+    ax2 = fig2.add_subplot()
     
     M2_XX_dd_val = M2_XX_dd(s, t, m_d2=m_d**2, vert=vert_el, m_X2=m_X**2)
+    M2_pp_dd_val = M2_pp_dd(s, t, m_d2=m_d**2, vert=vert_el, m_phi2=m_X**2)
     M2_bhaba_massless_val = M2_bhaba_massless(s, t, vert_el)
     M2_electron_positron_to_2photon_val = M2_electron_positron_to_2photon(s, t, m_d2=m_d**2, vert=vert_el)
-    plot_XX_dd = ax.contourf(s, t, np.log10(M2_XX_dd_val), levels=300, cmap='jet')
-    # plot_XX_dd = ax.contourf(s, t, np.log10(M2_bhaba_massless_val), levels=300, cmap='jet')
-    # plot_XX_dd = ax.contourf(s, t, np.log10(M2_electron_positron_to_2photon_val), levels=300, cmap='jet')
-    fig.colorbar(plot_XX_dd)
-    ax.set_xscale('log')
+    plot_XX_dd = ax1.contourf(s, t, np.log10(M2_XX_dd_val), levels=300, cmap='jet')
+    plot_compare = ax2.contourf(s, t, np.log10(M2_pp_dd_val), levels=300, cmap='jet')
+    # plot_compare = ax2.contourf(s, t, np.log10(M2_bhaba_massless_val), levels=300, cmap='jet')
+    # plot_compare = ax2.contourf(s, t, np.log10(M2_electron_positron_to_2photon_val), levels=300, cmap='jet')
+    fig1.colorbar(plot_XX_dd)
+    fig2.colorbar(plot_compare)
+    ax1.set_xscale('log')
+    ax2.set_xscale('log')
 
-    fig.tight_layout()
+    fig1.tight_layout()
+    fig2.tight_layout()
     plt.show()
 
     from matplotlib import collections  as mc
@@ -1477,9 +1941,10 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
 
     vert_XX_dd = y**4 * np.cos(th)**8
-    s_sigma = 10**(np.linspace(np.log10(s_min), 2, int(5e4)))
+    s_sigma = 10**(np.linspace(np.log10(s_min), 2, int(1e4)))
     sigma_XX_dd_val = np.vectorize(sigma_XX_dd)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
     sigma_XX_dd_val_new = np.vectorize(sigma_XX_dd_new)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
+    sigma_pp_dd_val = np.vectorize(sigma_pp_dd)(s=s_sigma, m_d=m_d, m_phi=m_X, vert=vert_XX_dd)
 
     # Color lines based on which index element has, for debugging purposes
     # lines = [np.column_stack([[s[i], s[i+1]], [sigma[i], sigma[i+1]]]) for i in range(len(s)-1)]
@@ -1492,13 +1957,17 @@ if __name__ == '__main__':
 
     # ax.plot(s, sigma*s*(s - 4*m_X**2), linestyle='none')        # |M|^2 integrated over t 
     ax.axvline(4*m_X**2, color='k', linestyle='--')
-    ax.plot(s_sigma, sigma_XX_dd_val, color='r', label='vector')
-    ax.plot(s_sigma, sigma_XX_dd_val_new, color='k', linestyle='--', label='vector_new')
-    ax.plot(s_sigma, np.vectorize(sigma_pp_dd)(s=s_sigma, m_d=m_d, m_phi=m_X, vert=vert_XX_dd), color='tab:blue', label='scalar')
+    ax.plot(s_sigma, sigma_XX_dd_val, color='r', label='sigma vector')
+    ax.plot(s_sigma, sigma_XX_dd_val_new, color='k', linestyle='--', label='sigma vector_new')
+    ax.plot(s_sigma, sigma_pp_dd_val, color='tab:blue', label='sigma scalar')
     ax.set_xscale('log')
     ax.set_yscale('log')
     ax.legend()
     plt.show()
 
-    # res = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=-1., k_X=1., T_d=T, xi_d=xi_d, xi_X=xi_X, vert=vert, type=0)
-    # print(res)
+    res_XX_dd = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0)
+    res_pp_dd = C_n_pp_dd(m_d=m_d, m_phi=m_X, k_d=k_d, k_phi=k_X, T_d=T_d, xi_d=xi_d, xi_phi=xi_X, vert=vert_el, type=0)
+    res_34_12 = C_34_12_new(type=0, nFW=1, nBW=-1, m1=m_d, m2=m_a, m3=m_d, m4=m_d, k1=k_d, k2=k_a, k3=k_d, k4=k_d, T1=T_d, T2=T_a, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_a, xi3=xi_d, xi4=xi_d, vert=vert_tr, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2, res_sub=False, thermal_width=True)
+    print(res_XX_dd)
+    print(res_pp_dd)
+    print(res_34_12)

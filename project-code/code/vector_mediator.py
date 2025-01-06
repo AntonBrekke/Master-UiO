@@ -4,6 +4,7 @@ import numpy as np
 import numba as nb
 from math import sin, cos, sqrt, atan, log
 from scipy.integrate import quad
+from scalar_mediator import Gamma_phi
 
 rtol_int = 1e-4
 
@@ -47,7 +48,7 @@ def Gamma_X(y, th, m_X, m_d):
     """
     Anton: 
     M2_X->23 = 2g^2/m_X^2 * (m_X^2 - (m2 - m3)^2) * [2*m_X^2 + (m2 + m3)^2]
-    X_23 = |p_f|/(2^M*8*pi*m_X2)*|M_X->23| * H(m_X - (m2 + m3))
+    Gamma_X_23 = |p_f|/(2^M*8*pi*m_X2)*|M_X->23| * H(m_X - (m2 + m3))
     |p_f| = 1/(2*m_X)*sqrt((m_X2 - m2^2 - m3^2)^2 - 4*m2^2*m3^2) 
     """
     M2_aa = 2.*y2*(sth**4.)/m_X2 * (m_X2)*(2*m_X2)
@@ -516,8 +517,10 @@ if __name__ == '__main__':
     print(f'vert_fi: {vert_fi:.2e}, vert_tr: {vert_tr:.2e}, vert_el: {vert_el:.2e}')
 
     th_arr = np.linspace(0, 2*np.pi, 1000)
-    Gamma = Gamma_X(y=y, th=th_arr, m_X=m_X, m_d=m_d)
-    plt.plot(th_arr, Gamma)
+    GammaX = Gamma_X(y=y, th=th_arr, m_X=m_X, m_d=m_d)
+    GammaPhi = Gamma_phi(y=y, th=th_arr, m_phi=m_X, m_d=m_d)
+    plt.plot(th_arr, GammaX, 'r')
+    plt.plot(th_arr, GammaPhi, 'tab:blue')
     plt.xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi], labels=[r'$0$',r'$\pi/2$',r'$\pi$',r'$3\pi/2$', r'$2\pi$'])
     plt.show()
 
