@@ -39,7 +39,7 @@ m_ratio = 3
 # y = 1.905e-4
 
 # BP2 
-m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+m_d = 3e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 m_a = 0.
 m_X = m_ratio*m_d
 sin2_2th = 3e-15
@@ -48,8 +48,8 @@ y = 1.602e-3
 m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 m_a = 0.
 m_X = m_ratio*m_d
-sin2_2th = 1.3e-15
-y = 1.7475e-3
+sin2_2th = 8e-16
+y = 3e-3
 
 print(f'md: {m_d:.3e}, mX: {m_X:.3e}, y: {y:.3e}, sin22th: {sin2_2th:.3e}')
 
@@ -137,10 +137,10 @@ def C_n(T_a, T_d, xi_d, xi_X):
     C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0) / 4. # symmetry factor 1/4, type=0 include reaction both ways
     # C_XX_dd = C_res_scalar.C_n_pp_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0) / 4. # symmetry factor 1/4, type=0 include reaction both ways
     # Pandemic growth
-    # C_da_dd = C_res_vector.C_34_12_new(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2,m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    # C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2,m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
     # Freeze-in
-    # C_aa_da = C_res_vector.C_34_12_new(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi_da, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
-    # C_aa_dd = C_res_vector.C_34_12_new(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi_dd, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 4.
+    # C_aa_da = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi_da, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    # C_aa_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi_dd, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 4.
 
     C_aa_dd = 0
     C_aa_da = 0 
@@ -157,8 +157,8 @@ def C_rho(T_a, T_d, xi_d, xi_X):
 
     # 2-to-2
     # Pandemic growth only included 
-    # C_da_dd = C_res_vector.C_34_12_new(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
-    # C_aa_da = C_res_vector.C_34_12_new(type=1, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi_da, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    # C_da_dd = C_res_vector.C_34_12(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    # C_aa_da = C_res_vector.C_34_12(type=1, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi_da, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
 
     C_aa_da = 0 
     C_da_dd = 0 

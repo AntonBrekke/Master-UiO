@@ -29,16 +29,16 @@ dof_X = 3.      # Anton: Massive vector boson 3 polarization dof.
 # sin2_2th_grid = np.logspace(-17, -8, n_th)
 
 # The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
-n_m = 1         # 21
-n_th = 1        # 81
+n_m = 3         # 21
+n_th = 6        # 81
 # Anton: Search for keV-scale sterile neutrinos. Input is in GeV, so (m_d keV) = (1e-6*m_d GeV)
-m_d_grid = 1e-6*np.logspace(1, 100, n_m)    # ~ 1 keV - 100 keV
+m_d_grid = 1e-6*np.logspace(0, 2, n_m)    # ~ 1 keV - 100 keV
 sin2_2th_grid = np.logspace(-17, -8, n_th)
 # m_d_grid = 1e-6*10**(np.array([1.7, 2.24, 1.15, 2.3, 1.5]))         
 # sin2_2th_grid = 10**(np.array([-16.0762, -15.6541, -16.5350, -15.6037, -16.2373]))
 
 num_cpus = cpu_count()
-num_process = int(2.5*num_cpus) # cpu_count(), 48
+num_process = int(1.5*num_cpus) # cpu_count(), 48
 
 params_grid = np.array((np.repeat(m_d_grid, n_th), np.tile(sin2_2th_grid, n_m))).T
 
@@ -48,7 +48,7 @@ spin_facs = True
 off_shell = False
 
 dirname = './sterile_res/'
-i_max = 0      # 60
+i_max = 10      # 60
 i_skip = 20
 def find_y(params):
     m_d = params[0]
@@ -108,7 +108,12 @@ def find_y(params):
             # print(m_d, sin2_2th, O_d_h2_dw, log_enhance_req, log_enhance_cur, y_old, y_cur)
 
     print('find_y.py for-loop done ')
-    filename = f'md_{m_d:.4e}_mX_{m_X:.4e}_sin22th_{sin2_2th:.4e}_y_{y_cur:.4e}.dat'
+    md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    sin22th_str = f'{sin2_2th:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    y_str = f'{y_cur:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y_cur:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    filename = f'md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str};full.dat'
+    # Anton: Save benchmark-points
     np.savetxt(dirname+'benchmark_pts/'+filename, np.column_stack((t_grid[::-i_skip][::-1], T_SM_grid[::-i_skip][::-1], T_nu_grid[::-i_skip][::-1], ent_grid[::-i_skip][::-1], hubble_grid[::-i_skip][::-1], sf_grid[::-i_skip][::-1], T_d_grid[::-i_skip][::-1], xi_d_grid[::-i_skip][::-1], xi_X_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1], n_X_grid[::-i_skip][::-1], C_therm_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1]*m_d*cf.s0/(ent_grid[::-i_skip][::-1]*cf.rho_crit0_h2))))
 
     therm_ratio = C_therm_grid / (3.*hubble_grid*n_d_grid)
@@ -129,4 +134,5 @@ if __name__ == '__main__':
 
     dt = time.time() - time1
     print(f"find_y.py ran in {dt//60//60}h {dt//60%60}m {dt%60}s")
-    np.savetxt(dirname+f'rm_{r_m:.2e}_y_relic_new.dat', results)
+    # Anton: Save plots for plot of parameter-space
+    np.savetxt(dirname+f'rm_{r_m:.2e}_y_relic_test_{n_m}x{n_th}x{i_max}.dat', results)

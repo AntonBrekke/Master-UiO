@@ -192,7 +192,7 @@ c5 = '#1e2f97' #'#f0944d'
 c4 = '#ffa62b'
 
 # Anton: 1e6 to make GeV to keV 
-plt.loglog(x_grid, 1e6*H, color=ch, ls='-', zorder=0) #83781B
+plt.loglog(x_grid, 1e6*3*H, color=ch, ls='-', zorder=0) #83781B
 plt.loglog(x_grid, 1e6*abs(C_dd_X), color=c1, ls='-', zorder=-4) #114B5F
 plt.loglog(x_grid, 1e6*abs(C_da_X), color=c2, ls='-', zorder=-4) #458751
 # plt.loglog(x_grid, 1e6*abs(C_aa_X), color='brown', ls='-')

@@ -19,10 +19,10 @@ sys.path.insert(0, grandparentdir)
 
 import constants_functions as cf
 
-# plt.rc('text', usetex=True)
-# plt.rc('font', family='serif', size=14)
-# # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-# plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif', size=14)
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white", gridspec_kw={'height_ratios': [2, 1]})
 ax1.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
@@ -82,18 +82,30 @@ load_str = './md_2e-05;mX_6e-05;sin22th_3e-19;y_2e-01;full.dat'
 load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-15;y_1.7e-03;full.dat'
 load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'       # BP2, overshoot
 load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-15;y_1.3e-03;full.dat'       # Overshoot
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_2e-03;full.dat'       # Overshoot
 load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1e-03;full.dat'       # Undershoot
 load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.5e-03;full.dat'       # Undershoot
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.6e-03;full.dat'       # Undershoot
 load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.8e-03;full.dat'       # Overshoot
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.7e-03;full.dat'       # Overshoot
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.74e-03;full.dat'       # Near
-load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.3e-03;full.dat'
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.745e-03;full.dat'       # Near
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.75e-03;full.dat'       # Near
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.747e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-17;y_1.7475e-02;full.dat'       # Terrible
+load_str = './md_2e-05;mX_6e-05;sin22th_1.10952e-15;y_2.0475e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_9.46956e-16;y_2.0475e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_9.46956e-16;y_1.8475e-03;full.dat'       # Undershoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.7e-03;full.dat'       # Undershoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.6e-03;full.dat'       # Undershoot
 load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.7475e-03;full.dat'       # Perfect
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.74e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_9.46956e-16;y_1.9475e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.747e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.3e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.75e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.745e-03;full.dat'       # Near
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_2e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1e-15;y_2e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1e-16;y_3e-03;full.dat'       # Undershoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1e-16;y_5e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_1e-16;y_4.5e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_5e-16;y_4.2e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_5e-16;y_4e-03;full.dat'       # Overshoot
+load_str = './md_2e-05;mX_6e-05;sin22th_8e-16;y_4e-03;full.dat'       # Overshoot
 
 data = np.loadtxt(load_str)
 

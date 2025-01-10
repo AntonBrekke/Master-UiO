@@ -146,7 +146,7 @@ def M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
     t_prop = 1. / ((t - m_X2)*(t - m_X2) + m_Gamma_X2)
     u_prop = 1. / ((u - m_X2)*(u - m_X2) + m_Gamma_X2)
     
-    # ss = 1/m_X4*4*(-m18+(-2*m32-2*m42+s+2*t+2*u)*m16+(4*m_X2*m2-2*m2*s)*m15+(2*m24+(2*m32+2*m42+3*s-2*t-2*u)*m22-4*m32*m42+s2-t2-u2+m32*s+m42*s+2*m3*m4*s+2*m32*t+2*m42*t-2*s*t-2*m_X2*(4*m22+2*m3*m4+s-t-u)+2*m32*u+2*m42*u-2*s*u-2*t*u)*m14+4*m2*(2*m_X2-s)*(m22+m32+m42-t-u)*m13+(2*(2*m22+m32+m42-2*m3*m4-t-u)*m_X4-2*(4*m24+(8*m32-4*m4*m3+8*m42-2*(s+3*(t+u)))*m22-s2+t2+u2+m42*s-2*m3*m4*s-m42*t+m32*(4*m42+s-3*t-u)-3*m42*u+2*t*u)*m_X2+m24*(2*m32+2*m42+3*s-2*t-2*u)+s*((4*m42+s-2*(t+u))*m32-2*m4*s*m3-s2+t2+u2+2*t*u+m42*(s-2*(t+u)))+2*m22*((4*m42+3*s-2*(t+u))*m32-2*m4*s*m3-s2+t2+u2-2*s*t-2*s*u+2*t*u+m42*(3*s-2*(t+u))))*m12-2*m2*(2*(m32-4*m4*m3+m42-s)*m_X4-2*(m24+2*(m32+m42-t-u)*m22-s2+t2+u2+m42*s-2*m3*m4*s-2*m42*t-2*m42*u+2*t*u+m32*(4*m42+s-2*(t+u)))*m_X2+s*(m24+2*(m32+m42-t-u)*m22-s2+t2+u2+m42*s-2*m3*m4*s-2*m42*t-2*m42*u+2*t*u+m32*(4*m42+s-2*(t+u))))*m1-m28+m26*(-2*m32-2*m42+s+2*t+2*u)+2*m_X4*((2*m42-t-u)*m32+2*m4*s*m3+t2+u2-m42*(t+u))+m24*(-2*(2*m3*m4+s-t-u)*m_X2+s2-t2-u2+m42*s+2*m3*m4*s+2*m42*t-2*s*t+2*m42*u-2*s*u-2*t*u+m32*(-4*m42+s+2*(t+u)))+m22*(2*(m32-2*m4*m3+m42-t-u)*m_X4-2*((4*m42+s-t-3*u)*m32-2*m4*s*m3-s2+t2+u2+m42*(s-3*t-u)+2*t*u)*m_X2+s*((4*m42+s-2*(t+u))*m32-2*m4*s*m3-s2+t2+u2+2*t*u+m42*(s-2*(t+u))))) * s_prop*(s_prop*((s-m_X2)*(s-m_X2) - m_Gamma_X2) if sub else 1.)
+    # Anton: For s-channel processes, need to take care of real intermediate state subtraction (RIS)
     if sub: 
         ss = 1/m_X4*4*(-m18+(-2*m32-2*m42+s+2*t+2*u)*m16+(4*m_X2*m2-2*m2*s)*m15+(2*m24+(2*m32+2*m42+3*s-2*t-2*u)*m22-4*m32*m42+s2-t2-u2+m32*s+m42*s+2*m3*m4*s+2*m32*t+2*m42*t-2*s*t-2*m_X2*(4*m22+2*m3*m4+s-t-u)+2*m32*u+2*m42*u-2*s*u-2*t*u)*m14+4*m2*(2*m_X2-s)*(m22+m32+m42-t-u)*m13+(2*(2*m22+m32+m42-2*m3*m4-t-u)*m_X4-2*(4*m24+(8*m32-4*m4*m3+8*m42-2*(s+3*(t+u)))*m22-s2+t2+u2+m42*s-2*m3*m4*s-m42*t+m32*(4*m42+s-3*t-u)-3*m42*u+2*t*u)*m_X2+m24*(2*m32+2*m42+3*s-2*t-2*u)+s*((4*m42+s-2*(t+u))*m32-2*m4*s*m3-s2+t2+u2+2*t*u+m42*(s-2*(t+u)))+2*m22*((4*m42+3*s-2*(t+u))*m32-2*m4*s*m3-s2+t2+u2-2*s*t-2*s*u+2*t*u+m42*(3*s-2*(t+u))))*m12-2*m2*(2*(m32-4*m4*m3+m42-s)*m_X4-2*(m24+2*(m32+m42-t-u)*m22-s2+t2+u2+m42*s-2*m3*m4*s-2*m42*t-2*m42*u+2*t*u+m32*(4*m42+s-2*(t+u)))*m_X2+s*(m24+2*(m32+m42-t-u)*m22-s2+t2+u2+m42*s-2*m3*m4*s-2*m42*t-2*m42*u+2*t*u+m32*(4*m42+s-2*(t+u))))*m1-m28+m26*(-2*m32-2*m42+s+2*t+2*u)+2*m_X4*((2*m42-t-u)*m32+2*m4*s*m3+t2+u2-m42*(t+u))+m24*(-2*(2*m3*m4+s-t-u)*m_X2+s2-t2-u2+m42*s+2*m3*m4*s+2*m42*t-2*s*t+2*m42*u-2*s*u-2*t*u+m32*(-4*m42+s+2*(t+u)))+m22*(2*(m32-2*m4*m3+m42-t-u)*m_X4-2*((4*m42+s-t-3*u)*m32-2*m4*s*m3-s2+t2+u2+m42*(s-3*t-u)+2*t*u)*m_X2+s*((4*m42+s-2*(t+u))*m32-2*m4*s*m3-s2+t2+u2+2*t*u+m42*(s-2*(t+u))))) * s_prop*s_prop*((s-m_X2)*(s-m_X2) - m_Gamma_X2)
 
@@ -165,12 +165,9 @@ def M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
 
     uu = 1/m_X4*4*(-m18+(-2*m22-2*m32+2*s+2*t+u)*m16+(4*m_X2*m4-2*m4*u)*m15+(2*m44+2*m32*m42-2*s*m42-2*t*m42+3*u*m42-s2-t2+u2+2*m32*s+2*m32*t-2*s*t+m32*u+2*m2*m3*u-2*s*u-2*t*u-2*m_X2*(4*m42+2*m2*m3-s-t+u)+m22*(-4*m32+2*m42+2*s+2*t+u))*m14+4*m4*(m22+m32+m42-s-t)*(2*m_X2-u)*m13+(2*(m22-2*m3*m2+m32+2*m42-s-t)*m_X4-2*(4*m44-6*s*m42-6*t*m42-2*u*m42+s2+t2-u2+2*s*t-2*m2*m3*(2*m42+u)+m32*(8*m42-s-3*t+u)+m22*(4*m32+8*m42-3*s-t+u))*m_X2+2*m32*m44-u3+2*m42*s2+2*m42*t2+m32*u2-2*m42*u2-2*m44*s-4*m32*m42*s-2*m44*t-4*m32*m42*t+4*m42*s*t+3*m44*u+6*m32*m42*u+s2*u+t2*u-2*m32*s*u-4*m42*s*u-2*m32*t*u-4*m42*t*u+2*s*t*u-2*m2*m3*u*(2*m42+u)+m22*(2*m44+(-4*s-4*t+6*u)*m42+4*m32*(2*m42+u)+u*(-2*s-2*t+u)))*m12-2*m4*(2*(m22-4*m3*m2+m32-u)*m_X4-2*(m44-2*s*m42-2*t*m42+s2+t2-u2+2*s*t-2*m2*m3*u+m32*(2*m42-2*s-2*t+u)+m22*(4*m32+2*m42-2*s-2*t+u))*m_X2+u*(m44-2*s*m42-2*t*m42+s2+t2-u2+2*s*t-2*m2*m3*u+m32*(2*m42-2*s-2*t+u)+m22*(4*m32+2*m42-2*s-2*t+u)))*m1+2*m_X4*((2*m32+m42-s-t)*m22+2*m3*(u-m42)*m2+s2+t2-m42*s+m32*(m42-s-t)-m42*t)-m42*(m42-u)*(m44-2*s*m42-2*t*m42+s2+t2-u2+2*s*t-2*m2*m3*u+m32*(2*m42-2*s-2*t+u)+m22*(4*m32+2*m42-2*s-2*t+u))-2*m_X2*m42*((4*m32-s-3*t+u)*m22+2*m3*(m42-u)*m2-(m42-s-t-u)*(s+t-u)+m32*(-3*s-t+u))) * u_prop
 
-    # st = 1/m_X4*2*(2*m18+(4*m22+4*m32+4*m42-3*s-3*t-5*u)*m16+2*(-2*m23-2*(m3+m4)*m22+(-2*m32+s+u)*m2-2*m33-2*m32*m4+m4*(4*m_X2+u)+m3*(t+u))*m15+(2*m24+4*(m3+m4)*m23+(4*m32+4*m4*m3+4*m42-2*(s+t+3*u))*m22+(4*m33+4*m4*m32-2*u*m3-2*m4*(t+u))*m2+2*m34+4*m32*m42+4*u2+4*m33*m4-2*m32*s-3*m42*s-2*m3*m4*s-2*m32*t-3*m42*t+4*s*t-4*m_X2*(2*m22+2*m3*m2+2*m32-u)-6*m32*u-5*m42*u-2*m3*m4*u+4*s*u+4*t*u)*m14+(-4*m25-4*(m3+m4)*m24+4*(-2*m32-2*m42+s+t+2*u)*m23+(-8*m33-8*m4*m32+4*(-2*m42+s+t+2*u)*m3+2*m4*(s+3*(t+u)))*m22+(-4*m34+4*(-2*m42+s+t+2*u)*m32-s2+t2-3*u2-4*s*t-4*s*u-2*t*u+4*m42*(s+u))*m2-4*m35-8*m33*m42+m3*s2-m3*t2-3*m3*u2-2*m4*u2-4*m34*m4+4*m33*s+6*m32*m4*s+4*m33*t+4*m3*m42*t+2*m32*m4*t-4*m3*s*t+8*m33*u+4*m3*m42*u+6*m32*m4*u-2*m3*s*u-2*m4*s*u-4*m3*t*u-2*m4*t*u+4*m_X2*(2*m23+2*(m3+m4)*m22+(2*m32+s-t-u)*m2+2*m33+2*m32*m4-m3*(s-t+u)-2*m4*(s+t+u)))*m13+(4*(m3+m4)*m25+(4*m3*m4+s+t-u)*m24+(8*m33+8*m4*m32+(8*m42-4*(s+t+2*u))*m3-2*m4*(s+3*(t+u)))*m23+(8*m4*m33+(4*m42+3*(s+t-u))*m32-6*m4*(s+t+u)*m3+m42*(s+t-u)-2*(s2+t2-u2))*m22+(4*m35+4*m4*m34+(8*m42-4*(s+t+2*u))*m33-6*m4*(s+t+u)*m32-(4*u*m42+s2+t2-3*u2-2*t*u-2*s*(2*t+u))*m3+2*m4*(t2+2*u*t+u*(s+u)))*m2+s3+t3-u3-2*m32*s2-m42*s2+2*m3*m4*s2-2*m32*t2-m42*t2-s*t2+2*m32*u2+m42*u2+2*m3*m4*u2-s*u2-t*u2+4*m35*m4+m34*s+m32*m42*s-6*m33*m4*s+m34*t+m32*m42*t-s2*t-2*m33*m4*t+4*m42*s*t+8*m_X4*(m22+(m3-m4)*m2+m32-m3*m4-u)-m34*u-m32*m42*u+s2*u+t2*u-6*m33*m4*u+4*m3*m4*s*u+2*m3*m4*t*u-2*s*t*u-2*m_X2*(4*m24+(16*m32-8*m4*m3+12*m42-5*s-5*t-7*u)*m22-2*(4*m4*m32-4*m42*m3+2*u*m3+m4*s-m4*u)*m2+4*m34+m32*(12*m42-5*s-5*t-7*u)+2*m3*m4*(u-t)+2*u*(-3*m42+s+t+u)))*m12+(2*(2*m32-4*m4*m3-s+u)*m25+2*(2*m33-2*m4*m32-(s+t-u)*m3+m4*t)*m24+(4*m34-16*m4*m33+(-6*s-6*t+2*u)*m32+8*m4*(s+t+u)*m3+3*s2+t2-3*u2-2*t*u+2*m42*(-s+t+u))*m23+(4*m35-4*m4*m34+(-6*s-6*t+2*u)*m33+2*m4*(3*s+3*t+u)*m32-2*m42*(s+t-u)*m3+3*(s2+t2-u2)*m3-2*m4*t*(t+u))*m22+(-8*m4*m35-2*(s+t-u)*m34+8*m4*(s+t+u)*m33+(3*(s2+t2-u2)-2*m42*(s+t-u))*m32-2*m4*(s2+2*u*s+(t+u)**2)*m3-s3-t3+u3+s*t2+s*u2+t*u2+s2*t-s2*u-t2*u+2*s*t*u+m42*(s2-4*t*s+t2-u2))*m2-8*m_X4*((m3-m4)*m22+(m32-4*m4*m3+m42-s)*m2-m32*m4+m3*(m42-t)+m4*u)+m3*(-2*(t-u)*m34+2*m4*s*m33+(2*(s-t+u)*m42+s2+3*t2-3*u2-2*s*u)*m32-2*m4*s*(s+u)*m3-s3-t3+u3+s*t2+s*u2+t*u2+s2*t-s2*u-t2*u+2*s*t*u+m42*(s2-4*t*s+t2-u2))+4*m_X2*(m25+(m3-m4)*m24+2*(m32+m42-t-u)*m23+(2*m33-4*m4*m32+(6*m42-s-3*u)*m3-m4*(s+t-u))*m22+(m34+(6*m42-t-3*u)*m32-2*m4*(s+t)*m3-s2+t2+u2-s*t+m42*(s-2*u)+t*u)*m2+m35-m34*m4+2*m33*(m42-s-u)-m32*m4*(s+t-u)+m3*((t-2*u)*m42+s2-t2+u2+s*(u-t))+m4*(t*u+s*(2*t+u))))*m1-8*m_X4*((-m42+m3*m4+u)*m22+(m4*m32+(u-m42)*m3-m4*t)*m2-m3*m4*s+(m42-u)*u+m32*(u-m42))-m2*m3*(2*(2*m32-2*m4*m3-s+u)*m24+(2*m33-4*m4*m32-(s+t-u)*m3+2*m4*t)*m23+(4*m34-4*m4*m33+(-6*s-6*t+2*u)*m32+2*m4*(3*s+t+u)*m3+3*s2+t2-3*u2-2*t*u+2*m42*(-s+t+u))*m22-(4*m4*m34+(s+t-u)*m33-2*m4*(s+3*t+u)*m32+((s+t-u)*m42-s2-t2+u2)*m3+2*m4*t*(t+u))*m2-s3-t3+u3+m42*s2+m42*t2+s*t2-m42*u2+s*u2+t*u2+2*m33*m4*s+s2*t-4*m42*s*t-2*m34*(t-u)-s2*u-t2*u+2*s*t*u-2*m3*m4*s*(s+u)+m32*(2*(s-t+u)*m42+s2+3*t2-3*u2-2*s*u))+2*m_X2*(2*(m3-m4)*m25+(-2*m3*m4-s+t+u)*m24-2*(m3-m4)*(2*m3*m4+s+t+u)*m23-(4*m4*m33+(8*m42-6*u)*m32-2*m4*(s+2*t)*m3-s2+t2+u2+m42*(s-3*t-u)+2*t*u)*m22+2*(m35-m4*m34+(2*m42-s-t-u)*m33+m4*(2*s+t)*m32+(-2*(s+t)*m42+2*s*t+s*u+t*u)*m3-m4*s*(t+u))*m2+m3*(-2*m4*m34+(s-t+u)*m33+2*m4*(s+t+u)*m32+((3*s-t+u)*m42-s2+t2-u2-2*s*u)*m3-2*m4*t*(s+u)))) * s_prop*t_prop*((s-m_X2)*(t-m_X2) + (0. if sub else m_Gamma_X2))
-
-    # su = -1/m_X4*2*(2*m18+(4*m22+4*m32+4*m42-3*s-5*t-3*u)*m16+2*(-2*m23-2*(m3+m4)*m22+(-2*m42+s+t)*m2-2*m43-2*m3*m42+4*m_X2*m3+m3*t+m4*t+m4*u)*m15+(2*m24+4*(m3+m4)*m23+(4*m32+4*m4*m3+4*m42-2*(s+3*t+u))*m22+(4*m43+4*m3*m42-2*t*m4-2*m3*(t+u))*m2+2*m44+4*m3*m43+4*m32*m42+4*t2-3*m32*s-2*m42*s-2*m3*m4*s-4*m_X2*(2*m22+2*m4*m2+2*m42-t)-5*m32*t-6*m42*t-2*m3*m4*t+4*s*t-3*m32*u-2*m42*u+4*s*u+4*t*u)*m14+(-4*m25-4*(m3+m4)*m24+4*(-2*m32-2*m42+s+2*t+u)*m23+(-8*m4*m32+2*(-4*m42+s+3*(t+u))*m3+4*m4*(-2*m42+s+2*t+u))*m22+(-4*m44+4*(s+2*t+u)*m42-s2-3*t2+u2-4*s*t+4*m32*(-2*m42+s+t)-4*s*u-2*t*u)*m2-4*m45-4*m3*m44-8*m32*m43+m4*s2-2*m3*t2-3*m4*t2-m4*u2+4*m43*s+6*m3*m42*s+8*m43*t+6*m3*m42*t+4*m32*m4*t-2*m3*s*t-2*m4*s*t+4*m43*u+2*m3*m42*u+4*m32*m4*u-4*m4*s*u-2*m3*t*u-4*m4*t*u+4*m_X2*(2*m23+2*(m3+m4)*m22+(2*m42+s-t-u)*m2+2*m3*(m42-s-t-u)+m4*(2*m42-s-t+u)))*m13+(4*(m3+m4)*m25+(4*m3*m4+s-t+u)*m24+(8*m4*m32+8*m42*m3-2*(s+3*(t+u))*m3+4*m4*(2*m42-s-2*t-u))*m23+(8*m3*m43+3*(s-t+u)*m42-6*m3*(s+t+u)*m4+m32*(4*m42+s-t+u)-2*(s2-t2+u2))*m22+((8*m43-4*m4*t)*m32+2*(2*m44-3*(s+t+u)*m42+(t+u)**2+s*t)*m3+m4*(4*m44-4*(s+2*t+u)*m42-s2+3*t2-u2+2*t*u+2*s*(t+2*u)))*m2+4*m3*m45+s3-t3+u3-m32*s2-2*m42*s2+2*m3*m4*s2+m32*t2+2*m42*t2+2*m3*m4*t2-s*t2-m32*u2-2*m42*u2-s*u2+t*u2+m44*s-6*m3*m43*s+m32*m42*s+8*m_X4*(m22+(m4-m3)*m2+m42-m3*m4-t)-m44*t-6*m3*m43*t-m32*m42*t+s2*t+4*m3*m4*s*t+m44*u-2*m3*m43*u+m32*m42*u-s2*u-t2*u+4*m32*s*u+2*m3*m4*t*u-2*s*t*u-2*m_X2*(4*m24+(12*m32-8*m4*m3+16*m42-5*s-7*t-5*u)*m22+2*(4*m4*m32+(-4*m42-s+t)*m3-2*m4*t)*m2+4*m44+2*t2-5*m42*s+6*m32*(2*m42-t)-7*m42*t+2*s*t+2*m3*m4*(t-u)-5*m42*u+2*t*u))*m12+(-2*(-2*m42+4*m3*m4+s-t)*m25-2*(m3*(2*m42-u)+m4*(-2*m42+s-t+u))*m24+(4*m44+(-6*s+2*t-6*u)*m42+8*m3*(-2*m42+s+t+u)*m4+3*s2-3*t2+u2-2*t*u+2*m32*(-s+t+u))*m23+(4*m45+(-6*s+2*t-6*u)*m43-2*m32*(s-t+u)*m4+3*(s2-t2+u2)*m4-2*m3*(2*m44-(3*s+t+3*u)*m42+u*(t+u)))*m22+(-2*(s-t+u)*m44+3*(s2-t2+u2)*m42-2*m3*(4*m44-4*(s+t+u)*m42+s2+(t+u)**2+2*s*t)*m4-s3+t3-u3+s*t2+s*u2-t*u2-s2*t+s2*u+t2*u+2*s*t*u+m32*(-2*(s-t+u)*m42+s2-t2+u2-4*s*u))*m2+8*m_X4*((m3-m4)*m22-(m32-4*m4*m3+m42-s)*m2-m32*m4+m3*(m42-t)+m4*u)+m4*(2*(t-u)*m44+(s2-2*t*s-3*t2+3*u2)*m42+2*m3*s*(m42-s-t)*m4-s3+t3-u3+s*t2+s*u2-t*u2-s2*t+s2*u+t2*u+2*s*t*u+m32*(2*(s+t-u)*m42+s2-t2+u2-4*s*u))+4*m_X2*(m25+(m4-m3)*m24+2*(m32+m42-t-u)*m23+(6*m4*m32-(4*m42+s-t+u)*m3+m4*(2*m42-s-3*t))*m22+(m44-(3*t+u)*m42-2*m3*(s+u)*m4-s2+t2+u2+m32*(6*m42+s-2*t)-s*u+t*u)*m2+m32*m4*(2*m42-2*t+u)+m4*(m44-2*(s+t)*m42+s2+t2-u2+s*(t-u))+m3*(-m44-(s-t+u)*m42+t*u+s*(t+2*u))))*m1+8*m_X4*((m32-m4*m3-t)*m22+(m4*m32+(u-m42)*m3-m4*t)*m2+m3*m4*s+m32*(m42-t)+t*(t-m42))-2*m_X2*(2*(m3-m4)*m25+(2*m3*m4+s-t-u)*m24-2*(m3-m4)*(2*m3*m4+s+t+u)*m23+(4*m3*m43-6*t*m42-2*m3*(s+2*u)*m4-s2+t2+u2+m32*(8*m42+s-t-3*u)+2*t*u)*m22-2*(2*m4*(m42-s-u)*m32-(m44-(2*s+u)*m42+s*(t+u))*m3+m4*(m44-(s+t+u)*m42+s*t+2*s*u+t*u))*m2+m4*(m4*(-3*s-t+u)*m32+2*(m42-s-t)*(m42-u)*m3-m4*(m42-s-t-u)*(s+t-u)))-m2*m4*(-2*(-2*m42+2*m3*m4+s-t)*m24+(m4*(2*m42-s+t-u)+m3*(2*u-4*m42))*m23+(4*m44+(-6*s+2*t-6*u)*m42+2*m3*(-2*m42+3*s+t+u)*m4+3*s2-3*t2+u2-2*t*u+2*m32*(-s+t+u))*m22-(m4*(s-t+u)*m32+2*(2*m44-(s+t+3*u)*m42+u*(t+u))*m3+m4*((s-t+u)*m42-s2+t2-u2))*m2-s3+t3-u3+m42*s2-3*m42*t2+s*t2+3*m42*u2+s*u2-t*u2+2*m3*m4*s*(m42-s-t)+2*m44*t-s2*t-2*m42*s*t-2*m44*u+s2*u+t2*u+2*s*t*u+m32*(2*(s+t-u)*m42+s2-t2+u2-4*s*u))) * s_prop*u_prop*((s-m_X2)*(u-m_X2) + (0. if sub else m_Gamma_X2))
-
     tu = 1/m_X4*2*(2*m18+(4*m22+4*m32+4*m42-5*s-3*t-3*u)*m16+2*(-2*m33-2*m4*m32-2*m42*m3+s*m3+t*m3-2*m43+4*m_X2*m2+m4*s+m2*(-2*m32-2*m42+s)+m4*u)*m15+(-4*(2*m32+2*m4*m3+2*m42-s)*m_X2+m22*(4*m32+4*m42-5*s-3*t-3*u)+m2*(4*m33+4*m4*m32+4*m42*m3-2*(s+u)*m3+4*m43-2*m4*(s+t))+2*(m34+2*m4*m33+(2*m42-3*s-t-u)*m32+(2*m43-m4*s)*m3+m44+2*(s+t)*(s+u)-m42*(3*s+t+u)))*m14+(-4*m35-4*m4*m34-8*m42*m33+8*s*m33+4*t*m33+4*u*m33-8*m43*m32+8*m4*s*m32+4*m4*t*m32+4*m4*u*m32-4*m44*m3-3*s2*m3-t2*m3+u2*m3+8*m42*s*m3+4*m42*t*m3-4*s*t*m3+4*m42*u*m3-2*s*u*m3-4*t*u*m3-4*m45-3*m4*s2+m4*t2-m4*u2+8*m43*s+4*m43*t-2*m4*s*t+4*m43*u-4*m4*s*u-4*m4*t*u+4*m22*(-2*m33-2*m4*m32+(-2*m42+s+t)*m3+m4*(-2*m42+s+u))+4*m_X2*(2*m33+2*m4*m32+(2*m42-s+t-u)*m3+2*m2*(m32+m42-s-t-u)+m4*(2*m42-s-t+u))-2*m2*(2*m34+(4*m42-3*s-t-3*u)*m32+2*m44+s*(s+t+u)-m42*(3*s+3*t+u)))*m13+(4*m4*m35-s*m34+t*m34+u*m34+8*m43*m33-8*m4*s*m33-4*m4*t*m33-4*m4*u*m33+2*s2*m32-2*t2*m32-2*u2*m32-3*m42*s*m32+3*m42*t*m32+3*m42*u*m32+4*m45*m3+3*m4*s2*m3-m4*t2*m3-m4*u2*m3-8*m43*s*m3-4*m43*t*m3+2*m4*s*t*m3-4*m43*u*m3+2*m4*s*u*m3+4*m4*t*u*m3-s3+t3+u3+2*m42*s2-2*m42*t2+s*t2-2*m42*u2+s*u2-t*u2+8*m_X4*(m32+m4*m3+m42-m2*(m3+m4)-s)-m44*s+m44*t-s2*t+m44*u-s2*u-t2*u-2*s*t*u+m22*(8*m4*m33+(4*m42-s+t+u)*m32+(8*m43-4*m4*s)*m3+s2-t2-u2+4*t*u+m42*(-s+t+u))-2*m_X2*(4*m34+(16*m42-7*s-5*(t+u))*m32-4*m4*s*m3+4*m44+2*s2+2*m22*(6*m32+4*m4*m3+6*m42-3*s)-7*m42*s-5*m42*t+2*s*t-5*m42*u+2*s*u-2*m2*(4*m4*m32+(4*m42-s+t)*m3+m4*(u-s)))+2*m2*(2*m35+2*m4*m34+(4*m42-3*s-t-3*u)*m33+(4*m43-3*m4*(s+t+u))*m32+(2*m44-3*(s+t+u)*m42+s2+u2+s*t+2*s*u)*m3+m4*(2*m44-(3*s+3*t+u)*m42+s2+t2+2*s*t+s*u)))*m12+(4*m42*m35+2*s*m35-2*t*m35+4*m43*m34+2*m4*s*m34-2*m4*t*m34-2*m4*u*m34+4*m44*m33-3*s2*m33+3*t2*m33+u2*m33+2*m42*s*m33-6*m42*t*m33-6*m42*u*m33-2*s*u*m33+4*m45*m32-3*m4*s2*m32+3*m4*t2*m32+3*m4*u2*m32+2*m43*s*m32-6*m43*t*m32-6*m43*u*m32+s3*m3-t3*m3-u3*m3-3*m42*s2*m3+3*m42*t2*m3-s*t2*m3+3*m42*u2*m3-s*u2*m3+t*u2*m3+2*m44*s*m3-2*m44*t*m3+s2*t*m3-2*m44*u*m3+s2*u*m3+t2*u*m3+2*s*t*u*m3+m4*s3-m4*t3-m4*u3-3*m43*s2+m43*t2-m4*s*t2+3*m43*u2-m4*s*u2+m4*t*u2+2*m45*s+m4*s2*t-2*m43*s*t-2*m45*u+m4*s2*u+m4*t2*u+2*m4*s*t*u-8*m_X4*((m3+m4)*m22-(m32+4*m4*m3+m42-s)*m2+m32*m4+m3*(m42-t)-m4*u)+m22*(2*(s-t+u)*m33+2*m4*(s-t-u)*m32+(2*(s-t-u)*m42-s2+t2+u2-4*t*u)*m3+m4*(2*(s+t-u)*m42-s2+t2+u2-4*t*u))+4*m_X2*(m35+m4*m34+2*(m42-s-u)*m33+m4*(2*m42-3*s-t)*m32+(m44-(3*s+u)*m42+s2-t2+u2+s*u-t*u)*m3+m4*(m44-2*(s+t)*m42+s2+t2-u2+s*t-t*u)+m22*(2*m33+6*m4*m32+(6*m42-2*s+t)*m3+m4*(2*m42-2*s+u))-m2*(m34+(4*m42-s+t+u)*m32+2*m4*(t+u)*m3+m44-s*t-s*u-2*t*u+m42*(-s+t+u)))-2*m2*(4*m4*m35+(2*m42-u)*m34+4*m4*(2*m42-s-t-u)*m33+(2*m44-(s+3*(t+u))*m42+u*(s+u))*m32+m4*(4*m44-4*(s+t+u)*m42+s2+t2+u2+2*s*(t+u))*m3+m42*t*(-m42+s+t)))*m1+8*m_X4*((m32+m4*m3+m42-s)*m22+(-m4*m32+(u-m42)*m3+m4*t)*m2+s*(-m32-m4*m3-m42+s))+2*m_X2*(2*m4*m35+(s-t+u)*m34-2*m4*(s+t+u)*m33+(6*s*m42-s2+t2-u2-2*s*u)*m32+2*m4*(m44-(s+t+u)*m42+2*t*u+s*(t+u))*m3+m42*(m42-s-t-u)*(s+t-u)+m22*(4*m4*m33+(-8*m42+s-t+3*u)*m32+4*m4*(m42-t-u)*m3+m42*(s+3*t-u))-2*m2*(m35+m4*m34+(2*m42-s-t-u)*m33+m4*(2*m42-t-2*u)*m32+(m44-(2*t+u)*m42+t*(s+u))*m3+m4*(m42-s-t)*(m42-u)))-m3*m4*(2*(2*m42+s-t)*m34+m4*(2*m42+s-t-u)*m33+(4*m44+2*(s-3*(t+u))*m42-3*s2+3*t2+u2-2*s*u)*m32+m4*((s-t-u)*m42-s2+t2+u2)*m3+s3-t3-u3-3*m42*s2+m42*t2-s*t2+3*m42*u2-s*u2+t*u2+2*m44*s+s2*t-2*m42*s*t-2*m44*u+s2*u+t2*u+2*s*t*u+m22*(2*(s-t+u)*m32+m4*(s-t-u)*m3-s2+t2+u2+2*m42*(s+t-u)-4*t*u)-2*m2*(2*m4*m34+(2*m42-u)*m33+m4*(2*m42-s-3*t-u)*m32+(2*m44-(s+t+3*u)*m42+u*(s+u))*m3+m4*t*(-m42+s+t)))) * t_prop*u_prop*((t-m_X2)*(u-m_X2)+m_Gamma_X2)
 
+    # Anton: Think returning only s-channel would be sufficient
     # return vert*ss
     return vert*(ss + tt + uu + st + su + tu)
 
@@ -438,66 +435,6 @@ def sigma_el(s, m_d2, vert, m_X2, m_Gamma_X2):
     # factor 0.5 due to identical particles in final state
     return 1e3*M2_t_integrate / 2
 
-@nb.jit(nopython=True, cache=True)
-def M2_gen_tHoft(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
-
-    m12 = m1*m1
-    m13 = m1*m12
-    m14 = m12*m12
-    # m15 = m12*m13
-    # m16 = m12*m14
-    # m17 = m13*m14
-    # m18 = m14*m14
-
-    m22 = m2*m2
-    m23 = m2*m22
-    m24 = m22*m22
-    # m25 = m22*m23
-    # m26 = m22*m24
-    # # m27 = m23*m24
-    # m28 = m24*m24
-
-    m32 = m3*m3
-    m33 = m3*m32
-    # m34 = m32*m32
-    # m35 = m32*m33
-    # m36 = m32*m34
-    # m37 = m33*m34
-    # m38 = m34*m34
-
-    m42 = m4*m4
-    m43 = m4*m42
-    # m44 = m42*m42
-    # m45 = m42*m43
-    # m46 = m42*m44
-    # m47 = m43*m44
-    # m48 = m44*m44
-
-    m_X4 = m_X2*m_X2
-    u = m12 + m22 + m32 + m42 - s - t
-
-    s2 = s*s
-    t2 = t*t
-    # 2 = u*u
-
-    s_prop = 1. / ((s - m_X2)*(s - m_X2) + m_Gamma_X2)
-    t_prop = 1. / ((t - m_X2)*(t - m_X2) + m_Gamma_X2)
-    u_prop = 1. / ((u - m_X2)*(u - m_X2) + m_Gamma_X2)
-
-    ss = s_prop*s_prop*8*(8*m1*m2*m3*m4*m_X4-2*m3*m4*(m12+m22-s)*m_X4-2*m1*m2*(m32+m42-s)*m_X4+(m12+m32-t)*(m22+m42-t)*m_X4+(m22+m32-s-t)*(m12+m42-s-t)*m_X4-16*m1*m2*m3*m4*s*m_X2+4*m3*m4*(m12+m22-s)*s*m_X2+4*m1*m2*(m32+m42-s)*s*m_X2-2*s*(m12+m32-t)*(m22+m42-t)*m_X2-2*s*(-m22-m32+s+t)*(-m12-m42+s+t)*m_X2+8*m1*m2*m3*m4*m_Gamma_X2+8*m1*m2*m3*m4*s2-2*m3*m4*(m12+m22-s)*s2-2*m1*m2*(m32+m42-s)*s2-2*m3*m4*m_Gamma_X2*(m12+m22-s)-2*m1*m2*m_Gamma_X2*(m32+m42-s)+m_Gamma_X2*(m12+m32-t)*(m22+m42-t)+s2*(m12+m32-t)*(m22+m42-t)+m_Gamma_X2*(m22+m32-s-t)*(m12+m42-s-t)+s2*(-m22-m32+s+t)*(-m12-m42+s+t))
-
-    tt = t_prop*t_prop*8*(8*m1*m2*m3*m4*m_X4+(m12+m22-s)*(m32+m42-s)*m_X4-2*m2*m4*(m12+m32-t)*m_X4-2*m1*m3*(m22+m42-t)*m_X4+(m22+m32-s-t)*(m12+m42-s-t)*m_X4-16*m1*m2*m3*m4*t*m_X2-2*(m12+m22-s)*(m32+m42-s)*t*m_X2+4*m2*m4*(m12+m32-t)*t*m_X2+4*m1*m3*(m22+m42-t)*t*m_X2+2*(m22+m32-s-t)*t*(-m12-m42+s+t)*m_X2+8*m1*m2*m3*m4*m_Gamma_X2+8*m1*m2*m3*m4*t2+(m12+m22-s)*(m32+m42-s)*t2-2*m2*m4*(m12+m32-t)*t2-2*m1*m3*(m22+m42-t)*t2+(m22+m32-s-t)*(m12+m42-s-t)*t2+m_Gamma_X2*(m12+m22-s)*(m32+m42-s)-2*m2*m4*m_Gamma_X2*(m12+m32-t)-2*m1*m3*m_Gamma_X2*(m22+m42-t)+m_Gamma_X2*(m22+m32-s-t)*(m12+m42-s-t))
-
-    uu = u_prop*u_prop*8*(m_Gamma_X2+(-m_X2+m12+m22+m32+m42-s-t)**2)*(2*m4*m13+(m22+m32+2*m42-s-t)*m12+2*m4*(m42+4*m2*m3-s-t)*m1+t2+2*m23*m3+(m32-s)*(m42-s)+2*m2*m3*(m32-s-t)+m22*(2*m32+m42-s-t)-(m32+m42)*t)
-
-    st = s_prop*t_prop*8*(8*m1*m2*m3*m4*m_X4-2*m3*m4*(m12+m22-s)*m_X4-2*m1*m2*(m32+m42-s)*m_X4-2*m2*m4*(m12+m32-t)*m_X4-2*m1*m3*(m22+m42-t)*m_X4+2*(m22+m32-s-t)*(m12+m42-s-t)*m_X4+2*m2*m3*(-m22-m32+s+t)*m_X4+2*m1*m4*(-m12-m42+s+t)*m_X4-8*m1*m2*m3*m4*s*m_X2+2*m3*m4*(m12+m22-s)*s*m_X2+2*m1*m2*(m32+m42-s)*s*m_X2+2*m2*m4*s*(m12+m32-t)*m_X2+2*m1*m3*s*(m22+m42-t)*m_X2+2*m2*m3*s*(m22+m32-s-t)*m_X2+2*m1*m4*s*(m12+m42-s-t)*m_X2-8*m1*m2*m3*m4*t*m_X2+2*m3*m4*(m12+m22-s)*t*m_X2+2*m1*m2*(m32+m42-s)*t*m_X2+2*m2*m4*(m12+m32-t)*t*m_X2+2*m1*m3*(m22+m42-t)*t*m_X2+2*m2*m3*(m22+m32-s-t)*t*m_X2+2*m1*m4*(m12+m42-s-t)*t*m_X2+2*(m22+m32-s-t)*t*(-m12-m42+s+t)*m_X2-2*s*(-m22-m32+s+t)*(-m12-m42+s+t)*m_X2+8*m1*m2*m3*m4*m_Gamma_X2-2*m3*m4*m_Gamma_X2*(m12+m22-s)-2*m1*m2*m_Gamma_X2*(m32+m42-s)-2*m2*m4*m_Gamma_X2*(m12+m32-t)-2*m1*m3*m_Gamma_X2*(m22+m42-t)+2*m_Gamma_X2*(m22+m32-s-t)*(m12+m42-s-t)+8*m1*m2*m3*m4*s*t-2*m3*m4*(m12+m22-s)*s*t-2*m1*m2*(m32+m42-s)*s*t-2*m2*m4*s*(m12+m32-t)*t-2*m1*m3*s*(m22+m42-t)*t+2*m2*m3*m_Gamma_X2*(-m22-m32+s+t)+2*m2*m3*s*t*(-m22-m32+s+t)+2*m1*m4*m_Gamma_X2*(-m12-m42+s+t)+2*m1*m4*s*t*(-m12-m42+s+t)+2*s*t*(-m22-m32+s+t)*(-m12-m42+s+t))
-
-    su = s_prop*u_prop*8*(-8*m1*m2*m3*m4*m_X4+2*m3*m4*(m12+m22-s)*m_X4+2*m1*m2*(m32+m42-s)*m_X4-2*m2*m4*(m12+m32-t)*m_X4-2*m1*m3*(m22+m42-t)*m_X4-2*(m12+m32-t)*(m22+m42-t)*m_X4+2*m2*m3*(-m22-m32+s+t)*m_X4+2*m1*m4*(-m12-m42+s+t)*m_X4+8*m1*m2*m3*m4*s*m_X2-2*m3*m4*(m12+m22-s)*s*m_X2-2*m1*m2*(m32+m42-s)*s*m_X2+2*m2*m4*s*(m12+m32-t)*m_X2+2*m1*m3*s*(m22+m42-t)*m_X2+2*s*(m12+m32-t)*(m22+m42-t)*m_X2+2*m2*m3*s*(m22+m32-s-t)*m_X2+2*m1*m4*s*(m12+m42-s-t)*m_X2+8*m1*m2*m3*m4*(m12+m22+m32+m42-s-t)*m_X2-2*m3*m4*(m12+m22-s)*(m12+m22+m32+m42-s-t)*m_X2-2*m1*m2*(m32+m42-s)*(m12+m22+m32+m42-s-t)*m_X2+2*m2*m4*(m12+m32-t)*(m12+m22+m32+m42-s-t)*m_X2+2*m1*m3*(m22+m42-t)*(m12+m22+m32+m42-s-t)*m_X2+2*(m12+m32-t)*(m22+m42-t)*(m12+m22+m32+m42-s-t)*m_X2+2*m2*m3*(m22+m32-s-t)*(m12+m22+m32+m42-s-t)*m_X2+2*m1*m4*(m12+m42-s-t)*(m12+m22+m32+m42-s-t)*m_X2-8*m1*m2*m3*m4*m_Gamma_X2+2*m3*m4*m_Gamma_X2*(m12+m22-s)+2*m1*m2*m_Gamma_X2*(m32+m42-s)-2*m2*m4*m_Gamma_X2*(m12+m32-t)-2*m1*m3*m_Gamma_X2*(m22+m42-t)-2*m_Gamma_X2*(m12+m32-t)*(m22+m42-t)-8*m1*m2*m3*m4*s*(m12+m22+m32+m42-s-t)+2*m3*m4*(m12+m22-s)*s*(m12+m22+m32+m42-s-t)+2*m1*m2*(m32+m42-s)*s*(m12+m22+m32+m42-s-t)-2*m2*m4*s*(m12+m32-t)*(m12+m22+m32+m42-s-t)-2*m1*m3*s*(m22+m42-t)*(m12+m22+m32+m42-s-t)-2*s*(m12+m32-t)*(m22+m42-t)*(m12+m22+m32+m42-s-t)-2*m2*m3*s*(m22+m32-s-t)*(m12+m22+m32+m42-s-t)-2*m1*m4*s*(m12+m42-s-t)*(m12+m22+m32+m42-s-t)+2*m2*m3*m_Gamma_X2*(-m22-m32+s+t)+2*m1*m4*m_Gamma_X2*(-m12-m42+s+t))
-
-    tu = t_prop*u_prop*16*(m_Gamma_X2+(m_X2-t)*(m_X2-m12-m22-m32-m42+s+t))*(m4*m13+(m32+m4*m3+m42-m2*m4-s)*m12+(m43-m3*m42-s*m4-t*m4-m22*m3+m2*(m32+4*m4*m3+m42-s)+m3*t)*m1+m23*m3+m22*(m32+m4*m3+m42-s)-(m32+m4*m3+m42-s)*s+m2*(m33-m4*m32-(s+t)*m3+m4*t))
-
-    return vert*(ss + tt + uu + su + st + tu)
-
 if __name__ == '__main__':
     import matplotlib.pyplot as plt 
 
@@ -528,7 +465,7 @@ if __name__ == '__main__':
     m2 = m_d
     s_min = (m1 + m2)**2
     # S = np.linspace(s_min, 1e2, int(1e3))
-    S = 10**(np.linspace(np.log10(s_min), 0.1, int(1e3)))
+    S = 10**(np.linspace(np.log10(s_min), 2, int(1e3)))
     T = np.linspace(-1, 1, int(1e3))
     # T = np.concatenate((-10**(np.linspace(1, 0, int(1e3/2))), 10**(np.linspace(0, 1, int(1e3/2)))))
     s, t = np.meshgrid(S, T, indexing='ij')
@@ -577,21 +514,24 @@ if __name__ == '__main__':
     fig1 = plt.figure()
     ax1 = fig1.add_subplot()
 
-    M2_trans = np.vectorize(M2_tr)(s, t, m_d2=m_d**2, vert=vert_tr, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
+    # M2_trans = np.vectorize(M2_tr)(s, t, m_d2=m_d**2, vert=vert_tr, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
     # M2_general_tHoft = M2_gen_tHoft(s, t, m1=m_a, m2=m_d, m3=m_d, m4=m_d, vert=vert_tr, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
-    M2_elast = np.vectorize(M2_el)(s, t, m_d2=m_d**2, vert=vert_el, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
-    plot_M2 = ax1.contourf(s, t, np.log10(M2_elast), levels=300, cmap='jet')
+    # M2_elast = np.vectorize(M2_el)(s, t, m_d2=m_d**2, vert=vert_el, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
+    M2_general_false = np.vectorize(M2_gen)(s, t, m1=m_d, m2=m_d, m3=m_d, m4=m_d, vert=vert_el, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2, sub=True)
+    plot_M2 = ax1.contourf(s, t, np.log10(M2_general_false), levels=300, cmap='jet')
     fig1.colorbar(plot_M2)
     ax1.set_xscale('log')
+    ax1.plot(m_X**2, 0, 'ko')
 
     # 2 
     fig2 = plt.figure()
     ax2 = fig2.add_subplot()
+    ax2.plot(m_X**2, 0, 'ko')
 
-    M2_general = np.vectorize(M2_gen)(s, t, m1=m_d, m2=m_d, m3=m_d, m4=m_d, vert=vert_el, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2)
+    M2_general_true = np.vectorize(M2_gen)(s, t, m1=m_d, m2=m_d, m3=m_d, m4=m_d, vert=vert_el, m_X2=m_X**2, m_Gamma_X2=m_Gamma_X2, sub=True)
     # Anton: They are equal up to ~ r decimals, where abs((a-b)/b) = C*10^(-r)
     # print(-np.log10(np.max(abs((M2_general_tHoft - M2_general)/M2_general))))
-    plot_M2_gen = ax2.contourf(s, t, np.log10(M2_general), levels=300, cmap='jet')
+    plot_M2_gen = ax2.contourf(s, t, np.log10(M2_general_true), levels=300, cmap='jet')
     cbar2 = fig2.colorbar(plot_M2_gen)
     # plt.plot(S[::10], np.zeros_like(S[::10]), 'ko')
     ax2.set_xscale('log')
@@ -599,13 +539,13 @@ if __name__ == '__main__':
     # Anton: Can make colorbar interactive - see constant value that you click
     from matplotlib import colors
     highlight_cmap = colors.ListedColormap(['k'])
-    highlight = ax2.imshow(np.ma.masked_all_like(np.log10(M2_general)), interpolation='nearest', vmin=np.log10(M2_general).min(), vmax=np.log10(M2_general).max(), extent=[S.min(),S.max(),T.min(), T.max()], cmap=highlight_cmap, origin='lower', aspect='auto', zorder=10)
+    highlight = ax2.imshow(np.ma.masked_all_like(np.log10(M2_general_true)), interpolation='nearest', vmin=np.log10(M2_general_true).min(), vmax=np.log10(M2_general_true).max(), extent=[S.min(),S.max(),T.min(), T.max()], cmap=highlight_cmap, origin='lower', aspect='auto', zorder=10)
 
-    # highlight = [ax2.contour(s, t, (M2_general), colors='none')]
+    # highlight = [ax2.contour(s, t, (M2_general_true), colors='none')]
 
     def on_pick(event):
         val = event.mouseevent.ydata
-        selection = np.ma.masked_outside(np.log10(M2_general), val-0.2, val+0.2)
+        selection = np.ma.masked_outside(np.log10(M2_general_true), val-0.2, val+0.2)
         highlight.set_data(selection.T)
         # highlight[0].remove()
         # highlight[0] = ax2.contour(s, t, selection, colors='k')
