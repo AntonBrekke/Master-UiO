@@ -13,6 +13,10 @@ Anton:
 Finds coupling y that satisfies Omega*h^2 = 0.12 by
 using midpoint method (I think) to pick y and solve 
 with sterile-caller --> pandemolator. 
+
+Error-message:
+something went wrong...  Unable to allocate 1.16 MiB for an array with shape (38014, 4) and data type float64 <class 'numpy.core._exceptions._ArrayMemoryError'> find_y.py 73
+something went wrong...  Allocation failed (probably too large). <class 'MemoryError'> find_y.py 73
 """
 
 r_m = 3.        # Anton: Mass ratio m_X/m_d
@@ -29,16 +33,16 @@ dof_X = 3.      # Anton: Massive vector boson 3 polarization dof.
 # sin2_2th_grid = np.logspace(-17, -8, n_th)
 
 # The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
-n_m = 3         # 21
-n_th = 6        # 81
+n_m = 10         # 21
+n_th = 20        # 81
 # Anton: Search for keV-scale sterile neutrinos. Input is in GeV, so (m_d keV) = (1e-6*m_d GeV)
-m_d_grid = 1e-6*np.logspace(0, 2, n_m)    # ~ 1 keV - 100 keV
-sin2_2th_grid = np.logspace(-17, -8, n_th)
+m_d_grid = 1e-6*np.logspace(0, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
+sin2_2th_grid = np.logspace(-18, -8, n_th)
 # m_d_grid = 1e-6*10**(np.array([1.7, 2.24, 1.15, 2.3, 1.5]))         
 # sin2_2th_grid = 10**(np.array([-16.0762, -15.6541, -16.5350, -15.6037, -16.2373]))
 
 num_cpus = cpu_count()
-num_process = int(1.5*num_cpus) # cpu_count(), 48
+num_process = int(2.5*num_cpus) # cpu_count(), 48
 
 params_grid = np.array((np.repeat(m_d_grid, n_th), np.tile(sin2_2th_grid, n_m))).T
 
@@ -48,7 +52,7 @@ spin_facs = True
 off_shell = False
 
 dirname = './sterile_res/'
-i_max = 10      # 60
+i_max = 15      # 60
 i_skip = 20
 def find_y(params):
     m_d = params[0]
@@ -61,12 +65,13 @@ def find_y(params):
     if log_enhance_req < 0.:
         return m_d, m_X, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     y_cur = np.sqrt(log_enhance_req/(1e19*sin2_2th/m_X)) # 1.65e16 roughly the scaling factor from parameter scans
-    print(f'm_d: {m_d:.2e}, sin2_2th: {sin2_2th:.2e}, O_d_g2_dw: {O_d_h2_dw:.2e}, log_enhance_req: {log_enhance_req:.2e}, y_cur: {y_cur:.2e}')
+    print(f'm_d: {m_d:.2e}, sin2_2th: {sin2_2th:.2e}, y_cur: {y_cur:.2e}, O_d_h2_dw: {O_d_h2_dw:.2e}, log_enhance_req: {log_enhance_req:.2e}')
     O_d_h2_old = O_d_h2_dw
     y_old = 0.
     max_y = 1.
     min_y = 0.
     for i in range(i_max + 1):
+        print(f'Iteration nr. {i}, {i/i_max*100:.1f}%')
         try:
             time1 = time.time()
             print("Running sterile_caller.call ")
@@ -121,7 +126,7 @@ def find_y(params):
     x_d_therm = m_d/T_d_grid[np.argmax(therm_ratio > 1.)]
     therm_ratio_max = np.amax(therm_ratio)
     O_d_h2 = n_d_grid[-1]*m_d*cf.s0/(ent_grid[-1]*cf.rho_crit0_h2)
-    print(f'Returned y = {y_cur:.2e} for m_d = {m_d:.2e}, sin2_2th = {sin2_2th:.2e}')
+    print(f'Saved {filename} to benchmark_pts')
     return m_d, m_X, sin2_2th, y_cur, O_d_h2, x_therm, x_d_therm, therm_ratio_max, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3
 
 if __name__ == '__main__':

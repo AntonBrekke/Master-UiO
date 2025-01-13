@@ -22,7 +22,7 @@ xi_ratio_stop = 100.
 
 class TimeTempRelation(object):
     def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=300, m_psi=None, dof_psi=None, k_psi=None):
-        print('Initializing TimeTempRelation')
+        # print('Initializing TimeTempRelation')
         if m_psi is None:
             self.psi_in_SM = True
         else:
@@ -361,9 +361,9 @@ class Pandemolator(object):
         ent0 = self.ent_interp_T(self.T_grid[self.i_ic + i_max])
         rho0 = self.rho_ic
         sf0 = self.sf_grid[self.i_ic + i_max]
-        print("Enter pandemolate while-loop ")
+        # print("Enter pandemolate while-loop ")
         while i_max < n_pts - 1:
-            print(f'Pandemolator while loop iteration i_max={i_max}')
+            # print(f'Pandemolator while loop iteration i_max={i_max}')
             if i_max > 0:#self.event_xi_nonzero(self.log_x_pts[i_max], [rho0*(sf0**4.)]) > 0.: # xi = 0 at beginning of calculation
                 def event_xi(log_x, y):
                     return self.event_xi_nonzero(log_x, y)
@@ -411,9 +411,9 @@ class Pandemolator(object):
                     return self.event_abund_large(log_x, y)
                 event_abund.terminal = True
                 event_abund.direction = -1
-                print('Start solve_ivp for Y, rho')
+                # print('Start solve_ivp for Y, rho')
                 sol = solve_ivp(self.der, [self.log_x_pts[i_xi_nonzero], self.log_x_pts[-1]], y0, t_eval=self.log_x_pts[i_xi_nonzero:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='RK45', first_step=self.log_x_pts[i_xi_nonzero+1]-self.log_x_pts[i_xi_nonzero], max_step=1.)
-                print('End solve_ivp for Y, rho')
+                # print('End solve_ivp for Y, rho')
                 i_max = i_xi_nonzero + sol.t.size - 1
 
                 self.T_chi_last = (rho0 / (cf.pi2*(dof_fac_chi+dof_fac_X)/30.))**0.25
@@ -444,7 +444,7 @@ class Pandemolator(object):
             else:
                 i_max = i_xi_nonzero
 
-        print("Exit pandemolate while-loop ")
+        # print("Exit pandemolate while-loop ")
         # shorten solution grids, relevant if integration stopped due to large abundance
         self.t_grid_sol = self.t_grid_sol[:n_pts]
         self.T_grid_sol = self.T_grid_sol[:n_pts]

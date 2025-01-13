@@ -203,9 +203,9 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
 
     pan = pandemolator.Pandemolator(m_d, k_d, dof_d, m_X, k_X, dof_X, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, n_ic, rho_ic, i_end)
     time1 = time.time()
-    print("Running Pandemolator.pandemolate ")
+    # print("Running Pandemolator.pandemolate ")
     pan.pandemolate()
-    print(f"Pandemolator.pandemolate ran in {time.time() - time1}s ")
+    # print(f"Pandemolator.pandemolate ran in {time.time() - time1}s ")
 
     try:
         C_therm_grid = np.array([C_therm(T_d, xi_d, xi_X) for T_d, xi_d, xi_X in zip(pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_X_grid_sol)])

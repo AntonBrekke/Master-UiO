@@ -92,6 +92,9 @@ load_str = './md_1e-06;mX_3e-06;sin22th_3.98107e-14;y_1.27355e-04;full.dat'
 load_str = './md_1e-06;mX_3e-06;sin22th_6.30957e-16;y_1.03536e-03;full.dat'
 load_str = './md_1e-06;mX_3e-06;sin22th_1e-17;y_5.33445e-03;full.dat'
 
+load_str = './md_3.59381e-06;mX_1.07814e-05;sin22th_3.79269e-17;y_4.37434e-03;full.dat'
+load_str = './md_3.59381e-06;mX_1.07814e-05;sin22th_5.45559e-14;y_1.859e-04;full.dat'
+
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]
