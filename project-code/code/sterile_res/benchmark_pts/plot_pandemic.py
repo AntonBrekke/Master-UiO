@@ -83,7 +83,6 @@ load_str = './md_1e-04;mX_3e-04;sin22th_1e-17;y_2.77418e-02;full.dat'       # Ea
 load_str = './md_1e-05;mX_3e-05;sin22th_1.58489e-1;y_2.37543e-06;full.dat'      # ???
 load_str = './md_1e-05;mX_3e-05;sin22th_2.51189e-12;y_3.31647e-05;full.dat'
 load_str = './md_1e-05;mX_3e-05;sin22th_3.98107e-14;y_3.35078e-04;full.dat'
-load_str = './md_1e-05;mX_3e-05;sin22th_1e-17;y_1.1091e-02;full.dat'        # Interesting 
 
 load_str = './md_1e-06;mX_3e-06;sin22th_1e-08;y_9.66433e-08;full.dat'
 load_str = './md_1e-06;mX_3e-06;sin22th_1.58489e-1;y_1.34186e-06;full.dat'      # ?? 
@@ -92,8 +91,10 @@ load_str = './md_1e-06;mX_3e-06;sin22th_3.98107e-14;y_1.27355e-04;full.dat'
 load_str = './md_1e-06;mX_3e-06;sin22th_6.30957e-16;y_1.03536e-03;full.dat'
 load_str = './md_1e-06;mX_3e-06;sin22th_1e-17;y_5.33445e-03;full.dat'
 
-load_str = './md_3.59381e-06;mX_1.07814e-05;sin22th_3.79269e-17;y_4.37434e-03;full.dat'
 load_str = './md_3.59381e-06;mX_1.07814e-05;sin22th_5.45559e-14;y_1.859e-04;full.dat'
+load_str = './md_1.29155e-05;mX_3.87465e-05;sin22th_4.83293e-15;y_1.01657e-03;full.dat'
+load_str = './md_3.59381e-06;mX_1.07814e-05;sin22th_3.79269e-17;y_4.37434e-03;full.dat'     # **
+load_str = './md_1e-05;mX_3e-05;sin22th_1e-17;y_1.1091e-02;full.dat'        # Interesting 
 
 data = np.loadtxt(load_str)
 

@@ -32,23 +32,36 @@ dof_X = 3.      # Anton: Massive vector boson 3 polarization dof.
 # m_d_grid = np.logspace(-6, -3.7, n_m)         # ~ 1 keV - 100 keV
 # sin2_2th_grid = np.logspace(-17, -8, n_th)
 
+# n_m = 5         # 21
+# n_th = 10        # 81
+# m_d_grid = 1e-6*np.logspace(0, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
+# sin2_2th_grid = np.logspace(-18, -8, n_th)
 # The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
-n_m = 10         # 21
-n_th = 20        # 81
+n_m = 5         # 21
+n_th = 10        # 81
 # Anton: Search for keV-scale sterile neutrinos. Input is in GeV, so (m_d keV) = (1e-6*m_d GeV)
-m_d_grid = 1e-6*np.logspace(0, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
-sin2_2th_grid = np.logspace(-18, -8, n_th)
-# m_d_grid = 1e-6*10**(np.array([1.7, 2.24, 1.15, 2.3, 1.5]))         
-# sin2_2th_grid = 10**(np.array([-16.0762, -15.6541, -16.5350, -15.6037, -16.2373]))
+# 4
+m_d_grid = 1e-6*np.logspace(2.5/2, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
+sin2_2th_grid = np.logspace(-13, -8, n_th)
+# 3
+m_d_grid = 1e-6*np.logspace(2.5/2, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
+sin2_2th_grid = np.logspace(-18, -13, n_th)
+# 2
+m_d_grid = 1e-6*np.logspace(0, 2.5/2, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
+sin2_2th_grid = np.logspace(-13, -8, n_th)
+# 1
+m_d_grid = 1e-6*np.logspace(0, 2.5/2, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
+sin2_2th_grid = np.logspace(-18, -13, n_th)
+
 
 num_cpus = cpu_count()
-num_process = int(2.5*num_cpus) # cpu_count(), 48
+num_process = int(2*num_cpus) # cpu_count(), 48
 
 params_grid = np.array((np.repeat(m_d_grid, n_th), np.tile(sin2_2th_grid, n_m))).T
 
 # Anton: If spin-statistics should be included (True) or not (False)
 spin_facs = True
-# Anton: If intermediate particle is of-shell (True) or on-shell (False)
+# Anton: If intermediate particle is off-shell (True) or on-shell (False)
 off_shell = False
 
 dirname = './sterile_res/'
@@ -70,13 +83,14 @@ def find_y(params):
     y_old = 0.
     max_y = 1.
     min_y = 0.
+    print(f'Finished {m_d/m_d_grid[-1]*100}% of m_d, {sin2_2th/sin2_2th_grid[-1]*100}% of sin2_2th')
     for i in range(i_max + 1):
-        print(f'Iteration nr. {i}, {i/i_max*100:.1f}%')
+        print(f'Iteration {i} of {i_max}, {i/i_max*100:.1f}%')
         try:
-            time1 = time.time()
-            print("Running sterile_caller.call ")
+            # time1 = time.time()
+            # print("Running sterile_caller.call ")
             t_grid, T_SM_grid, T_nu_grid, ent_grid, hubble_grid, sf_grid, T_d_grid, xi_d_grid, xi_X_grid, n_d_grid, n_X_grid, C_therm_grid, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = sterile_caller.call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y_cur, spin_facs=spin_facs, off_shell=off_shell)
-            print(f"sterile_caller.call ran in {time.time()-time1}s")
+            # print(f"sterile_caller.call ran in {time.time()-time1}s")
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -85,7 +99,7 @@ def find_y(params):
             return m_d, m_X, sin2_2th, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
 
         O_d_h2_cur = n_d_grid[-1]*m_d*cf.s0/(ent_grid[-1]*cf.rho_crit0_h2)
-        print(f'm_d: {m_d:.2e}, sin2_2th: {sin2_2th:.2e}, y_cur: {y_cur:.2e}, O_d_g2_cur: {O_d_h2_cur:.2e}')
+        print(f'Use m_d: {m_d:.2e}, sin2_2th: {sin2_2th:.2e}, y_cur: {y_cur:.2e}, O_d_g2_cur: {O_d_h2_cur:.2e}')
         if O_d_h2_cur > cf.omega_d0:
             max_y = min(y_cur, max_y)
         elif O_d_h2_cur < cf.omega_d0 and ((y_cur > y_old) == (O_d_h2_cur > O_d_h2_old) or i == 0):
@@ -140,4 +154,4 @@ if __name__ == '__main__':
     dt = time.time() - time1
     print(f"find_y.py ran in {dt//60//60}h {dt//60%60}m {dt%60}s")
     # Anton: Save plots for plot of parameter-space
-    np.savetxt(dirname+f'rm_{r_m:.2e}_y_relic_test_{n_m}x{n_th}x{i_max}.dat', results)
+    np.savetxt(dirname+f'rm_{r_m:.2e}_y_relic_test_{n_m}x{n_th}x{i_max}_q1.dat', results)

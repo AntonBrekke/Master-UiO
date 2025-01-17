@@ -33,7 +33,7 @@ class TimeTempRelation(object):
 
         t_start = 1./(2.*self.hubble_of_temps(T_start, T_start))
         grid_size_time = int( log10(t_end/t_start) * t_gp_pd )
-        print(f'Time grid size: {grid_size_time}')
+        # print(f'Time grid size: {grid_size_time}')
         self.t_grid = np.logspace(log10(t_start), log10(t_end), num=grid_size_time)
         self.sqrt_t_grid = np.sqrt(self.t_grid)
 

@@ -122,7 +122,7 @@ nX = data[:,10]
 var_list = load_str.split(';')[:-1]
 md, mX, sin22th, y = [eval(s.split('_')[-1]) for s in var_list]
 print(md, mX, sin22th, y)
-mY_relic = cf.omega_d0 * cf.rho_crit0_h2 / cf.s0        # m*Y = m*n/s = Omega * rho0 / s0
+mY_relic = cf.omega_d0 * cf.rho_crit0_h2 / cf.s0        # m*Y = m*n/s = Omega * rho_c0 / s0
 
 T_grid_dw = np.logspace(np.log10(1.4e-3), 1, 400)
 mYd_dw = cf.O_h2_dw_Tevo(T_grid_dw, md, 0.5*np.arcsin(np.sqrt(sin22th)))*cf.rho_crit0_h2 / cf.s0     # Anton: mY from Dodelson-Widrow
