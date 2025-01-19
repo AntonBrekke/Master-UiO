@@ -38,6 +38,36 @@ Implemented real intermediate state (RIS) subtraction
 
 # Total decay-rate
 @nb.jit(nopython=True, cache=True)
+def Gamma_X_new(y, th, m_X, m_d):
+    y2 = y*y
+    sth = np.sin(th)
+    cth = np.cos(th)
+
+    m_d2 = m_d*m_d
+    m_X2 = m_X*m_X
+    """
+    Anton: 
+    M2_X->23 = 2*g^2/mX2*(2*mX2+(m2-m3)^2)*(mX-m2-m3)*(mX+m2+m3)
+    Gamma_X_23 = |p_f|/(2^M*8*pi*m_X2)*|M_X->23| * H(m_X - (m2 + m3))
+    |p_f| = 1/(2*m_X)*sqrt((m_X2 - m2^2 - m3^2)^2 - 4*m2^2*m3^2) 
+    """
+    M2_aa = 2.*y2*(sth**4.)/m_X2 * (2*m_X2)*(m_X2)
+    M2_ad = 2.*y2*(sth**2.)*(cth**2.)/m_X2 * (2*m_X2+m_d2)*(m_X2-m_d2)
+    M2_dd = 2.*y2*(cth**4.)/m_X2 * (2*m_X2)*(m_X2-4*m_d2)
+
+    pf_aa = m_X/2 
+    pf_ad = 1/(2*m_X)*(m_X2 - m_d2) 
+    pf_dd = 1/(2*m_X)*sqrt((m_X2 - 2*m_d2)**2 - 4*m_d2*m_d2) 
+
+    # Anton: Decay to aa, ad, and dd. Have used m_a = 0.
+    X_aa = pf_aa/(16*np.pi*m_X2) * M2_aa * (m_X > 0)
+    X_ad = pf_ad/(8*np.pi*m_X2) * M2_ad * (m_X > m_d)
+    X_dd = pf_dd/(16*np.pi*m_X2) * M2_dd * (m_X > 2*m_d)
+
+    return X_aa + X_ad + X_dd
+
+# Total decay-rate
+@nb.jit(nopython=True, cache=True)
 def Gamma_X(y, th, m_X, m_d):
     y2 = y*y
     sth = np.sin(th)
@@ -125,6 +155,7 @@ def M2_gen(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, sub=False):
     https://arxiv.org/pdf/2309.16615
     Subtract on-shell contribution from Breit-Wigner propagator (RIS-subtraction) to 
     avoid double counting decay processes
+    Goal: D_BW --> D_off-shell, |D_BW|^2 --> |D_off-shell|^2
     D_BW(s) = 1 / (s - m^2 + imG) = (s - m^2)/((s-m^2)^2 + (mG)^2) - imG/((s-m^2)^2 + (mG)^2)
     |D_BW(s)|^2 = 1 / ((s-m^2)^2 + (mG)^2) := s_prop
     D_BW(s) = (s-m^2)*s_prop - imG*s_prop
@@ -455,8 +486,10 @@ if __name__ == '__main__':
 
     th_arr = np.linspace(0, 2*np.pi, 1000)
     GammaX = Gamma_X(y=y, th=th_arr, m_X=m_X, m_d=m_d)
+    GammaX_new = Gamma_X_new(y=y, th=th_arr, m_X=m_X, m_d=m_d)
     GammaPhi = Gamma_phi(y=y, th=th_arr, m_phi=m_X, m_d=m_d)
     plt.plot(th_arr, GammaX, 'r')
+    plt.plot(th_arr, GammaX_new, 'tab:green')
     plt.plot(th_arr, GammaPhi, 'tab:blue')
     plt.xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi], labels=[r'$0$',r'$\pi/2$',r'$\pi$',r'$3\pi/2$', r'$2\pi$'])
     plt.show()

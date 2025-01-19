@@ -84,7 +84,6 @@ load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'       # BP2,
 load_str = './md_2e-05;mX_6e-05;sin22th_3.5e-15;y_1.3e-03;full.dat'       # Overshoot
 load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1e-03;full.dat'       # Undershoot
 load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.5e-03;full.dat'       # Undershoot
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.8e-03;full.dat'       # Overshoot
 load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-17;y_1.7475e-02;full.dat'       # Terrible
 load_str = './md_2e-05;mX_6e-05;sin22th_1.10952e-15;y_2.0475e-03;full.dat'       # Overshoot
 load_str = './md_2e-05;mX_6e-05;sin22th_9.46956e-16;y_2.0475e-03;full.dat'       # Overshoot
@@ -107,6 +106,7 @@ load_str = './md_2e-05;mX_6e-05;sin22th_5e-16;y_4.2e-03;full.dat'       # Oversh
 load_str = './md_2e-05;mX_6e-05;sin22th_5e-16;y_4e-03;full.dat'       # Overshoot
 load_str = './md_2e-05;mX_6e-05;sin22th_8e-16;y_4e-03;full.dat'       # Overshoot
 
+load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.8e-03;full.dat'       # Overshoot
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]
@@ -199,7 +199,7 @@ if True:
     ax2.set_ylim(1e-2, 2e0)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
-    plt.savefig(f'dens_evo_{load_str.replace("./", "").replace(".dat","")}_final.pdf')
+    plt.savefig(f'dens_evo_{load_str.replace("./", "").replace(".dat","")}_final_new.pdf')
     plt.show()
 elif False:
     plt.loglog(md1/T_nu1, 1e6*Td1, color='dodgerblue', ls='-')

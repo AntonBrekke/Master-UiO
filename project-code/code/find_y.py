@@ -83,7 +83,7 @@ def find_y(params):
     y_old = 0.
     max_y = 1.
     min_y = 0.
-    print(f'Finished {m_d/m_d_grid[-1]*100}% of m_d, {sin2_2th/sin2_2th_grid[-1]*100}% of sin2_2th')
+    print(f'Starting {(m_d - m_d_grid[0])/(m_d_grid[-1] - m_d_grid[0])*100}% of m_d, {(sin2_2th - sin2_2th_grid[0])/(sin2_2th_grid[-1] - sin2_2th_grid[0])*100}% of sin2_2th')
     for i in range(i_max + 1):
         print(f'Iteration {i} of {i_max}, {i/i_max*100:.1f}%')
         try:

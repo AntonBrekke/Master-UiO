@@ -48,8 +48,8 @@ y = 1.602e-3
 m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 m_a = 0.
 m_X = m_ratio*m_d
-sin2_2th = 8e-16
-y = 3e-3
+sin2_2th = 1.3e-15
+y = 1.8e-3
 
 print(f'md: {m_d:.3e}, mX: {m_X:.3e}, y: {y:.3e}, sin22th: {sin2_2th:.3e}')
 
@@ -79,6 +79,11 @@ y2 = y*y
 M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
 M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
 M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+
+# Test if new Feynman rules work
+# M2_dd = 2.*y2*(c_th**4.)/m_X2 * (2*m_X2)*(m_X2-4*m_d2)
+# M2_aa = 2.*y2*(s_th**4.)/m_X2 * (2*m_X2)*(m_X2)
+# M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (2*m_X2+m_d2)*(m_X2-m_d2)
 
 vert_fi_da = y2*y2*(c_th**2.)*(s_th**6.)       # aa <--> da
 vert_fi_dd = y2*y2*(c_th**4.)*(s_th**4.)       # aa <--> dd
@@ -205,7 +210,7 @@ mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'
 sin22th_str = f'{sin2_2th:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 y_str = f'{y:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 
-file_str = f'sterile_test/md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str};full.dat'
+file_str = f'sterile_test/md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str};full_new.dat'
 np.savetxt(file_str, np.column_stack((Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], ent_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_X_grid_sol, pan.n_chi_grid_sol, pan.n_X_grid_sol)))
 
 print(f'Saved data to {file_str}')
