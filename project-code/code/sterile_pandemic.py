@@ -10,7 +10,6 @@ import vector_mediator
 # import resonant_pandemolator as pandemolator
 import pandemolator as pandemolator
 import C_res_vector
-import C_res_scalar
 import time
 
 """
@@ -26,40 +25,59 @@ XX <--> dd ~ y^4 * cos^4(theta) ~ y^4
 
 Larger y must be compansated with smaller sin^2(2*theta) to 
 not make pandemic growth to strong. 
+Generically roughly expect: lower/increase y by one order <--> increase(lower) sin22th by two orders
 """
 
-m_ratio = 3
+m_ratio = 3           # If m_d = 10 keV, m_X = 10*1e4 keV = 100 MeV
 # C = (1.5e-3)**4 * 3.5e-15       # Anton: Tested, this value gives close to Omega*h^2 = 0.12
 
 # BP1 
-# m_d = 1.2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+# m_d = 12e-6          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 # m_a = 0.
 # m_X = m_ratio*m_d
 # sin2_2th = 2.5e-13
 # y = 1.905e-4
 
 # BP2 
-m_d = 3e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
-m_a = 0.
-m_X = m_ratio*m_d
-sin2_2th = 3e-15
-y = 1.602e-3
+# m_d = 20e-6          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+# m_a = 0.
+# m_X = m_ratio*m_d
+# sin2_2th = 3e-15
+# y = 1.602e-3
 
-m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+load_str = './md_1.4251e-05;mX_4.27531e-05;sin22th_1.06082e-17;y_9.52709e-03;full.dat'
+m_d = 1.4251e-05         # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 m_a = 0.
-m_X = m_ratio*m_d
-sin2_2th = 1.3e-15
-y = 1.8e-3
+m_X = m_ratio*m_d      # MeV-scale dark photon
+m_X = 4.27531e-05      # MeV-scale dark photon
+sin2_2th = 1.06082e-17
+y = 9.52709e-03
+
+# load_str = './md_1.12534e-04;mX_3.37601e-04;sin22th_2.15443e-15;y_1.71776e-03;full.dat'
+# m_d = 1.12534e-04         # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+# m_a = 0.
+# m_X = m_ratio*m_d      # MeV-scale dark photon
+# m_X = 3.37601e-04      # MeV-scale dark photon
+# sin2_2th = 2.15443e-15
+# y = 1.71776e-03
+
+# load_str = './md_8.37678e-05;mX_2.51303e-04;sin22th_3.25702e-18;y_3.3924e-02;full.dat'
+# m_d = 8.37678e-05         # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+# m_a = 0.
+# m_X = m_ratio*m_d      # MeV-scale dark photon
+# m_X = 2.51303e-04      # MeV-scale dark photon
+# sin2_2th = 3.25702e-18
+# y = 3.3924e-02 * np.sqrt(2)
 
 print(f'md: {m_d:.3e}, mX: {m_X:.3e}, y: {y:.3e}, sin22th: {sin2_2th:.3e}')
 
-# 1: fermion, -1: boson
+# Anton: fermion = 1, boson = -1
 k_d = 1.
 k_a = 1.
 k_X = -1.
 
 dof_d = 2.      # Anton: Fermions have 2 spin dofs. 
-dof_X = 3.      # Anton: Massive vector boson has 3 dof. 
+dof_X = 2.      # Anton: Massive vector boson has 3 polarization dof. 
 
 m_d2 = m_d*m_d
 m_a2 = m_a*m_a
@@ -67,23 +85,30 @@ m_X2 = m_X*m_X
 th = 0.5*asin(sqrt(sin2_2th))
 c_th = cos(th)
 s_th = sin(th)
-y2 = y*y
+y2 = y*y*2
 
 # Anton: Matrix elements added here for some reason
 # M2_dd = 2. * y2 * (c_th**4.) * (m_X2 - 4.*m_d2)
-# M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
 # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
+# M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a2)
 
 # M2_X23 = 2*g^2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
-# New matrix elements for X --> 23
-M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
-M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
-M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+# Anton: Vector coupling only 
+# M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
+# M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
+# M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
 
-# Test if new Feynman rules work
-# M2_dd = 2.*y2*(c_th**4.)/m_X2 * (2*m_X2)*(m_X2-4*m_d2)
-# M2_aa = 2.*y2*(s_th**4.)/m_X2 * (2*m_X2)*(m_X2)
-# M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (2*m_X2+m_d2)*(m_X2-m_d2)
+# Anton: Test if new Feynman rules work. M2_da x2 larger, M2_dd change
+# Anton: Vector and/or axial coupling gamma^mu * (gV - gamma^5)
+# M2_dd = 4.*y2*(c_th**4.)*(m_X2-4*m_d2)
+# M2_da = 4.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
+# M2_aa = 4.*y2*(s_th**4.)*m_X2
+
+# Anton: Removed longitudinal component of spin sum
+M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
+# M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+M2_da = 4*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+M2_aa = 4.*y2*(s_th**4.)*m_X2
 
 vert_fi_da = y2*y2*(c_th**2.)*(s_th**6.)       # aa <--> da
 vert_fi_dd = y2*y2*(c_th**4.)*(s_th**4.)       # aa <--> dd
@@ -92,7 +117,7 @@ vert_el = y2*y2*(c_th**8.)                  # dd <--> dd
 
 print(f'vert_el:{vert_el:.3e}, vert_tr:{vert_tr:.3e}, vert_fi_dd:{vert_fi_dd:.3e}, vert_fi_da:{vert_fi_da:.3e}')
 
-Gamma_X = vector_mediator.Gamma_X(y, th, m_X, m_d)
+Gamma_X = vector_mediator.Gamma_X_new(y, th, m_X, m_d)
 m_Gamma_X2 = m_X2*Gamma_X*Gamma_X
 
 """
@@ -101,7 +126,7 @@ res_sub = True: |D_off-shell|^2 is used -- on-shell contribution is subtracted, 
 res_sub = False: |D_BW|^2 is used -- already counts decay/inverse decay contributions via s-channel resonance
 
 nFW = # occurence of particle in final - # occurence of particle in inital for forward process (34 --> 12)
-nBW = # occurence of particle in final - # occurence of particle in inital for forward process (12 --> 34)
+nBW = # occurence of particle in final - # occurence of particle in inital for backward process (12 --> 34)
 
 nFW = -nBW if they are for same process
 Same procedure should be done for all C_n, i.e. sum collision operator for each occurence of particle.  
@@ -140,39 +165,41 @@ def C_n(T_a, T_d, xi_d, xi_X):
     # 2-to-2
     # dd <--> XX
     C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0) / 4. # symmetry factor 1/4, type=0 include reaction both ways
-    # C_XX_dd = C_res_scalar.C_n_pp_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0) / 4. # symmetry factor 1/4, type=0 include reaction both ways
     # Pandemic growth
-    # C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2,m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    # C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2,m_Gamma_X2=m_Gamma_X2, gV1=1, gV2=0, res_sub=False) / 2.
     # Freeze-in
+    # C_aa_dd = C_res_vector.C_34_12(type=0, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi_dd, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False) / 4.
     # C_aa_da = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi_da, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
-    # C_aa_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi_dd, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 4.
 
+    C_da_dd = 0
     C_aa_dd = 0
-    C_aa_da = 0 
-    C_da_dd = 0  
+    C_aa_da = 0
 
-    print("C_ns:", C_da, 2.*C_aa, C_da_dd, C_aa_da, 2.*C_XX_dd)
+    print("C_ns:  ", f'{C_da:.5e}', f'{2.*C_aa:.5e}', f'{C_da_dd}', f'{C_aa_da}', f'{2.*C_XX_dd:.5e}')
     return C_da + 2*C_aa + C_dd + C_da_dd + 2*C_aa_dd + C_aa_da + 2*C_XX_dd
 
 # rho = rho_d + rho_X
 def C_rho(T_a, T_d, xi_d, xi_X):
     # Decay/inverse decay
+    # Anton: type=2: C[X] + C[d] = int (E_x - E_d)*delta(E_x-E_d-E_a)*(f_s*f_a*(1-kX*f_X) - f_X*(1-kd*f_d)*(1-ka*f_a)) = int E_a*delta(E_x-E_d-E_a)*(f_s*f_a*(1-kX*f_X) - f_X*(1-kd*f_d)*(1-ka*f_a)) = C[a]
+    # Trick to avoid computation for both X and d, and only do for a once 
     C_da = C_res_vector.C_rho_3_12(type=2, m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_da)
     C_aa = C_res_vector.C_rho_3_12(type=3, m1=m_a, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_a, T2=T_a, T3=T_d, xi1=0., xi2=0., xi3=xi_X, M2=M2_aa) / 2. # symmetry factor 1/2
 
     # 2-to-2
     # Pandemic growth only included 
-    # C_da_dd = C_res_vector.C_34_12(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
-    # C_aa_da = C_res_vector.C_34_12(type=1, nFW=1., nBW=-1., m1=m_d, m2=m_a, m3=m_a, m4=m_a, k1=k_d, k2=k_a, k3=k_a, k4=k_a, T1=T_d, T2=T_a, T3=T_a, T4=T_a, xi1=xi_d, xi2=0., xi3=0., xi4=0., vert=vert_fi_da, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=True) / 2.
+    # C_da_dd = C_res_vector.C_34_12(type=1, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=1, gV2=0, res_sub=False) / 2.
+    # C_aa_dd = C_res_vector.C_34_12(type=1, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi_dd, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False) / 2.
 
+    C_da_dd = 0
+    C_aa_dd = 0
     C_aa_da = 0 
-    C_da_dd = 0 
 
-    print("C_rhos:", C_da, C_aa, C_da_dd, C_aa_da)
-    return C_da + C_aa + C_da_dd + C_aa_da
+    print("C_rhos:", f'{C_da:.5e}', f'{C_aa:.5e}', f'{C_da_dd}', f'{C_aa_da}', f'{C_aa_dd}')
+    return C_da + C_aa + C_da_dd + C_aa_da + C_aa_dd
 
 def C_xi0(T_a, T_d, xi_d, xi_X):
-    C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=1) / 4.      # type=1 only dd --> XX
+    C_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=1) / 4.      # type=1, only dd --> XX
     return 2.*C_XX_dd
 
 Ttrel = pandemolator.TimeTempRelation()
@@ -197,7 +224,7 @@ rho_ic = n_ic * cf.avg_mom_0_dw(m_d) / sf_ic_norm_0
 print('sterile_pandemic.py start pandemolator')
 time_now = time.localtime()
 print(f'Estimated finish {(time_now.tm_hour + 1 + (time_now.tm_min + 30)//60)%24}:{(time_now.tm_min + 30)%60} -- {time_now.tm_hour + 2}:{time_now.tm_min}')
-pan = pandemolator.Pandemolator(m_d, k_d, dof_d, m_X, k_X, dof_X, m_a, k_a, C_n, C_rho, C_xi0, Ttrel.t_grid, Ttrel.T_nu_grid, Ttrel.dTnu_dt_grid, ent_grid, Ttrel.hubble_grid, Ttrel.sf_grid, i_ic, n_ic, rho_ic, i_end)
+pan = pandemolator.Pandemolator(m_chi=m_d, k_chi=k_d, dof_chi=dof_d, m_X=m_X, k_X=k_X, dof_X=dof_X, m_psi=m_a, k_psi=k_a, C_n=C_n, C_rho=C_rho, C_xi0=C_xi0, t_grid=Ttrel.t_grid, T_grid=Ttrel.T_nu_grid, dT_dt_grid=Ttrel.dTnu_dt_grid, ent_grid=ent_grid, hubble_grid=Ttrel.hubble_grid, sf_grid=Ttrel.sf_grid, i_ic=i_ic, n_ic=n_ic, rho_ic=rho_ic, i_end=i_end)
 start = time.time()
 pan.pandemolate()
 end = time.time()

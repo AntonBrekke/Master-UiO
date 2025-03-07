@@ -269,7 +269,6 @@ class Pandemolator(object):
 
         C_xi0 = self.C_xi0(T, T_chi, xi_chi, xi_X)
         # print(C_xi0/(H*n))
-
         return 1. - C_xi0/(5.*xi_ratio_stop*H*n)
 
     def event_abund_large(self, log_x, y):
@@ -365,6 +364,7 @@ class Pandemolator(object):
         while i_max < n_pts - 1:
             # print(f'Pandemolator while loop iteration i_max={i_max}')
             if i_max > 0:#self.event_xi_nonzero(self.log_x_pts[i_max], [rho0*(sf0**4.)]) > 0.: # xi = 0 at beginning of calculation
+                print(f'i_max > 0')
                 def event_xi(log_x, y):
                     return self.event_xi_nonzero(log_x, y)
                 event_xi.terminal = True
@@ -382,7 +382,7 @@ class Pandemolator(object):
                     ent = self.ent_interp_T(self.T_grid_sol[i])
                     sf = self.sf_interp_T(self.T_grid_sol[i])
                     rho = sol_xi0.y[0, i-i_max]/(sf**4.)
-                    root_sol = root(self.rho_root, [log(self.T_chi_last)], jac=self.jac_rho_root, args = (rho))
+                    root_sol = root(self.rho_root, [log(self.T_chi_last)], jac=self.jac_rho_root, args=(rho))
                     self.T_chi_grid_sol[i] = exp(root_sol.x[0])
                     self.xi_chi_grid_sol[i] = 0.
                     self.T_chi_last, self.xi_chi_last = self.T_chi_grid_sol[i], self.xi_chi_grid_sol[i]
@@ -412,8 +412,9 @@ class Pandemolator(object):
                 event_abund.terminal = True
                 event_abund.direction = -1
                 # print('Start solve_ivp for Y, rho')
+                print('Start solve_ivp')
                 sol = solve_ivp(self.der, [self.log_x_pts[i_xi_nonzero], self.log_x_pts[-1]], y0, t_eval=self.log_x_pts[i_xi_nonzero:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='RK45', first_step=self.log_x_pts[i_xi_nonzero+1]-self.log_x_pts[i_xi_nonzero], max_step=1.)
-                # print('End solve_ivp for Y, rho')
+                print('End solve_ivp')
                 i_max = i_xi_nonzero + sol.t.size - 1
 
                 self.T_chi_last = (rho0 / (cf.pi2*(dof_fac_chi+dof_fac_X)/30.))**0.25
@@ -424,13 +425,15 @@ class Pandemolator(object):
                     sf = self.sf_interp_T(self.T_grid_sol[i])
                     n = sol.y[0, i-i_xi_nonzero]*ent
                     rho = sol.y[1, i-i_xi_nonzero]/(sf**4.)
-                    root_sol = root(self.n_rho_root, [log(self.T_chi_last), self.xi_chi_last-self.m_chi/self.T_chi_last], jac=self.jac_n_rho_root, args = (n, rho), method='lm')
+                    root_sol = root(self.n_rho_root, [log(self.T_chi_last), (self.xi_chi_last-self.m_chi/self.T_chi_last)], jac=self.jac_n_rho_root, args=(n, rho), method='lm')
+                    # print(exp(root_sol.x[0]))
                     self.T_chi_grid_sol[i] = exp(root_sol.x[0])
                     self.xi_chi_grid_sol[i] = min(root_sol.x[1] + self.m_chi/self.T_chi_grid_sol[i], (1.-1e-14)*self.m_X/(self.fac_n_X*self.T_chi_grid_sol[i]))#root_sol.x[1] + self.m_chi/self.T_chi_grid_sol[i]
                     self.T_chi_last, self.xi_chi_last = self.T_chi_grid_sol[i], self.xi_chi_grid_sol[i]
                     self.xi_X_grid_sol[i] = self.fac_n_X*self.xi_chi_grid_sol[i]
                     self.n_chi_grid_sol[i] = self.n_chi(self.T_chi_grid_sol[i], self.xi_chi_grid_sol[i])
                     self.n_X_grid_sol[i] = self.n_X(self.T_chi_grid_sol[i], self.xi_X_grid_sol[i])
+
                 ent0 = self.ent_interp_T(self.T_grid_sol[i_max])
                 sf0 = self.sf_interp_T(self.T_grid_sol[i_max])
                 n0 = sol.y[0,-1]*ent0
@@ -488,9 +491,13 @@ if __name__ == '__main__':
 
     # M2_X23 = 2*g**2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
     # New matrix elements for X --> 23
-    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
-    M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
-    M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+    # M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
+    # M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
+    # M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+
+    M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
+    M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+    M2_aa = 4.*y2*(s_th**4.)*m_X2
 
     def C_n(T_a, T_d, xi_d, xi_X):
         C_pp_dd = C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, y2*y2*(c_th**8.)) / 4. # symmetry factor 1/4

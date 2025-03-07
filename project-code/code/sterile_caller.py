@@ -18,6 +18,7 @@ mZ = 91.1876
 mW = 80.379
 
 def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True, off_shell=False):
+    m_d2 = m_d*m_d
     m_X2 = m_X*m_X
     th = 0.5*asin(sqrt(sin2_2th))
     c_th = cos(th)
@@ -29,17 +30,29 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
     # M2_aa = 2. * y2 * (s_th**4.) * (m_X2 - 4.*m_a*m_a)
     # M2_da = 2. * y2 * (s_th**2.) * (c_th**2.) * (m_X2 - ((m_a+m_d)**2.))
 
-    # M2_X23 = 2*g**2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
-    # New matrix elements for X --> 23
-    M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
-    M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
-    M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+    # Anton: M2_X23 = 2*g**2/m_X^2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
+    # Anton: Vector coupling only 
+    # M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (2*m_d)**2)
+    # M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
+    # M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+
+    # Anton: Test if new Feynman rules work. M2_da x2 larger, M2_dd change
+    # Anton: Vector and/or axial coupling gamma^mu * (gV - gA*gamma^5)
+    # M2_dd = 4.*y2*(c_th**4.)*(m_X2-4*m_d2)
+    # M2_aa = 4.*y2*(s_th**4.)*m_X2
+    # M2_da = 4.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
+
+    # Anton: Removed longitudinal component of spin sum
+    M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
+    # M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+    M2_da = 4*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+    M2_aa = 4.*y2*(s_th**4.)*m_X2
 
     vert_fi = y2*y2*(c_th**4.)*(s_th**4.)
     vert_tr = y2*y2*(c_th**6.)*(s_th**2.)
     vert_el = y2*y2*(c_th**8.)
 
-    Gamma_X = vector_mediator.Gamma_X(y, th, m_X, m_d)
+    Gamma_X = vector_mediator.Gamma_X_new(y, th, m_X, m_d)
     m_Gamma_X2 = m_X2*Gamma_X*Gamma_X
 
     if spin_facs:       # Anton: If spin statistics is important
@@ -60,8 +73,8 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
                 else:
                     C_da = 0.
                     C_aa = 0.
-                    C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=False, thermal_width=True) / 2.
-                    C_aa_dd = C_res_vector.C_34_12(type=0, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=False, thermal_width=True) / 4.
+                    C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=1, gV2=0, res_sub=False, thermal_width=True) / 2.
+                    C_aa_dd = C_res_vector.C_34_12(type=0, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True) / 4.
                 return C_da + 2.*C_aa + C_da_dd + C_aa_dd + 2.*C_XX_dd
             # rho = rho_d + rho_X
             def C_rho(T_a, T_d, xi_d, xi_X):
@@ -92,7 +105,7 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
                 if T_d > m_X:
                     return 2.*C_res_vector.C_n_3_12(m1=m_d, m2=m_d, m3=m_X, k1=k_d, k2=k_d, k3=k_X, T1=T_d, T2=T_d, T3=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_X, M2=M2_dd, type=1) / 2.
                 elif m_d / T_d - xi_d < 4.:
-                    return 2.*C_res_vector.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=False, thermal_width=True) / 4.
+                    return 2.*C_res_vector.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True) / 4.
                 return 2.*C_res_vector_no_spin_stat.C_dd_dd_gon_gel(m_d=m_d, k_d=k_d, T_d=T_d, xi_d=xi_d, vert_el=vert_el, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=False) / 4.
         else:
             print("Implementation needs to be updated...")

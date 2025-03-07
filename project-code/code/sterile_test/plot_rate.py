@@ -31,8 +31,7 @@ import vector_mediator
 # # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 # plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
-load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full.dat'       # BP2, overshoot
-load_str = './md_2e-05;mX_6e-05;sin22th_1.3e-15;y_1.75e-03;full.dat'       # Near
+load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.868e-03;full_new.dat'
 
 var_list = load_str.split(';')[:-1]
 m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
@@ -61,9 +60,19 @@ y2 = y*y
 
 # M2_X23 = 2*g**2/m_X2 * (m_X2 - (m2 - m3)**2)*(2*m_X2 + (m2 + m3)**2)
 # New matrix elements for X --> 23
-M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
-M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
-M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+# M2_dd = 2.*y2*(c_th**4.)/m_X2 * (m_X2)*(2*m_X2 + (m_d + m_d)**2)
+# M2_aa = 2.*y2*(s_th**4.)/m_X2 * (m_X2)*(2*m_X2)
+# M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
+
+# Anton: Test if new Feynman rules work. M2_da x2 larger, M2_dd change
+M2_dd = 4.*y2*(c_th**4.)*(m_X2-4*m_d2)
+M2_aa = 4.*y2*(s_th**4.)*m_X2
+M2_da = 4.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
+
+# Anton: Removed longitudonal component of spin sum
+M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
+M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+M2_aa = 4.*y2*(s_th**4.)*m_X2
 
 print(f'M2_dd: {M2_dd:3e}, M2_da: {M2_da:3e}, M2_aa: {M2_aa:3e}')
 
@@ -71,7 +80,7 @@ vert_fi = y2*y2*(c_th**4.)*(s_th**4.)
 vert_tr = y2*y2*(c_th**6.)*(s_th**2.)
 vert_el = y2*y2*(c_th**8.)
 
-Gamma_X = vector_mediator.Gamma_X(y, th, m_X, m_d)
+Gamma_X = vector_mediator.Gamma_X_new(y, th, m_X, m_d)
 m_Gamma_X2 = m_X2*Gamma_X*Gamma_X
 
 data_evo = np.loadtxt(load_str)
@@ -191,11 +200,15 @@ c5 = '#1e2f97' #'#f0944d'
 
 c4 = '#ffa62b'
 
+print(np.max(abs(C_X_aa)))
+print(np.max(abs(C_aa_X)))
+
 # Anton: 1e6 to make GeV to keV 
 plt.loglog(x_grid, 1e6*3*H, color=ch, ls='-', zorder=0) #83781B
 plt.loglog(x_grid, 1e6*abs(C_dd_X), color=c1, ls='-', zorder=-4) #114B5F
 plt.loglog(x_grid, 1e6*abs(C_da_X), color=c2, ls='-', zorder=-4) #458751
-# plt.loglog(x_grid, 1e6*abs(C_aa_X), color='brown', ls='-')
+plt.loglog(x_grid, 1e6*abs(C_X_aa), color='brown', ls='-')
+plt.loglog(x_grid, 1e6*abs(C_aa_X), color='purple', ls='-')
 plt.loglog(x_grid, 1e6*abs(C_dd_XX), color=c3, ls='-', zorder=-4) #95190C
 plt.loglog(x_grid, 1e6*abs(C_XX_dd), color=c5, ls='-', zorder=-4) #D02411
 
@@ -205,7 +218,7 @@ plt.text(1.5e-4, 8e-23, r'$\rightarrow$', fontsize=8, color='0', horizontalalign
 #plt.text(4.5e-5, 1e-22, r'$\hspace{-0.55cm}\mathrm{Therma-}\\\mathrm{lization}\\\mathrm{ }\hspace{0.2cm}\rightarrow$', fontsize=10, color='0')
 
 
-ax.text(2e-4, 3e-14, r"$H$", color=ch, fontsize=10, rotation=0)
+ax.text(2e-4, 3e-14, r"$3H$", color=ch, fontsize=10, rotation=0)
 ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow X$", color=c1, fontsize=10, rotation=0)
 ax.text(1.5e-3, 3e-25, r"$\nu_s \nu_\alpha \to X$", color=c2, fontsize=10, rotation=0)
 ax.text(1.5e-3, 0.3e-19, r"$\nu_s \nu_s \to X X$", color=c3, fontsize=10, rotation=0)
@@ -215,7 +228,7 @@ plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-', color='black', label=r'$\
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
 
 
-plt.fill_betweenx([1e-28, 1e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+# plt.fill_betweenx([1e-28, 1e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
 plt.loglog([1e-3]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
 #plt.fill_betweenx([1e-28, 1e-8], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 

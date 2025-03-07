@@ -41,28 +41,35 @@ ax.yaxis.set_ticks_position('both')
 for axis in ['top','bottom','left','right']:
     ax.spines[axis].set_linewidth(0.5)
 
-# nx, ny = 23, 101
+nx, ny = 23, 101
+data = np.loadtxt('rm_3.00e+00_y_relic.dat')
+# nx, ny = 23, 111
+# data = np.loadtxt('rm_5.00e+00_y_relic.dat')
+md = data[:,0].reshape((nx, ny))
+mphi = data[:,1].reshape((nx, ny))
+sin22th = data[:,2].reshape((nx,ny))
+y = data[:,3].reshape((nx, ny))
+Odh2 = data[:,4].reshape((nx, ny))
+Odh2_no_spin_stat = data[:,5].reshape((nx, ny))
+xtherm = data[:,6].reshape((nx, ny))
+xdtherm = data[:,7].reshape((nx, ny))
+fs_length = data[:,9].reshape((nx, ny))
+fs_length_3 = data[:,10].reshape((nx, ny))
+T_kd = data[:,11].reshape((nx, ny))
+T_kd_3 = data[:,12].reshape((nx, ny))
+T_d_kd = data[:,13].reshape((nx, ny))
+T_d_kd_3 = data[:,14].reshape((nx, ny))
+r_sound = data[:,15].reshape((nx, ny))
+r_sound_3 = data[:,16].reshape((nx, ny))
 
-# data = np.loadtxt('rm_3.00e+00_y_relic.dat')
-# md = data[:,0].reshape((nx, ny))
-# mphi = data[:,1].reshape((nx, ny))
-# sin22th = data[:,2].reshape((nx,ny))
-# y = data[:,3].reshape((nx, ny))
-# Odh2 = data[:,4].reshape((nx, ny))
-# Odh2_no_spin_stat = data[:,5].reshape((nx, ny))
-# xtherm = data[:,6].reshape((nx, ny))
-# xdtherm = data[:,7].reshape((nx, ny))
-# fs_length = data[:,9].reshape((nx, ny))
-# fs_length_3 = data[:,10].reshape((nx, ny))
-# T_kd = data[:,11].reshape((nx, ny))
-# T_kd_3 = data[:,12].reshape((nx, ny))
-# T_d_kd = data[:,13].reshape((nx, ny))
-# T_d_kd_3 = data[:,14].reshape((nx, ny))
-# r_sound = data[:,15].reshape((nx, ny))
-# r_sound_3 = data[:,16].reshape((nx, ny))
 
-nx, ny = 10, 20
-data = np.loadtxt('rm_3.00e+00_y_relic_test_10x20x15.dat')
+nx, ny = 20, 20
+data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50.dat')
+# nx, ny = 40, 40
+# data = np.loadtxt('rm_3.00e+00_y_relic_40x40x50.dat')
+# nx, ny = 21, 81
+# data = np.loadtxt('rm_3.00e+00_y_relic_21x81x60.dat')
+
 md = data[:,0].reshape((nx, ny))
 mphi = data[:,1].reshape((nx, ny))
 sin22th = data[:,2].reshape((nx,ny))
@@ -93,7 +100,7 @@ t_life = 3e12*(1e-10/sin22th)*((1e-6/md)**5.)
 # xdtherm2 = data2[:,6].reshape((nx, ny))
 # fs_length2 = data2[:,8].reshape((nx, ny))
 
-plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(y), levels=[-6, -5, -4, -3, -2, -1], colors='forestgreen', linewidths = 0.4, zorder=-1, linestyles='-')
+plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(y), levels=[-6.,-5.,-4.,-3.,-2.,-1.], colors='forestgreen', linewidths = 0.4, zorder=-1, linestyles='-')
 
 # plt.contour(np.log10(1e6*md), np.log10(sin22th), np.abs(Odh2_no_spin_stat-Odh2)/Odh2, levels=[0.1])
 # plt.contour(np.log10(1e6*md), np.log10(sin22th), t_life, levels=[1.])
@@ -168,20 +175,20 @@ x3, y3 = get_xy(cs3)
 # plt.plot(x2[71:-18], y2[71:-18])
 # plt.plot(x3[18:], y3[18:])
 
-ip1 = interp1d(y1, x1, kind='linear')
-ip2 = interp1d(y2, x2, kind='linear')
-ip3 = interp1d(y3, x3, kind='linear')
+# ip1 = interp1d(y1, x1, kind='linear')
+# ip2 = interp1d(y2, x2, kind='linear')
+# ip3 = interp1d(y3, x3, kind='linear')
 
-Y1 = np.linspace(-14.8, -12, 100)
-X1 = [ip1(y) for y in Y1]
-Y2 = np.linspace(-13.81, -12.8, 100)
-X2 = [ip2(y) for y in Y2]
-Y3 = np.linspace(-15.3, -15, 100)
-X3 = [ip3(y) for y in Y3]
+# Y1 = np.linspace(-14.6, -12, 100)
+# X1 = [ip1(y) for y in Y1]
+# Y2 = np.linspace(-16.3, -14.65, 100)
+# X2 = [ip2(y) for y in Y2]
+# Y3 = np.linspace(-17.57, -16.31, 100)
+# X3 = [ip3(y) for y in Y3]
 
-plt.plot(X1, Y1, zorder=-3, color='darkorange', linestyle='--')
-plt.plot(X2, Y2, zorder=-3, color='#ff7b7b', linestyle='--')
-plt.plot(X3, Y3, zorder=-3, color='#A300CC', linestyle='--')
+# plt.plot(X1, Y1, zorder=-3, color='darkorange', linestyle='--')
+# plt.plot(X2, Y2, zorder=-3, color='#ff7b7b', linestyle='--')
+# plt.plot(X3, Y3, zorder=-3, color='#A300CC', linestyle='--')
 
 # BENCHMARK POINTS
 plt.plot(np.log10(12), np.log10(2.5e-13), marker='*', color='tomato')
@@ -229,5 +236,5 @@ ax.yaxis.set_major_locator(yMajorLocator)
 ax.yaxis.set_minor_locator(yMinorLocator)
 ax.yaxis.set_major_formatter(yMajorFormatter)
 plt.tight_layout()
-# plt.savefig('plot_md_sin22th_rm_3_0.pdf')
+# plt.savefig('plot_md_sin22th_rm_3_0_vector.pdf')
 plt.show()

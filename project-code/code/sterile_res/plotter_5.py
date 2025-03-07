@@ -122,7 +122,7 @@ plt.contourf(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), leve
 
 
 def get_xy(cs):
-    p = cs.collections[0].get_paths()[0]
+    p = cs.get_paths()[0]
     v = p.vertices
     x = v[:,0]
     y = v[:,1]
@@ -200,5 +200,5 @@ ax.yaxis.set_major_locator(yMajorLocator)
 ax.yaxis.set_minor_locator(yMinorLocator)
 ax.yaxis.set_major_formatter(yMajorFormatter)
 plt.tight_layout()
-plt.savefig('plot_md_sin22th_rm_5_0.pdf')
+# plt.savefig('plot_md_sin22th_rm_5_0.pdf')
 plt.show()

@@ -21,11 +21,11 @@ def D_BW2(s, M, Gamma):
     propagator_BW = 1/((s-M**2)**2 + (M*Gamma)**2)
     return propagator_BW
 
-def D_RIS2(s, M, Gamma, type=0):
-    if type == 0:
+def D_RIS2(s, M, Gamma, off_shell=True):
+    if off_shell:
         # Off-shell propagator 
         propagator_RIS = ((s-M**2)**2 - (M*Gamma)**2)/((s-M**2)**2 + (M*Gamma)**2)**2
-    if type == 1:
+    if not off_shell:
         # On-shell propagator
         propagator_RIS = (2*(M*Gamma)**2)/((s-M**2)**2 + (M*Gamma)**2)**2
     return propagator_RIS
@@ -48,23 +48,32 @@ def delta(x, a, eps):
 # plt.legend()
 # plt.show()
 
-s = np.linspace(0.9999, 1.0001, int(1e6))
+# Propagator centered around M^2, with width ~ M*Gamma. Choose to plot around 10*width
+s = np.linspace(M**2-10*M*Gamma, M**2+10*M*Gamma, int(1e4))
 ds = s[1]-s[0]
-# Integrate BW should give 1
+# Integrate BW should give ~1
 print(1/np.pi*M*Gamma*np.sum(D_BW2(s, M, Gamma))*ds)
-# Integrate off-shell should give zero
-print(1/np.pi*M*Gamma*np.sum(D_RIS2(s, M, Gamma, type=0))*ds)
-# Integrate on-shell should give 1
-print(1/np.pi*M*Gamma*np.sum(D_RIS2(s, M, Gamma, type=1))*ds)
+# Integrate off-shell should give ~zero
+print(1/np.pi*M*Gamma*np.sum(D_RIS2(s, M, Gamma, off_shell=True))*ds)
+# Integrate on-shell should give ~1
+print(1/np.pi*M*Gamma*np.sum(D_RIS2(s, M, Gamma, off_shell=False))*ds)
 
 fig = plt.figure()
 ax1 = fig.add_subplot(121)
 ax2 = fig.add_subplot(122)
-ax1.plot(s, D_BW2(s, M, Gamma))
+ax1.plot(s, D_BW2(s, M, Gamma), label=r'$D_{BW}$')
 # Off-shell
-ax2.plot(s, D_RIS2(s, M, Gamma, type=0), color='r')
+ax2.plot(s, D_RIS2(s, M, Gamma, off_shell=True), color='r', label=r'$D_{off}$')
 # On-shell
-ax2.plot(s, D_RIS2(s, M, Gamma, type=1), color='green')
+ax2.plot(s, D_RIS2(s, M, Gamma, off_shell=False), color='green', label=r'$D_{on}$')
 
+# Width at half maximum
+HM1 = 0.5 * np.max(D_BW2(s, M, Gamma))
+HM2 = 0.5 * np.max(D_RIS2(s, M, Gamma, off_shell=False))
+ax1.plot([M**2 - M*Gamma, M**2 + M*Gamma], [HM1, HM1], color='gray')
+ax2.plot([M**2 - M*Gamma, M**2 + M*Gamma], [HM2, HM2], color='gray')
+
+ax1.legend(prop={'size':14})
+ax2.legend(prop={'size':14})
 fig.tight_layout()
 plt.show()

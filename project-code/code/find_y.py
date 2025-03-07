@@ -25,7 +25,7 @@ k_d = 1.        # Anton: Fermi-statistics for fermion
 k_a = 1.        
 k_X = -1.       # Anton: Bose-statistics for boson
 dof_d = 2.      # Anton: Fermion 2 spin dof.
-dof_X = 3.      # Anton: Massive vector boson 3 polarization dof.
+dof_X = 2.      # Anton: Massive vector boson 3 polarization dof.
 
 # n_m = 21
 # n_th = 81
@@ -38,24 +38,14 @@ dof_X = 3.      # Anton: Massive vector boson 3 polarization dof.
 # sin2_2th_grid = np.logspace(-18, -8, n_th)
 # The mass is given in GeV, but is plotted in kev. Use 1e-6 * x GeV = x kev
 n_m = 5         # 21
-n_th = 10        # 81
+n_th = 5        # 81
 # Anton: Search for keV-scale sterile neutrinos. Input is in GeV, so (m_d keV) = (1e-6*m_d GeV)
-# 4
-m_d_grid = 1e-6*np.logspace(2.5/2, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
-sin2_2th_grid = np.logspace(-13, -8, n_th)
-# 3
-m_d_grid = 1e-6*np.logspace(2.5/2, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
-sin2_2th_grid = np.logspace(-18, -13, n_th)
-# 2
-m_d_grid = 1e-6*np.logspace(0, 2.5/2, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
-sin2_2th_grid = np.logspace(-13, -8, n_th)
-# 1
-m_d_grid = 1e-6*np.logspace(0, 2.5/2, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
-sin2_2th_grid = np.logspace(-18, -13, n_th)
+m_d_grid = 1e-6*np.logspace(0, 2.5, n_m)    # 10^a keV - 10^b keV, a=0, b=2.5
+sin2_2th_grid = np.logspace(-18, -8, n_th)
 
 
 num_cpus = cpu_count()
-num_process = int(2*num_cpus) # cpu_count(), 48
+num_process = int(0.75*num_cpus) # cpu_count(), 48
 
 params_grid = np.array((np.repeat(m_d_grid, n_th), np.tile(sin2_2th_grid, n_m))).T
 
@@ -83,7 +73,7 @@ def find_y(params):
     y_old = 0.
     max_y = 1.
     min_y = 0.
-    print(f'Starting {(m_d - m_d_grid[0])/(m_d_grid[-1] - m_d_grid[0])*100}% of m_d, {(sin2_2th - sin2_2th_grid[0])/(sin2_2th_grid[-1] - sin2_2th_grid[0])*100}% of sin2_2th')
+    print(f'Starting {np.log10(m_d/m_d_grid[0])/np.log10(m_d_grid[-1]/m_d_grid[0])*100}% of m_d, {np.log10(sin2_2th/sin2_2th_grid[0])/np.log10(sin2_2th_grid[-1]/sin2_2th_grid[0])*100}% of sin2_2th')
     for i in range(i_max + 1):
         print(f'Iteration {i} of {i_max}, {i/i_max*100:.1f}%')
         try:
@@ -127,10 +117,10 @@ def find_y(params):
             # print(m_d, sin2_2th, O_d_h2_dw, log_enhance_req, log_enhance_cur, y_old, y_cur)
 
     print('find_y.py for-loop done ')
-    md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1].rstrip('0').rstrip('.')
-    mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1].rstrip('0').rstrip('.')
-    sin22th_str = f'{sin2_2th:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th:.5e}'.split('e')[1].rstrip('0').rstrip('.')
-    y_str = f'{y_cur:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y_cur:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1]
+    mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1]
+    sin22th_str = f'{sin2_2th:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th:.5e}'.split('e')[1]
+    y_str = f'{y_cur:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y_cur:.5e}'.split('e')[1]
     filename = f'md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str};full.dat'
     # Anton: Save benchmark-points
     np.savetxt(dirname+'benchmark_pts/'+filename, np.column_stack((t_grid[::-i_skip][::-1], T_SM_grid[::-i_skip][::-1], T_nu_grid[::-i_skip][::-1], ent_grid[::-i_skip][::-1], hubble_grid[::-i_skip][::-1], sf_grid[::-i_skip][::-1], T_d_grid[::-i_skip][::-1], xi_d_grid[::-i_skip][::-1], xi_X_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1], n_X_grid[::-i_skip][::-1], C_therm_grid[::-i_skip][::-1], n_d_grid[::-i_skip][::-1]*m_d*cf.s0/(ent_grid[::-i_skip][::-1]*cf.rho_crit0_h2))))
@@ -154,4 +144,5 @@ if __name__ == '__main__':
     dt = time.time() - time1
     print(f"find_y.py ran in {dt//60//60}h {dt//60%60}m {dt%60}s")
     # Anton: Save plots for plot of parameter-space
+    print(dirname+f'rm_{r_m:.2e}_y_relic_test_{n_m}x{n_th}x{i_max}_q1.dat')
     np.savetxt(dirname+f'rm_{r_m:.2e}_y_relic_test_{n_m}x{n_th}x{i_max}_q1.dat', results)
