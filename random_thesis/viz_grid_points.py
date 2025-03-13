@@ -6,7 +6,7 @@ def viz_grid(X, Y):
     plt.plot(x, y, color='k', marker='.', linestyle='None')
 
 
-Nx = 40
+Nx = 20
 Ny = 40
 # X = np.concatenate([np.linspace(0, 0.5, 2*Nx), np.linspace(0.5, 1, Nx)])
 X = np.linspace(0, 1, Nx)

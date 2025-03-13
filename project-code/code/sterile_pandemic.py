@@ -45,29 +45,18 @@ m_ratio = 3           # If m_d = 10 keV, m_X = 10*1e4 keV = 100 MeV
 # sin2_2th = 3e-15
 # y = 1.602e-3
 
-load_str = './md_1.4251e-05;mX_4.27531e-05;sin22th_1.06082e-17;y_9.52709e-03;full.dat'
-m_d = 1.4251e-05         # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+load_str = './md_3.79269e-05;mX_1.13781e-04;sin22th_3.66524e-16;y_3.42622e-03;full.dat'
+load_str = './md_2.06914e-05;mX_6.20741e-05;sin22th_1.12534e-16;y_4.80046e-03;full.dat'
+var_list = load_str.split(';')[:-1]
+m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
 m_a = 0.
-m_X = m_ratio*m_d      # MeV-scale dark photon
-m_X = 4.27531e-05      # MeV-scale dark photon
-sin2_2th = 1.06082e-17
-y = 9.52709e-03
 
-# load_str = './md_1.12534e-04;mX_3.37601e-04;sin22th_2.15443e-15;y_1.71776e-03;full.dat'
-# m_d = 1.12534e-04         # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+# Manual  
+# m_d = 20e-6          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
 # m_a = 0.
-# m_X = m_ratio*m_d      # MeV-scale dark photon
-# m_X = 3.37601e-04      # MeV-scale dark photon
-# sin2_2th = 2.15443e-15
-# y = 1.71776e-03
-
-# load_str = './md_8.37678e-05;mX_2.51303e-04;sin22th_3.25702e-18;y_3.3924e-02;full.dat'
-# m_d = 8.37678e-05         # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
-# m_a = 0.
-# m_X = m_ratio*m_d      # MeV-scale dark photon
-# m_X = 2.51303e-04      # MeV-scale dark photon
-# sin2_2th = 3.25702e-18
-# y = 3.3924e-02 * np.sqrt(2)
+# m_X = m_ratio*m_d
+# sin2_2th = 3e-15
+# y = 1.602e-3
 
 print(f'md: {m_d:.3e}, mX: {m_X:.3e}, y: {y:.3e}, sin22th: {sin2_2th:.3e}')
 
@@ -77,7 +66,7 @@ k_a = 1.
 k_X = -1.
 
 dof_d = 2.      # Anton: Fermions have 2 spin dofs. 
-dof_X = 2.      # Anton: Massive vector boson has 3 polarization dof. 
+dof_X = 3.      # Anton: Massive vector boson has 3 polarization dof., removed longitudinal component
 
 m_d2 = m_d*m_d
 m_a2 = m_a*m_a
@@ -85,7 +74,7 @@ m_X2 = m_X*m_X
 th = 0.5*asin(sqrt(sin2_2th))
 c_th = cos(th)
 s_th = sin(th)
-y2 = y*y*2
+y2 = y*y
 
 # Anton: Matrix elements added here for some reason
 # M2_dd = 2. * y2 * (c_th**4.) * (m_X2 - 4.*m_d2)
@@ -105,8 +94,8 @@ y2 = y*y*2
 # M2_aa = 4.*y2*(s_th**4.)*m_X2
 
 # Anton: Removed longitudinal component of spin sum
-M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
 # M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
 M2_da = 4*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
 M2_aa = 4.*y2*(s_th**4.)*m_X2
 

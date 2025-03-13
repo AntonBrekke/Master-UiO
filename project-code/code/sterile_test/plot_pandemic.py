@@ -19,10 +19,10 @@ sys.path.insert(0, grandparentdir)
 
 import constants_functions as cf
 
-# plt.rc('text', usetex=True)
-# plt.rc('font', family='serif', size=14)
-# # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-# plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif', size=14)
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white", gridspec_kw={'height_ratios': [2, 1]})
 ax1.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
@@ -74,38 +74,9 @@ data = np.loadtxt('./md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat')
 data: Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_X_grid_sol, pan.n_chi_grid_sol, pan.n_X_grid_sol
 """
 
-# First, test BP1 and BP2 from previous article.
-load_str = './md_1.2e-05;mX_3.6e-05;sin22th_2.5e-13;y_1.905e-04;full_new.dat'       # BP1, overshoot 
-load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.602e-03;full_new.dat'     # BP2, overshoot
-
-# New tests
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_2e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.7e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.8e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.9e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.85e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.87e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.865e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.867e-03;full_new.dat'
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.868e-03;full_new.dat'
-# Good enough for now, run find_y.py 
-load_str = './md_1.12534e-04;mX_3.37601e-04;sin22th_2.15443e-15;y_1.71776e-03;full.dat'     # Like this one 
-load_str = './md_1.22954e-05;mX_3.68863e-05;sin22th_2.03092e-16;y_2.72255e-03;full.dat'     # Also cool
-
-load_str = './md_1.12534e-04;mX_3.37601e-04;sin22th_2.03092e-16;y_4.9488e-03;full.dat'
-load_str = './md_1.4251e-05;mX_4.27531e-05;sin22th_3.45511e-17;y_5.67319e-03;full.dat'
-
-# Weird that there is a difference here... (?? why)
-load_str = './md_1.4251e-05;mX_4.27531e-05;sin22th_1.06082e-17;y_9.52709e-03;full_new.dat'
-load_str = './md_1.4251e-05;mX_4.27531e-05;sin22th_1.06082e-17;y_9.52709e-03;full.dat'
-
-load_str = './md_1.65177e-05;mX_4.9553e-05;sin22th_1.12534e-16;y_3.61271e-03;full.dat'
-
-load_str = './md_2.57191e-05;mX_7.71574e-05;sin22th_2.03092e-16;y_3.19754e-03;full.dat'
-load_str = './md_2.57191e-05;mX_7.71574e-05;sin22th_2.03092e-16;y_3.19754e-03;full_new.dat' # smoother 
-
-load_str = './md_8.37678e-05;mX_2.51303e-04;sin22th_3.25702e-18;y_3.3924e-02;full.dat'
-load_str = './md_8.37678e-05;mX_2.51303e-04;sin22th_3.25702e-18;y_3.3924e-02;full_new.dat'
+load_str = './md_9.41205e-05;mX_2.82361e-04;sin22th_6.23551e-17;y_1.11318e-02;full.dat'
+load_str = './md_9.41205e-05;mX_2.82361e-04;sin22th_6.61474e-16;y_3.50346e-03;full.dat'
+load_str = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full_new.dat'
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]
@@ -185,12 +156,12 @@ if True:
     ax2.yaxis.set_label_text(r"$T_\text{d}/T_\nu$")
 
 
-    # ax1.xaxis.set_major_locator(xMajorLocator)
-    # ax1.xaxis.set_minor_locator(xMinorLocator)
-    # ax1.xaxis.set_major_formatter(xMajorFormatter)
-    # ax1.yaxis.set_major_locator(yMajorLocator)
-    # ax1.yaxis.set_minor_locator(yMinorLocator)
-    # ax1.yaxis.set_major_formatter(yMajorFormatter)
+    ax1.xaxis.set_major_locator(xMajorLocator)
+    ax1.xaxis.set_minor_locator(xMinorLocator)
+    ax1.xaxis.set_major_formatter(xMajorFormatter)
+    ax1.yaxis.set_major_locator(yMajorLocator)
+    ax1.yaxis.set_minor_locator(yMinorLocator)
+    ax1.yaxis.set_major_formatter(yMajorFormatter)
 
     plt.xlim(2e-5, 20)
 

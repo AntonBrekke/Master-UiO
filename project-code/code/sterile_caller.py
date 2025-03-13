@@ -75,6 +75,7 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
                     C_aa = 0.
                     C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=1, gV2=0, res_sub=False, thermal_width=True) / 2.
                     C_aa_dd = C_res_vector.C_34_12(type=0, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True) / 4.
+                print("C_ns:  ", f'{C_da:.5e}', f'{2.*C_aa:.5e}', f'{C_da_dd}', f'{2.*C_XX_dd:.5e}')
                 return C_da + 2.*C_aa + C_da_dd + C_aa_dd + 2.*C_XX_dd
             # rho = rho_d + rho_X
             def C_rho(T_a, T_d, xi_d, xi_X):
@@ -461,48 +462,74 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
     # G_d_grid = np.array([G_d(T_d, xi_d, xi_X) for T_d, xi_d, xi_X in zip(pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_X_grid_sol)])
 
 if __name__ == '__main__':
-    m_d = 2.820886956356105858e-06
-    m_X = 5.*m_d
+
+    # load_str = './md_2.06914e-05;mX_6.20741e-05;sin22th_1.12534e-16;y_4.80046e-03;full.dat'
+    # load_str = './md_1.35388e-06;mX_4.06163e-06;sin22th_4.64159e-12;y_1.12987e-05;full.dat'
+    load_str = './md_3.35982e-06;mX_1.00795e-05;sin22th_7.01704e-15;y_5.43211e-04;full.dat'
+    load_str = './md_3.79269e-05;mX_1.13781e-04;sin22th_6.61474e-16;y_2.65322e-03;full.dat'
+    load_str = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full.dat'
+
+    var_list = load_str.split(';')[:-1]
+    m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
     m_a = 0.
+
+    # Anton: fermion = 1, boson = -1
     k_d = 1.
     k_a = 1.
     k_X = -1.
-    dof_d = 2.
-    dof_X = 1.
-    y = 3.736391058821046055e-03
-    sin2_2th = 1e-16
+
+    dof_d = 2.      # Anton: Fermions have 2 spin dofs. 
+    dof_X = 3.      # Anton: Massive vector boson has 3 polarization dof., removed longitudinal component
+
+    th = 0.5*asin(sqrt(sin2_2th))
+    c_th = cos(th)
+    s_th = sin(th)
+    y2 = y*y
+
     spin_facs = True
     off_shell = False
 
     t, T_SM, T_nu, ent, H, sf, T_d, xi_d, xi_X, n_d, n_X, C_therm, fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3, reached_integration_end = call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs = spin_facs, off_shell = off_shell)
-    print(fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3)
+    # print(fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3)
+
+
+    md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    sin22th_str = f'{sin2_2th:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+    y_str = f'{y:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+
+    file_str = f'sterile_test/md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str};full_new.dat'
+    np.savetxt(file_str, np.column_stack((t, T_SM, T_nu, ent, H, sf, T_d, xi_d, xi_X, n_d, n_X)))
+
+    print(f'Saved data to {file_str}')
+
 
     # filename = f'md_{m_d:.2e}_mX_{m_X:.2e}_sin22th_{sin2_2th:.2e}_y_{y:.2e}.dat'
     # np.savetxt('sterile_test/'+filename, np.column_stack((t, T_SM, T_nu, ent, H, sf, T_d, xi_d, xi_X, n_d, n_X)))
 
-    import matplotlib.pyplot as plt
-    import densities as dens
-    rho_d = np.array([dens.rho(k_d, T, m_d, dof_d, xi) for T, xi in zip(T_d, xi_d)])
-    rho_X = np.array([dens.rho(k_X, T, m_X, dof_X, xi) for T, xi in zip(T_d, xi_X)])
-    plt.loglog(m_d/T_nu, m_d/T_d)
-    plt.show()
-    plt.loglog(m_d/T_nu, n_d*m_d*cf.s0/(ent*cf.rho_crit0_h2), color='dodgerblue')
-    plt.loglog(m_d/T_nu, n_X*m_d*cf.s0/(ent*cf.rho_crit0_h2), color='darkorange')
-    plt.loglog(m_d/T_nu, (n_d+n_X)*m_d*cf.s0/(ent*cf.rho_crit0_h2), color='mediumorchid')
-    plt.show()
-    plt.close()
-    plt.clf()
-    plt.loglog(m_d/T_nu, rho_d*(sf**4.), color='dodgerblue')
-    plt.loglog(m_d/T_nu, rho_X*(sf**4.), color='darkorange')
-    plt.loglog(m_d/T_nu, (rho_d+rho_X)*(sf**4.), color='mediumorchid')
-    plt.show()
-    plt.clf()
-    plt.close()
-    plt.loglog(m_d/T_nu, C_therm, color='#458751')
-    # plt.loglog(m_d/T_nu, C_therm[:,1], color='#458751', ls='--')
-    plt.loglog(m_d/T_nu, 3.*H*n_d, color='dodgerblue')
-    plt.loglog(m_d/T_nu, 3.*H*n_X, color='darkorange')
-    plt.loglog(m_d/T_nu, 3.*H*np.array([dens.n(k_a, T, m_a, 2., 0.) for T in T_nu]), color='tomato')
-    plt.show()
-    plt.close()
-    plt.clf()
+    # import matplotlib.pyplot as plt
+    # import densities as dens
+    # rho_d = np.array([dens.rho(k_d, T, m_d, dof_d, xi) for T, xi in zip(T_d, xi_d)])
+    # rho_X = np.array([dens.rho(k_X, T, m_X, dof_X, xi) for T, xi in zip(T_d, xi_X)])
+    # plt.loglog(m_d/T_nu, m_d/T_d)
+    # plt.show()
+    # plt.loglog(m_d/T_nu, n_d*m_d*cf.s0/(ent*cf.rho_crit0_h2), color='dodgerblue')
+    # plt.loglog(m_d/T_nu, n_X*m_d*cf.s0/(ent*cf.rho_crit0_h2), color='darkorange')
+    # plt.loglog(m_d/T_nu, (n_d+n_X)*m_d*cf.s0/(ent*cf.rho_crit0_h2), color='mediumorchid')
+    # plt.show()
+    # plt.close()
+    # plt.clf()
+    # plt.loglog(m_d/T_nu, rho_d*(sf**4.), color='dodgerblue')
+    # plt.loglog(m_d/T_nu, rho_X*(sf**4.), color='darkorange')
+    # plt.loglog(m_d/T_nu, (rho_d+rho_X)*(sf**4.), color='mediumorchid')
+    # plt.show()
+    # plt.clf()
+    # plt.close()
+    # plt.loglog(m_d/T_nu, C_therm, color='#458751')
+    # # plt.loglog(m_d/T_nu, C_therm[:,1], color='#458751', ls='--')
+    # plt.loglog(m_d/T_nu, 3.*H*n_d, color='dodgerblue')
+    # plt.loglog(m_d/T_nu, 3.*H*n_X, color='darkorange')
+    # plt.loglog(m_d/T_nu, 3.*H*np.array([dens.n(k_a, T, m_a, 2., 0.) for T in T_nu]), color='tomato')
+    # plt.show()
+    # plt.close()
+    # plt.clf()

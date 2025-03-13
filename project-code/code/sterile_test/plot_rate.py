@@ -31,7 +31,7 @@ import vector_mediator
 # # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 # plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
-load_str = './md_3.5e-05;mX_1.05e-04;sin22th_1e-15;y_1.868e-03;full_new.dat'
+load_str = './md_1.08264e-05;mX_3.24791e-05;sin22th_1.1721e-16;y_3.8676e-03;full_new.dat'
 
 var_list = load_str.split(';')[:-1]
 m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
@@ -48,7 +48,7 @@ k_d = 1.
 k_a = 1.
 k_X = -1.
 dof_d = 2.
-dof_X = 3.
+dof_X = 2.
 
 m_d2 = m_d*m_d
 m_a2 = m_a*m_a
@@ -65,14 +65,16 @@ y2 = y*y
 # M2_da = 2.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d**2)*(2*m_X2 + m_d**2)
 
 # Anton: Test if new Feynman rules work. M2_da x2 larger, M2_dd change
-M2_dd = 4.*y2*(c_th**4.)*(m_X2-4*m_d2)
-M2_aa = 4.*y2*(s_th**4.)*m_X2
-M2_da = 4.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
+# M2_dd = 4.*y2*(c_th**4.)*(m_X2-4*m_d2)
+# M2_aa = 4.*y2*(s_th**4.)*m_X2
+# M2_da = 4.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
 
 # Anton: Removed longitudonal component of spin sum
 M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
-M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+# M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+M2_da = 4*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
 M2_aa = 4.*y2*(s_th**4.)*m_X2
+
 
 print(f'M2_dd: {M2_dd:3e}, M2_da: {M2_da:3e}, M2_aa: {M2_aa:3e}')
 
@@ -260,4 +262,3 @@ fig_str = f'rates_evo_md_{md_str};mX_{mX_str};sin22th_{sin22th_str};y_{y_str}.pd
 print(f'saved {fig_str}')
 plt.savefig(fig_str)
 plt.show()
-

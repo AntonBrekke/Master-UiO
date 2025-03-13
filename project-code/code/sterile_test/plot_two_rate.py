@@ -26,10 +26,10 @@ import C_res_scalar
 import C_res_vector_no_spin_stat
 import vector_mediator
 
-# plt.rc('text', usetex=True)
-# plt.rc('font', family='serif', size=14)
-# # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-# plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif', size=14)
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 def make_rate_file(m_d, m_X, M2_dd, M2_da, M2_aa, vert_el, n_d_grid, T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid, H_grid, filename):
     time_start = time.time()
@@ -55,13 +55,23 @@ def make_rate_file(m_d, m_X, M2_dd, M2_da, M2_aa, vert_el, n_d_grid, T_d_grid, T
     C_aa_dd = np.zeros(T_d_grid.size)#np.array([C_res_vector.C_34_12(0, 2., 0., m_d, m_d, m_a, m_a, k_d, k_d, k_a, k_a, T_d, T_d, T_a, T_a, xi_d, xi_d, 0., 0., vert_fi, m_X2, m_Gamma_X2) / 4. for T_d, T_a, xi_d in zip(T_d_grid, T_nu_grid, xi_d_grid)])
     C_dd_aa = np.zeros(T_d_grid.size)#np.array([C_res_vector.C_34_12(0, 0., 2., m_d, m_d, m_a, m_a, k_d, k_d, k_a, k_a, T_d, T_d, T_a, T_a, xi_d, xi_d, 0., 0., vert_fi, m_X2, m_Gamma_X2) / 2. for T_d, T_a, xi_d in zip(T_d_grid, T_nu_grid, xi_d_grid)])
     C_XX_dd = -C_XX_dd_both[:,0]
-    C_dd_XX = C_XX_dd_both[:,1]
+    C_dd_XX = C_XX_dd_both[:,1] 
 
     np.savetxt(filename, np.column_stack((m_d/T_nu_grid, H_grid, C_X_dd/n_d_grid, C_dd_X/n_d_grid, C_X_da/n_d_grid, C_da_X/n_d_grid, C_X_aa/n_d_grid, C_aa_X/n_d_grid, C_XX_dd/n_d_grid, C_dd_XX/n_d_grid, C_dd_dd/n_d_grid, C_da_dd/n_d_grid, C_dd_da/n_d_grid, C_aa_dd/n_d_grid, C_dd_aa/n_d_grid)))
     print(f'Made file {filename} in {time.time()-time_start}s')
 
-load_str_1 = './md_1.35388e-06;mX_4.06163e-06;sin22th_2.06914e-12;y_1.21276e-05;full.dat'
-load_str_2 = './md_3.79269e-05;mX_1.13781e-04;sin22th_4.28133e-16;y_2.56926e-03;full.dat'
+# load_str_1 = './md_2.48163e-06;mX_7.44489e-06;sin22th_1.4251e-12;y_2.76291e-05;full.dat'
+# load_str_2 = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full.dat'
+
+# load_str_1 = './md_1.35388e-06;mX_4.06163e-06;sin22th_4.64159e-12;y_1.12987e-05;full_new.dat'
+# load_str_2 = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full_new.dat'
+
+# load_str_1 = './md_3.35982e-06;mX_1.00795e-05;sin22th_7.01704e-15;y_5.43211e-04;full_new.dat'
+# load_str_2 = './md_3.79269e-05;mX_1.13781e-04;sin22th_6.61474e-16;y_2.65322e-03;full_new.dat'
+
+load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
+load_str_2 = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full_new.dat'
+
 data_1 = np.loadtxt(load_str_1)
 data_2 = np.loadtxt(load_str_2)
 
@@ -116,14 +126,13 @@ m_a2 = m_a*m_a
 # M2_aa_2 = 2.*y2_2*(s_th_2**4.)/m_X2_2 * (m_X2_2)*(2*m_X2_2)
 # M2_da_2 = 2.*y2_2*(s_th_2**2.)*(c_th_2**2.)/m_X2_2 * (m_X2_2 - m_d2_2)*(2*m_X2_2 + m_d2_2)
 
-# Anton: Test if new Feynman rules work. M2_da x2 larger, M2_dd change
-# Vector and axial coupling 
-M2_dd_1 = 4.*y2_1*(c_th_1**4.)*(m_X2_1-4*m_d2_1)
+# Anton: Test if new Feynman rules work.
+M2_dd_1 = 4*y2_1*(c_th_1**4.)*(m_X2_1-6*m_d2_1)
+M2_da_1 = 4*y2_1*(s_th_1**2.)*(c_th_1**2.)*(m_X2_1-m_d2_1)
 M2_aa_1 = 4.*y2_1*(s_th_1**4.)*m_X2_1
-M2_da_1 = 4.*y2_1*(s_th_1**2.)*(c_th_1**2.)/m_X2_1 * (m_X2_1 - m_d2_1)*(2*m_X2_1 + m_d2_1)
-M2_dd_2 = 4.*y2_2*(c_th_2**4.)*(m_X2_2-4*m_d2_2)
+M2_dd_2 = 4*y2_2*(c_th_2**4.)*(m_X2_2-6*m_d2_2)
+M2_da_2 = 4*y2_2*(s_th_2**2.)*(c_th_2**2.)*(m_X2_2-m_d2_2)
 M2_aa_2 = 4.*y2_2*(s_th_2**4.)*m_X2_2
-M2_da_2 = 4.*y2_2*(s_th_2**2.)*(c_th_2**2.)/m_X2_2 * (m_X2_2 - m_d2_2)*(2*m_X2_2 + m_d2_2)
 
 print(f'M2_dd_1: {M2_dd_1:3e}, M2_da_1: {M2_da_1:3e}, M2_aa_1: {M2_aa_1:3e}')
 print(f'M2_dd_2: {M2_dd_2:3e}, M2_da_2: {M2_da_2:3e}, M2_aa_2: {M2_aa_2:3e}')
@@ -137,8 +146,8 @@ vert_tr_2 = y2_2*y2_2*(c_th_2**6.)*(s_th_2**2.)
 vert_el_2 = y2_2*y2_2*(c_th_2**8.)
 
 Gamma_X_1 = vector_mediator.Gamma_X_new(y_1, th_1, m_X_1, m_d_1)
-m_Gamma_X2_1 = m_X2_1*Gamma_X_1*Gamma_X_1
 Gamma_X_2 = vector_mediator.Gamma_X_new(y_2, th_2, m_X_2, m_d_2)
+m_Gamma_X2_1 = m_X2_1*Gamma_X_1*Gamma_X_1
 m_Gamma_X2_2 = m_X2_2*Gamma_X_2*Gamma_X_2
 
 data_evo_1 = np.loadtxt(load_str_1)
@@ -157,7 +166,7 @@ data_evo_2 = np.loadtxt(load_str_2)
 10: n_X_grid_sol (n_phi_grid_sol)
 """
 
-i_skip = 1
+i_skip = 15
 
 t_grid_1 = data_evo_1[::i_skip,0]
 T_SM_grid_1 = data_evo_1[::i_skip,1]
@@ -274,7 +283,7 @@ yMajorFormatter = FixedFormatter(ylMajor)
 ch = 'crimson'
 c1 = '#797ef6' #'#5170d7'
 c2 = '#1aa7ec' #'mediumorchid'
-c3 = '#4adede' #'crimson'
+c3 = '#4adede' #'crimson'   
 c5 = '#1e2f97' #'#f0944d'
 
 c4 = '#ffa62b'
@@ -288,13 +297,13 @@ plt.loglog(x_grid_1, 1e6*abs(C_da_X_1), color=c2, ls='-', zorder=-4) #458751
 plt.loglog(x_grid_1, 1e6*abs(C_dd_XX_1), color=c3, ls='-', zorder=-4) #95190C
 plt.loglog(x_grid_1, 1e6*abs(C_XX_dd_1), color=c5, ls='-', zorder=-4) #D02411
 
-plt.loglog(x_grid_2, 1e6*3*H_2, color=ch, ls='--', zorder=0) #83781B
-plt.loglog(x_grid_2, 1e6*abs(C_dd_X_2), color=c1, ls='--', zorder=-4) #114B5F
-plt.loglog(x_grid_2, 1e6*abs(C_da_X_2), color=c2, ls='--', zorder=-4) #458751
+plt.loglog(x_grid_2, 1e6*3*H_2, color=ch, ls='--', zorder=0, dashes=(3.8,1.65)) #83781B
+plt.loglog(x_grid_2, 1e6*abs(C_dd_X_2), color=c1, ls='--', zorder=-4, dashes=(3.8,1.65)) #114B5F
+plt.loglog(x_grid_2, 1e6*abs(C_da_X_2), color=c2, ls='--', zorder=-4, dashes=(3.8,1.65)) #458751
 # plt.loglog(x_grid_2, 1e6*abs(C_X_aa_2), color='brown', ls='--')
 # plt.loglog(x_grid_2, 1e6*abs(C_aa_X_2), color='purple', ls='--')
-plt.loglog(x_grid_2, 1e6*abs(C_dd_XX_2), color=c3, ls='--', zorder=-4) #95190C
-plt.loglog(x_grid_2, 1e6*abs(C_XX_dd_2), color=c5, ls='--', zorder=-4) #D02411
+plt.loglog(x_grid_2, 1e6*abs(C_dd_XX_2), color=c3, ls='--', zorder=-4, dashes=(3.8,1.65)) #95190C
+plt.loglog(x_grid_2, 1e6*abs(C_XX_dd_2), color=c5, ls='--', zorder=-4, dashes=(3.8,1.65)) #D02411
 
 plt.text(1.5e-4, 8e-21, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
 plt.text(1.5e-4, 8e-22, r'$\mathrm{Thermalization}$', fontsize=8, color='0', horizontalalignment='center')
@@ -302,11 +311,11 @@ plt.text(1.5e-4, 8e-23, r'$\rightarrow$', fontsize=8, color='0', horizontalalign
 #plt.text(4.5e-5, 1e-22, r'$\hspace{-0.55cm}\mathrm{Therma-}\\\mathrm{lization}\\\mathrm{ }\hspace{0.2cm}\rightarrow$', fontsize=10, color='0')
 
 
-ax.text(2e-4, 3e-14, r"$H$", color=ch, fontsize=10, rotation=0)
+ax.text(2e-4, 8e-13, r"$3H$", color=ch, fontsize=10, rotation=0)
 ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow X$", color=c1, fontsize=10, rotation=0)
 ax.text(1.5e-3, 3e-25, r"$\nu_s \nu_\alpha \to X$", color=c2, fontsize=10, rotation=0)
 ax.text(1.5e-3, 0.3e-19, r"$\nu_s \nu_s \to X X$", color=c3, fontsize=10, rotation=0)
-ax.text(2.2e-3, 8e-28, r"$X X \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
+ax.text(1.5e-3, 8e-28, r"$X X \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
 
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-', color='black', label=r'$\text{BP1}$')
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
@@ -338,10 +347,10 @@ ax.yaxis.set_minor_locator(yMinorLocator)
 ax.yaxis.set_major_formatter(yMajorFormatter)
 
 plt.xlim(2e-5, 20)
-ax.set_ylim(1e-28, 1e-8)
+ax.set_ylim(1e-28, 8.5e-8)
 plt.tight_layout()
 fig_str = f'rates_evo_BP1_BP2.pdf'
 print(f'saved {fig_str}')
-plt.savefig(fig_str)
+# plt.savefig(fig_str)
 plt.show()
 

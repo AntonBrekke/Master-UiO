@@ -19,10 +19,10 @@ sys.path.insert(0, grandparentdir)
 
 import constants_functions as cf
 
-# plt.rc('text', usetex=True)
-# plt.rc('font', family='serif', size=14)
-# # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-# plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif', size=14)
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white", gridspec_kw={'height_ratios': [2, 1]})
 ax1.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
@@ -74,8 +74,18 @@ data = np.loadtxt('./md_1e-5_mX_2.5e-5_sin22th_1e-12_y_5.6e-5_full.dat')
 data: Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1], Ttrel.T_nu_grid[pan.i_ic:pan.i_end+1], Ttrel.hubble_grid[pan.i_ic:pan.i_end+1], Ttrel.sf_grid[pan.i_ic:pan.i_end+1]/Ttrel.sf_grid[pan.i_ic], pan.T_chi_grid_sol, pan.xi_chi_grid_sol, pan.xi_X_grid_sol, pan.n_chi_grid_sol, pan.n_X_grid_sol
 """
 
-load_str_1 = './md_1.35388e-06;mX_4.06163e-06;sin22th_2.06914e-12;y_1.21276e-05;full.dat'
-load_str_2 = './md_3.79269e-05;mX_1.13781e-04;sin22th_4.28133e-16;y_2.56926e-03;full_new.dat'
+load_str_1 = './md_2.48163e-06;mX_7.44489e-06;sin22th_1.4251e-12;y_2.76291e-05;full_new.dat'
+load_str_1 = './md_1.35388e-06;mX_4.06163e-06;sin22th_4.64159e-12;y_1.12987e-05;full_new.dat'
+load_str_1 = './md_3.35982e-06;mX_1.00795e-05;sin22th_4.12463e-14;y_2.1568e-04;full.dat'
+
+load_str_1 = './md_3.35982e-06;mX_1.00795e-05;sin22th_7.01704e-15;y_5.43211e-04;full_new.dat'
+
+load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
+load_str_2 = './md_3.79269e-05;mX_1.13781e-04;sin22th_6.61474e-16;y_2.65322e-03;full_new.dat'
+load_str_2 = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full_new.dat'
+
+# load_str_1 = './md_2.48163e-06;mX_7.44489e-06;sin22th_1.4251e-12;y_2.76291e-05;full_new.dat'
+# load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_1.12534e-16;y_4.80046e-03;full_new.dat'
 data_1 = np.loadtxt(load_str_1)
 data_2 = np.loadtxt(load_str_2)
 
@@ -142,7 +152,7 @@ if True:
     # ax1.loglog(x_dw_1[x_dw_1 < 1e-3], y_dw_1[x_dw_1 < 1e-3], color='r', ls='-', zorder=-1)
     # ax1.loglog(x_dw_2[x_dw_2 < 1e-3], y_dw_2[x_dw_2 < 1e-3], color='r', ls='--', zorder=-1)
     ax1.loglog(x1, y1, color='#7bc043', ls='-', zorder=-1)
-    ax1.loglog(x2, y2, color='#7bc043', ls='--', zorder=-1)
+    ax1.loglog(x2, y2, color='#7bc043', ls='--', zorder=-1, dashes=(3.8,1.65))
 
     ax1.fill_betweenx([1e-23, 1e5], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
     # ax1.fill_betweenx([1e-23, 1e-18], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
@@ -160,19 +170,19 @@ if True:
 
 
     ax1.loglog(md_1/T_nu_1, mX_1*nX_1/ent_1, color='#f37736', ls='-', zorder=-4)
-    ax1.loglog(md_2/T_nu_2, mX_2*nX_2/ent_2, color='#f37736', ls='--', zorder=-4)
+    ax1.loglog(md_2/T_nu_2, mX_2*nX_2/ent_2, color='#f37736', ls='--', zorder=-4, dashes=(3.8,1.6))
 
     ax1.loglog([1e-8, 1e3], [mY_relic, mY_relic], color='0.65', ls='-.', zorder=-2)
     ax1.text(3e-5, 1e-11, r'$\Omega_s h^2 = 0.12$', fontsize=11, color='0.65')
 
-    ax1.text(2.5, 1e-11, r'$\nu_s$', color='#7bc043', fontsize=11)
-    ax1.text(2.0, 1e-16, r'$X$', color='#f37736', fontsize=11)
+    ax1.text(2.0, 5e-12, r'$\nu_s$', color='#7bc043', fontsize=11)
+    ax1.text(1.5, 1e-16, r'$X$', color='#f37736', fontsize=11)
 
     ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-' , color='black', label=r'$\text{BP1}$')
     ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
 
     ax2.loglog(md_1/T_nu_1, Td_1/T_nu_1, color='0.4', ls='-', zorder=-4)
-    ax2.loglog(md_2/T_nu_2, Td_2/T_nu_2, color='0.4', ls='--', zorder=-4)
+    ax2.loglog(md_2/T_nu_2, Td_2/T_nu_2, color='0.4', ls='--', zorder=-4, dashes=(3.8,1.6))
 
     ax2.fill_betweenx([1e-1, 1.5e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
 
@@ -203,7 +213,7 @@ if True:
     ax2.set_ylim(1e-2, 2e0)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
-    plt.savefig(f'dens_evo_{load_str_1.replace("./", "").replace(".dat","")}_BP1_BP2.pdf')
+    # plt.savefig(f'dens_evo_BP1_BP2.pdf')
     plt.show()
 elif False:
     plt.loglog(md1/T_nu1, 1e6*Td1, color='dodgerblue', ls='-')

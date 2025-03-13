@@ -69,6 +69,20 @@ data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50.dat')
 # data = np.loadtxt('rm_3.00e+00_y_relic_40x40x50.dat')
 # nx, ny = 21, 81
 # data = np.loadtxt('rm_3.00e+00_y_relic_21x81x60.dat')
+# nx, ny = 30, 40
+# data = np.loadtxt('rm_3.00e+00_y_relic_30x40x70_part2.dat')
+# nx, ny = 20, 30
+# data = np.loadtxt('rm_3.00e+00_y_relic_20x30x70.dat')
+# nx, ny = 20, 20
+# data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50_new.dat')
+# nx, ny = 20, 40
+# data = np.loadtxt('rm_3.00e+00_y_relic_20x40x60_new.dat')
+
+
+
+# Removed max_step=1. in pandemolator for this one -- terrible result...
+# nx, ny = 30, 30
+# data = np.loadtxt('rm_3.00e+00_y_relic_30x30x60_new.dat')
 
 md = data[:,0].reshape((nx, ny))
 mphi = data[:,1].reshape((nx, ny))
@@ -87,18 +101,10 @@ T_d_kd_3 = data[:,13].reshape((nx, ny))
 r_sound = data[:,14].reshape((nx, ny))
 r_sound_3 = data[:,15].reshape((nx, ny))
 
-t_life = 3e12*(1e-10/sin22th)*((1e-6/md)**5.)
+# These just became nan for some reason
+# r_sound[np.isnan(r_sound)] = 0.34
 
-# nx, ny = 11, 21
-# data2 = np.loadtxt('rm_5.00e+00_y_relic.dat')
-# md2 = data2[:,0].reshape((nx, ny))
-# mphi2 = data2[:,1].reshape((nx, ny))
-# sin22th2 = data2[:,2].reshape((nx,ny))
-# y2 = data2[:,3].reshape((nx, ny))
-# Odh22 = data2[:,4].reshape((nx, ny))
-# xtherm2 = data2[:,5].reshape((nx, ny))
-# xdtherm2 = data2[:,6].reshape((nx, ny))
-# fs_length2 = data2[:,8].reshape((nx, ny))
+t_life = 3e12*(1e-10/sin22th)*((1e-6/md)**5.)
 
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(y), levels=[-6.,-5.,-4.,-3.,-2.,-1.], colors='forestgreen', linewidths = 0.4, zorder=-1, linestyles='-')
 
@@ -150,6 +156,7 @@ plt.plot(np.log10(1e6*extp_proj[:,0]), np.log10(extp_proj[:,1]), color='black', 
 # SELF-INTERACTIONS
 self_int_const = cf.conv_cm2_g
 sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*md/(4.*np.pi*(mphi**4.))
+# sigma_self_int[np.isnan(sigma_self_int)] = self_int_const
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const)], colors='#A300CC', linewidths=1.3, zorder=-5)
 plt.contourf(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const), np.log10(1e6*self_int_const)], colors='#A300CC', alpha=0.25, zorder=-5)
 
