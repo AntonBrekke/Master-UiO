@@ -63,8 +63,8 @@ r_sound = data[:,15].reshape((nx, ny))
 r_sound_3 = data[:,16].reshape((nx, ny))
 
 
-nx, ny = 20, 20
-data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50.dat')
+# nx, ny = 20, 20
+# data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50.dat')
 # nx, ny = 40, 40
 # data = np.loadtxt('rm_3.00e+00_y_relic_40x40x50.dat')
 # nx, ny = 21, 81
@@ -75,10 +75,10 @@ data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50.dat')
 # data = np.loadtxt('rm_3.00e+00_y_relic_20x30x70.dat')
 # nx, ny = 20, 20
 # data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50_new.dat')
-# nx, ny = 20, 40
-# data = np.loadtxt('rm_3.00e+00_y_relic_20x40x60_new.dat')
-
-
+nx, ny = 20, 40
+data = np.loadtxt('rm_3.00e+00_y_relic_20x40x60_new.dat')
+# nx, ny = 20, 20
+# data = np.loadtxt('rm_3.00e+00_y_relic_20x20x60_new.dat')
 
 # Removed max_step=1. in pandemolator for this one -- terrible result...
 # nx, ny = 30, 30
@@ -106,6 +106,41 @@ r_sound_3 = data[:,15].reshape((nx, ny))
 
 t_life = 3e12*(1e-10/sin22th)*((1e-6/md)**5.)
 
+# nans, x = np.isnan(y), lambda z: z.nonzero()[0]
+# y[nans]= np.interp(x(nans), x(~nans), y[~nans])
+
+from scipy.interpolate import griddata
+# Function for interpolating nan-values in 2D array
+def fill_nan(data, method='linear'):
+    # Create x and y coordinate grids for the data
+    ny, nx = data.shape
+    x, y = np.meshgrid(np.arange(nx), np.arange(ny))
+    
+    # Flatten the arrays for use with griddata
+    x_flat = x.flatten()
+    y_flat = y.flatten()
+    data_flat = data.flatten()
+    
+    # Identify valid (non-NaN) points
+    valid = ~np.isnan(data_flat)
+    points_valid = np.vstack((x_flat[valid], y_flat[valid])).T
+    values_valid = data_flat[valid]
+    
+    # Points where data is NaN
+    points_missing = np.vstack((x_flat[~valid], y_flat[~valid])).T
+    
+    # Interpolate the missing data
+    data_flat[~valid] = griddata(points_valid, values_valid, points_missing, method=method)
+    
+    # Reshape back to the original data shape
+    return data_flat.reshape(data.shape)
+
+y = fill_nan(y, method='cubic')
+r_sound = fill_nan(r_sound, method='cubic')
+r_sound = fill_nan(r_sound, method='nearest')
+fs_length = fill_nan(fs_length, method='cubic')
+
+
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(y), levels=[-6.,-5.,-4.,-3.,-2.,-1.], colors='forestgreen', linewidths = 0.4, zorder=-1, linestyles='-')
 
 # plt.contour(np.log10(1e6*md), np.log10(sin22th), np.abs(Odh2_no_spin_stat-Odh2)/Odh2, levels=[0.1])
@@ -114,10 +149,6 @@ plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(y), levels=[-6.,-5.,-4
 # LYMAN-ALPHA
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(fs_length), levels=[np.log10(0.24)], colors='darkorange', linewidths=1.3, zorder=-3, linestyles='-')
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(r_sound), levels=[np.log10(0.34)], colors='#ff7b7b', linewidths=1.3, zorder=-4, linestyles='-')
-
-# plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(fs_length), levels=[np.log10(0.0195)], colors='darkorange', linewidths=1.3, zorder=-3, linestyles=':')
-# plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(r_sound), levels=[np.log10(0.0214)], colors='#ff7b7b', linewidths=1.3, zorder=-4, linestyles=':')
-#
 
 plt.contourf(np.log10(1e6*md), np.log10(sin22th), np.log10(fs_length), levels=[np.log10(0.24), 6.], colors='darkorange', alpha=0.25, zorder=-3)
 plt.contourf(np.log10(1e6*md), np.log10(sin22th), np.log10(r_sound), levels=[np.log10(0.34), 6.], colors='#ff7b7b', alpha=0.25, zorder=-4)
@@ -141,9 +172,9 @@ plt.fill_between(np.log10(1e6*dw_up[:,0]), np.log10(dw_up[:,1]), color='skyblue'
 
 # X-RAY CONSTRAINTS
 constraint = np.loadtxt('../../xray_constraints/overall_constraint.dat')
-plt.plot(np.log10(1e6*constraint[:,0]), np.log10(constraint[:,1]), color='black', lw=1.3, zorder=-2)
 plt.fill_between(np.log10(1e6*constraint[:,0]), np.log10(constraint[:,1]), 1e0, color='white', lw=1.3, alpha=1, zorder=-2)
 plt.fill_between(np.log10(1e6*constraint[:,0]), np.log10(constraint[:,1]), 1e0, color='black', lw=1.3, alpha=0.25, zorder=-2)
+plt.plot(np.log10(1e6*constraint[:,0]), np.log10(constraint[:,1]), color='black', lw=1.3, zorder=-2)
 
 # X-RAY PROJECTIONS
 athena_proj = np.loadtxt('../../xray_constraints/Athena_projection_2103.13242.dat', skiprows=2)
@@ -182,15 +213,15 @@ x3, y3 = get_xy(cs3)
 # plt.plot(x2[71:-18], y2[71:-18])
 # plt.plot(x3[18:], y3[18:])
 
-# ip1 = interp1d(y1, x1, kind='linear')
-# ip2 = interp1d(y2, x2, kind='linear')
-# ip3 = interp1d(y3, x3, kind='linear')
+ip1 = interp1d(y1, x1, kind='linear')
+ip2 = interp1d(y2, x2, kind='linear')
+ip3 = interp1d(y3, x3, kind='linear')
 
-# Y1 = np.linspace(-14.6, -12, 100)
+# Y1 = np.linspace(-14.4, -12, 100)
 # X1 = [ip1(y) for y in Y1]
-# Y2 = np.linspace(-16.3, -14.65, 100)
+# Y2 = np.linspace(-16, -14.4, 100)
 # X2 = [ip2(y) for y in Y2]
-# Y3 = np.linspace(-17.57, -16.31, 100)
+# Y3 = np.linspace(-17.1, -16.05, 100)
 # X3 = [ip3(y) for y in Y3]
 
 # plt.plot(X1, Y1, zorder=-3, color='darkorange', linestyle='--')
@@ -198,8 +229,12 @@ x3, y3 = get_xy(cs3)
 # plt.plot(X3, Y3, zorder=-3, color='#A300CC', linestyle='--')
 
 # BENCHMARK POINTS
-plt.plot(np.log10(12), np.log10(2.5e-13), marker='*', color='tomato')
-plt.plot(np.log10(20), np.log10(3.0e-15), marker='*', color='tomato')
+md_B1 = 11.12884 
+sin22th_B1 = 2.42446e-13
+md_B2 = 50.13483
+sin22th_B2 = 1.19378e-15
+plt.plot(np.log10(md_B1), np.log10(sin22th_B1), marker='*', color='tomato')
+plt.plot(np.log10(md_B2), np.log10(sin22th_B2), marker='*', color='tomato')
 
 #plt.plot(np.log10(10), np.log10(3.5e-13), marker='*', color='tomato')
 #plt.plot(np.log10(20), np.log10(3.5e-15), marker='*', color='tomato')

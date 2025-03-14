@@ -81,8 +81,12 @@ load_str_1 = './md_3.35982e-06;mX_1.00795e-05;sin22th_4.12463e-14;y_2.1568e-04;f
 load_str_1 = './md_3.35982e-06;mX_1.00795e-05;sin22th_7.01704e-15;y_5.43211e-04;full_new.dat'
 
 load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
+load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_2.03092e-16;y_3.71429e-03;full_new.dat'
 load_str_2 = './md_3.79269e-05;mX_1.13781e-04;sin22th_6.61474e-16;y_2.65322e-03;full_new.dat'
 load_str_2 = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full_new.dat'
+
+load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
+load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;full_new.dat'
 
 # load_str_1 = './md_2.48163e-06;mX_7.44489e-06;sin22th_1.4251e-12;y_2.76291e-05;full_new.dat'
 # load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_1.12534e-16;y_4.80046e-03;full_new.dat'

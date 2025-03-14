@@ -468,6 +468,8 @@ if __name__ == '__main__':
     load_str = './md_3.35982e-06;mX_1.00795e-05;sin22th_7.01704e-15;y_5.43211e-04;full.dat'
     load_str = './md_3.79269e-05;mX_1.13781e-04;sin22th_6.61474e-16;y_2.65322e-03;full.dat'
     load_str = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full.dat'
+    load_str = './md_2.06914e-05;mX_6.20741e-05;sin22th_2.03092e-16;y_3.71429e-03;full.dat'
+    load_str = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;full.dat'
 
     var_list = load_str.split(';')[:-1]
     m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]

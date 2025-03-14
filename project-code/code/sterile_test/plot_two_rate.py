@@ -72,6 +72,9 @@ def make_rate_file(m_d, m_X, M2_dd, M2_da, M2_aa, vert_el, n_d_grid, T_d_grid, T
 load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
 load_str_2 = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full_new.dat'
 
+load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
+load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;full_new.dat'
+
 data_1 = np.loadtxt(load_str_1)
 data_2 = np.loadtxt(load_str_2)
 
