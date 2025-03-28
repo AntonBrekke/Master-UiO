@@ -21,6 +21,7 @@ This is what we check.
 M = 1
 Gamma = 1e-5
 
+# Given in the PVS-scheme
 def D_BW2(s, M, Gamma):
     propagator_BW = 1/((s-M**2)**2 + (M*Gamma)**2)
     return propagator_BW
@@ -33,6 +34,17 @@ def D_RIS2(s, M, Gamma, off_shell=True):
         # On-shell propagator
         propagator_RIS = (2*(M*Gamma)**2)/((s-M**2)**2 + (M*Gamma)**2)**2
     return propagator_RIS
+
+# Given in the CUT-scheme. 
+# In the cut scheme, prop2 = prop*prop, which is not true in PVS-scheme 
+def D_CUT2(s, M, delta, Gamma):
+    # e.g. delta = m*Gamma 
+    propagator_CUT = (1 - cut_func(s-M**2, delta))**2*D_BW2(s, M, Gamma)
+    return propagator_CUT
+
+def cut_func(x, delta):
+    # E.g. the top hat function H(delta-x)*H(delta+x)
+    return (x < delta)*(x > -delta)
 
 def delta(x, a, eps):
     # pi times delta-function
@@ -74,6 +86,7 @@ ax1.plot(s, D_BW2(s, M, Gamma), color='tab:blue', lw=2, label=r'$D_{BW}$')
 ax2.plot(s, D_RIS2(s, M, Gamma, off_shell=True), color='r', lw=2, label=r'$D_{off}$')
 # On-shell
 ax2.plot(s, D_RIS2(s, M, Gamma, off_shell=False), color='green', lw=2, label=r'$D_{on}$')
+ax2.plot(s, D_CUT2(s, M, M*Gamma, Gamma), color='k', lw=2, label=r'$D_{off}$')
 
 # Width at half maximum
 HM1 = 0.5 * np.max(D_BW2(s, M, Gamma))

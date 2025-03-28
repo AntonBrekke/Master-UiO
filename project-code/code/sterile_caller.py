@@ -9,6 +9,8 @@ import constants_functions as cf
 import utils
 import densities as dens
 
+import matplotlib.pyplot as plt 
+
 # import scalar_mediator
 import vector_mediator
 import pandemolator as pandemolator
@@ -43,9 +45,9 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
     # M2_da = 4.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
 
     # Anton: Removed longitudinal component of spin sum
-    M2_dd = 4*y2*(c_th**4.)*(m_X2-6*m_d2)
-    # M2_da = 8*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
-    M2_da = 4*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+    M2_dd = 4*y2*(c_th**4.)*(m_X2-4*m_d2)
+    # M2_da = 4*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)
+    M2_da = 4*y2*(s_th**2.)*(c_th**2.) * (m_X2-m_d2)*(1 + m_d2/(2*m_X2))
     M2_aa = 4.*y2*(s_th**4.)*m_X2
 
     vert_fi = y2*y2*(c_th**4.)*(s_th**4.)
@@ -60,6 +62,9 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
         if m_X > 2.*m_d:
             import C_res_vector_no_spin_stat as C_res_vector_no_spin_stat
             # n = n_d + 2.*n_X
+            call.count = 0
+            call.x_list = []
+            call.C_list = []
             def C_n(T_a, T_d, xi_d, xi_X):
                 if T_a < m_X / 50.:
                     return 0.
@@ -75,6 +80,17 @@ def call(m_d, m_X, m_a, k_d, k_X, k_a, dof_d, dof_X, sin2_2th, y, spin_facs=True
                     C_aa = 0.
                     C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=1, gV2=0, res_sub=False, thermal_width=True) / 2.
                     C_aa_dd = C_res_vector.C_34_12(type=0, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True) / 4.
+                
+                x = m_d / T_a
+                if call.count % 10 == 0:
+                    call.x_list.append(x)
+                    call.C_list.append([C_XX_dd])
+                    i = call.count // 10
+                    if i > 0: 
+                        plt.loglog([call.x_list[i-1], call.x_list[i]], [abs(call.C_list[i-1][0]), abs(call.C_list[i][0])], color='r', marker='o', markersize=3)
+                        plt.pause(0.05)
+                call.count += 1
+                
                 print("C_ns:  ", f'{C_da:.5e}', f'{2.*C_aa:.5e}', f'{C_da_dd}', f'{2.*C_XX_dd:.5e}')
                 return C_da + 2.*C_aa + C_da_dd + C_aa_dd + 2.*C_XX_dd
             # rho = rho_d + rho_X
@@ -470,9 +486,11 @@ if __name__ == '__main__':
     load_str = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full.dat'
     load_str = './md_2.06914e-05;mX_6.20741e-05;sin22th_2.03092e-16;y_3.71429e-03;full.dat'
     load_str = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;full.dat'
+    load_str = './md_2.15030e-05;mX_6e-05;sin22th_1.32739e-15;y_1.77827e-03;full_new.dat'
 
     var_list = load_str.split(';')[:-1]
     m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
+    m_X = 3*m_d
     m_a = 0.
 
     # Anton: fermion = 1, boson = -1

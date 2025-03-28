@@ -77,6 +77,9 @@ data: Ttrel.t_grid[pan.i_ic:pan.i_end+1], Ttrel.T_SM_grid[pan.i_ic:pan.i_end+1],
 load_str = './md_9.41205e-05;mX_2.82361e-04;sin22th_6.23551e-17;y_1.11318e-02;full.dat'
 load_str = './md_9.41205e-05;mX_2.82361e-04;sin22th_6.61474e-16;y_3.50346e-03;full.dat'
 load_str = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;full_new.dat'
+load_str = './md_2.15e-05;mX_6.45e-05;sin22th_1.2e-15;y_1.9e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;sin22th_3e-15;y_1.5e-03;full_new.dat'
+load_str = './md_2.1503e-05;mX_6.4509e-05;sin22th_1.32739e-15;y_1.77827e-03;full_new.dat'
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]

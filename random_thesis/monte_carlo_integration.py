@@ -1,6 +1,7 @@
 import numpy as np
 import vegas 
 import matplotlib.pyplot as plt
+import time 
 
 def f(x):
     return x**2 
@@ -10,13 +11,19 @@ def f(x):
 def kernel(x):
     return f(x)
 
+alpha = 1
+
+start = time.time()
 integ = vegas.Integrator([0., 1.])
-result1 = integ(kernel, nitn=100, neval=5e5)
-result2 = integ(kernel, nitn=100, neval=1e5)
-result3 = integ(kernel, nitn=100, neval=5e4)
-result4 = integ(kernel, nitn=100, neval=1e4)
+result1 = integ(kernel, nitn=100, neval=5e5, alpha=alpha)
+result2 = integ(kernel, nitn=100, neval=1e5, alpha=alpha)
+result3 = integ(kernel, nitn=100, neval=5e4, alpha=alpha)
+result4 = integ(kernel, nitn=100, neval=1e4, alpha=alpha)
+end = time.time()
+print(f'Ran in {end-start:.5} s')
 
 true_ans = 1/3
+print("True answer: 1/3")
 
 fig = plt.figure()
 ax1 = fig.add_subplot(221)
@@ -29,10 +36,10 @@ r2_hist = [r.mean for r in result2.itn_results]
 r3_hist = [r.mean for r in result3.itn_results]
 r4_hist = [r.mean for r in result4.itn_results]
 
-hist1, bins1, _ = ax1.hist(r1_hist, bins=30, align='left')
-hist2, bins2, _ = ax2.hist(r2_hist, bins=30, align='left')
-hist3, bins3, _ = ax3.hist(r3_hist, bins=30, align='left')
-hist4, bins4, _ = ax4.hist(r4_hist, bins=30, align='left')
+hist1, bins1, _ = ax1.hist(r1_hist, bins=40, align='left')
+hist2, bins2, _ = ax2.hist(r2_hist, bins=40, align='left')
+hist3, bins3, _ = ax3.hist(r3_hist, bins=40, align='left')
+hist4, bins4, _ = ax4.hist(r4_hist, bins=40, align='left')
 
 ax1.axvline(result1.mean, color='r', ls='--')
 ax2.axvline(result2.mean, color='r', ls='--')

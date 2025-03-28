@@ -626,9 +626,12 @@ def ker_C_n_XX_dd_s_t_integral_Higgs(ct_min, ct_max, ct_p, ct_m, a, s, E1, E3, p
     m_X6 = m_X2*m_X4
     m_X8 = m_X4*m_X4
 
-    m_h = 3*m_X
+    Gamma_h = 1e-14
+
+    m_h = 10*m_X
     m_h2 = m_h*m_h
-    m_h4 = m_h2*m_h2
+    m_h2 = m_h2 - 1j*m_h*Gamma_h
+    m_h4 = m_h2*m_h2 + m_h2*Gamma_h**2
 
     # t_max,min - t_m,p = 2p1*p3*(ct_max - ct_m)
     t_add = m_d2 + m_X2
@@ -1025,7 +1028,7 @@ def C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0):
 
     # Anton: Monte-Carlo integration of the 4 integrals from 0 to 1 
     integ = vegas.Integrator(4 * [[0., 1.]])
-    result = integ(kernel, nitn=10, neval=5e4)
+    result = integ(kernel, nitn=10, neval=1e4)
     # if result.mean != 0.:
     #     print("Vegas error pp dd: ", result.sdev/fabs(result.mean), result.mean, result.Q)
     # print("pp dd", result.mean*chem_eq_fac/(256.*(pi**6.)), (exp(2.*xi_d)-exp(2.*xi_X))*th_avg_sigma_v_XX_dd(T_d, m_d, m_phi, vert))
@@ -1357,7 +1360,7 @@ def sigma_XX_dd_new(s, m_d, m_X, vert):
 
 # Anton: Added Higgs instead of removing longitudinal by hand
 @nb.jit(nopython=True, cache=True)
-def sigma_XX_dd_Higgs(s, m_d, m_X, m_h, vert):
+def sigma_XX_dd_Higgs(s, m_d, m_X, m_h=1, vert=1):
     """
     Anton: Since sigma ~ int d(cos(theta)) |M|^2 for 2 to 2 process, we must integrate |M|^2 analytically. 
     Switch integration to t = m_d^2 + m_phi^2 - 2E1*E3 + 2p1*p3*cos(theta), d(cos(theta)) = 1/(2*p1*p3)dt
@@ -1394,7 +1397,12 @@ def sigma_XX_dd_Higgs(s, m_d, m_X, m_h, vert):
     m_X6 = m_X2*m_X4
     m_X8 = m_X4*m_X4
 
+    m_h = 10*m_X
+    Gamma_h = 1e-15
+    Gamma_h2 = Gamma_h*Gamma_h
+
     m_h2 = m_h*m_h
+    m_h2 = m_h2 - 1j*m_h*Gamma_h
     m_h4 = m_h2*m_h2
 
     s2 = s*s
@@ -1417,6 +1425,9 @@ def sigma_XX_dd_Higgs(s, m_d, m_X, m_h, vert):
 
     int_t_M2_lower = 8*vert*(-(1/(m_X4*(m_h2-s)*(s-2*m_X2)))*(-4*m_X6*(m_h2-8*m_d2)*(4*m_d2-m_X2)+s2*(-4*m_h2*m_d4+m_X4*(m_h2+12*m_d2)+4*m_d2*m_X2*(m_h2+8*m_d2))-4*m_X2*s*(m_h2*(3*m_d2*m_X2-4*m_d4)+32*m_d4*m_X2-8*m_d2*m_X4+m_X6)-s3*(2*m_d2+m_X2)**2)*(np.log(t_lower-m_d2)-np.log(-m_d2-2*m_X2+s+t_lower))-(2*t_lower*(m_h4*(m_d2*(8*m_X2-2*s)+m_X4)-2*m_h2*(4*m_d2*m_X2*(2*m_X2+s)+m_X4*s)+8*m_d4*(12*m_X4-4*m_X2*s+s2)+8*m_d2*m_X2*s*(s-m_X2)+m_X4*s2))/(m_X4*(m_h2-s)**2)+(m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_lower)-(m_X2-4*m_d2)**2/(m_d2-t_lower))
 
+    int_t_M2_upper = 8*vert*((1/(m_X4*(2*m_X2-s)*(Gamma_h2*m_h2+(m_h2-s)**2)))*(Gamma_h2*m_h2*(4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))+(m_h2-s)*(-4*m_X6*(m_h2-8*m_d2)*(4*m_d2-m_X2)+s2*(-4*m_h2*m_d4+m_X4*(m_h2+12*m_d2)+4*m_d2*m_X2*(m_h2+8*m_d2))-4*m_X2*s*(m_h2*(3*m_d2*m_X2-4*m_d4)+32*m_d4*m_X2-8*m_d2*m_X4+m_X6)-s3*(2*m_d2+m_X2)**2))*(np.log(t_upper-m_d2)-np.log(-m_d2-2*m_X2+s+t_upper))-(2*t_upper*(8*m_h2*m_d2*m_X2*(Gamma_h2+m_h2)-2*s*(m_h2*m_d2*(Gamma_h2+m_h2)+m_X4*(m_h2+4*m_d2)+4*m_d2*m_X2*(m_h2+4*m_d2))+m_X4*(Gamma_h2*m_h2+m_h4-16*m_h2*m_d2+96*m_d4)+s2*(8*m_d4+8*m_d2*m_X2+m_X4)))/(m_X4*(Gamma_h2*m_h2+(m_h2-s)**2))+(m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_upper)-(m_X2-4*m_d2)**2/(m_d2-t_upper))
+
+    int_t_M2_lower = 8*vert*((1/(m_X4*(2*m_X2-s)*(Gamma_h2*m_h2+(m_h2-s)**2)))*(Gamma_h2*m_h2*(4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))+(m_h2-s)*(-4*m_X6*(m_h2-8*m_d2)*(4*m_d2-m_X2)+s2*(-4*m_h2*m_d4+m_X4*(m_h2+12*m_d2)+4*m_d2*m_X2*(m_h2+8*m_d2))-4*m_X2*s*(m_h2*(3*m_d2*m_X2-4*m_d4)+32*m_d4*m_X2-8*m_d2*m_X4+m_X6)-s3*(2*m_d2+m_X2)**2))*(np.log(t_lower-m_d2)-np.log(-m_d2-2*m_X2+s+t_lower))-(2*t_lower*(8*m_h2*m_d2*m_X2*(Gamma_h2+m_h2)-2*s*(m_h2*m_d2*(Gamma_h2+m_h2)+m_X4*(m_h2+4*m_d2)+4*m_d2*m_X2*(m_h2+4*m_d2))+m_X4*(Gamma_h2*m_h2+m_h4-16*m_h2*m_d2+96*m_d4)+s2*(8*m_d4+8*m_d2*m_X2+m_X4)))/(m_X4*(Gamma_h2*m_h2+(m_h2-s)**2))+(m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_lower)-(m_X2-4*m_d2)**2/(m_d2-t_lower))
 
     sigma = ((int_t_M2_upper - int_t_M2_lower).real / (64.*np.pi*s*p1cm*p1cm))
     # Anton: divide by symmetry factor 2 for identical particles in phase space integral
@@ -1970,7 +1981,7 @@ if __name__ == '__main__':
         return sigma / 2
         return sigma_Depta / 2
 
-    ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral_new_3(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, vert=vert_el)
+    # ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral_new_3(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, vert=vert_el)
 
     # ker_C_n_XX_dd_s_t_integral_val_new = ker_C_n_XX_dd_s_t_integral_new(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, vert=vert_el)
 
@@ -1982,35 +1993,35 @@ if __name__ == '__main__':
 
     # ker_C_n_pp_dd_s_t_integral_val_previous = ker_C_n_pp_dd_s_t_integral_previous(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_phi=m_X, vert=vert_el)
 
-    ker_C_n_XX_dd_s_t_integral_val_Higgs = ker_C_n_XX_dd_s_t_integral_Higgs(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, vert=vert_el)
+    # ker_C_n_XX_dd_s_t_integral_val_Higgs = ker_C_n_XX_dd_s_t_integral_Higgs(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, vert=vert_el)
     # print(f'ker_C_n_XX_dd_s_t_integral ran in {time.time()-time1}s')
     # print(ker_C_n_XX_dd_s_t_integral_val)
     # C_n_XX_dd_val = C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert, type=0)
     # print(C_n_XX_dd_val)
 
   
-    fig = plt.figure()
-    ax = fig.add_subplot(121)
-    ax2 = fig.add_subplot(122)
+    # fig = plt.figure()
+    # ax = fig.add_subplot(121)
+    # ax2 = fig.add_subplot(122)
 
-    # print(np.max(ker_C_n_XX_dd_s_t_integral_val), np.max(ker_C_n_XX_dd_s_t_integral_val_new))
-    # x = ln(s/s_min) / ln(s_max/s_min)
-    ax.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val, 'r', label='XX_dd')
-    # ax.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val, 'tab:blue', label='pp_dd')
-    # ax.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_me, 'tab:blue', label='pp_dd')
-    # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_Depta, 'tab:green', label='pp_dd_Depta')
-    # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_previous, 'tab:orange', label='pp_dd_previous')
-    ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_Higgs, 'tab:orange', label='pp_dd_previous')
-    # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_new, 'tab:blue', label='XX_dd_new')
-    ax.set_xscale('log')
-    # ax.set_yscale('log')
-    ax2.set_xscale('log')
-    # ax2.set_yscale('log')
+    # # print(np.max(ker_C_n_XX_dd_s_t_integral_val), np.max(ker_C_n_XX_dd_s_t_integral_val_new))
+    # # x = ln(s/s_min) / ln(s_max/s_min)
+    # ax.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val, 'r', label='XX_dd')
+    # # ax.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val, 'tab:blue', label='pp_dd')
+    # # ax.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_me, 'tab:blue', label='pp_dd')
+    # # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_Depta, 'tab:green', label='pp_dd_Depta')
+    # # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_previous, 'tab:orange', label='pp_dd_previous')
+    # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_Higgs, 'tab:orange', label='pp_dd_previous')
+    # # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_new, 'tab:blue', label='XX_dd_new')
+    # ax.set_xscale('log')
+    # # ax.set_yscale('log')
+    # ax2.set_xscale('log')
+    # # ax2.set_yscale('log')
             
-    ax.legend()
-    ax2.legend()
-    fig.tight_layout()
-    plt.show()
+    # ax.legend()
+    # ax2.legend()
+    # fig.tight_layout()
+    # plt.show()
 
 
     s_min = 4*m_d**2

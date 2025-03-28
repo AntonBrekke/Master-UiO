@@ -16,6 +16,7 @@ k = 100
 def fprime(x, y):
     # RHS of the ODE 
     # return [np.exp(-a*x)*(k*np.cos(k*x)-a*np.sin(k*x))]
+    # return [(1 - 2*(x>0))*x]
     return [np.sin(k*x)/(k*x)]
 
 def event_zero(x, y):
@@ -31,7 +32,7 @@ dx = x[1]-x[0]
 atol = 0
 rtol = 1e-3
 
-max_step = dx
+max_step = 4e-2
 
 sol_RK45 = solve_ivp(fun=fprime, t_span=(x0, x1), y0=y0, method='RK45', t_eval=x, events=[event_zero], atol=atol, rtol=rtol, max_step=max_step)
 sol_Radau = solve_ivp(fun=fprime, t_span=(x0, x1), y0=y0, method='Radau', t_eval=x, events=[event_zero], atol=atol, rtol=rtol, max_step=max_step)
