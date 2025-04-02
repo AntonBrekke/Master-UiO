@@ -35,6 +35,7 @@ import scalar_mediator
 # load_str = './md_1.08264e-05;mX_3.24791e-05;sin22th_1.1721e-16;y_3.8676e-03;full_new.dat'
 load_str = './md_2e-05;mX_6e-05;mh_1.206e-04;sin22th_1e-15;y_1e-04;full_new.dat'
 load_str = './md_2e-05;mX_6e-05;mh_1.194e-04;sin22th_1e-15;y_1.1e-03;full_new.dat'
+load_str = './md_2.06914e-05;mX_1.03457e-04;mh_6.20741e-05;sin22th_6.61474e-16;y_1.83218e-03;full_new.dat'
 
 
 var_list = load_str.split(';')[:-1]
@@ -115,7 +116,7 @@ data_evo = np.loadtxt(load_str)
 10: n_X_grid_sol (n_phi_grid_sol)
 """
 
-i_skip = 30
+i_skip = 5
 t_grid = data_evo[::i_skip,0]
 T_SM_grid = data_evo[::i_skip,1]
 T_nu_grid = data_evo[::i_skip,2]
@@ -218,31 +219,32 @@ if not os.path.isfile('./' + filename):
 
 data = np.loadtxt(filename)
 
-x_grid = data[:,0]
-H = data[:,1]
-C_X_dd = data[:,2]
-C_dd_X = data[:,3]
-C_h_dd = data[:,4]
-C_dd_h = data[:,5]
-C_X_da = data[:,6]
-C_da_X = data[:,7]
-C_h_da = data[:,8]
-C_da_h = data[:,9]
-C_X_aa = data[:,10]
-C_aa_X = data[:,11]
-C_h_aa = data[:,12]
-C_aa_h = data[:,13]
-C_XX_dd = data[:,14]
-C_dd_XX = data[:,15]
-C_hh_dd = data[:,16]
-C_dd_hh = data[:,17]
-C_dd_dd = data[:,18]
-C_da_dd = data[:,19]
-C_dd_da = data[:,20]
-C_aa_dd = data[:,21]
-C_dd_aa = data[:,22]
-C_h_XX = data[:,23]
-C_XX_h = data[:,24]
+data_skip = 5 
+x_grid = data[::data_skip,0]
+H = data[::data_skip,1]
+C_X_dd = data[::data_skip,2]
+C_dd_X = data[::data_skip,3]
+C_h_dd = data[::data_skip,4]
+C_dd_h = data[::data_skip,5]
+C_X_da = data[::data_skip,6]
+C_da_X = data[::data_skip,7]
+C_h_da = data[::data_skip,8]
+C_da_h = data[::data_skip,9]
+C_X_aa = data[::data_skip,10]
+C_aa_X = data[::data_skip,11]
+C_h_aa = data[::data_skip,12]
+C_aa_h = data[::data_skip,13]
+C_XX_dd = data[::data_skip,14]
+C_dd_XX = data[::data_skip,15]
+C_hh_dd = data[::data_skip,16]
+C_dd_hh = data[::data_skip,17]
+C_dd_dd = data[::data_skip,18]
+C_da_dd = data[::data_skip,19]
+C_dd_da = data[::data_skip,20]
+C_aa_dd = data[::data_skip,21]
+C_dd_aa = data[::data_skip,22]
+C_h_XX = data[::data_skip,23]
+C_XX_h = data[::data_skip,24]
 
 # plt.loglog(x_grid, C_da_dd/C_da_X, color='dodgerblue')
 # plt.show()
@@ -286,6 +288,7 @@ print(np.max(abs(C_X_aa)))
 print(np.max(abs(C_aa_X)))
 
 # Anton: 1e6 to make GeV to keV 
+# plt.loglog(x_grid, 1e6*H, color=ch, ls='-', zorder=0) #83781B
 plt.loglog(x_grid, 1e6*3*H, color=ch, ls='-', zorder=0) #83781B
 
 plt.loglog(x_grid, 1e6*abs(C_dd_X), color=c1, ls='-', zorder=-4) #114B5F
@@ -312,16 +315,16 @@ plt.text(1.5e-4, 8e-23, r'$\rightarrow$', fontsize=8, color='0', horizontalalign
 
 
 ax.text(2e-4, 3e-14, r"$3H$", color=ch, fontsize=10, rotation=0)
-ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow X$", color=c1, fontsize=10, rotation=0)
-ax.text(1.5e-3, 3e-25, r"$\nu_s \nu_\alpha \to X$", color=c2, fontsize=10, rotation=0)
-ax.text(1.5e-3, 0.3e-19, r"$\nu_s \nu_s \to X X$", color=c3, fontsize=10, rotation=0)
-ax.text(2.2e-3, 8e-28, r"$X X \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
+ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow \Phi$", color=c1, fontsize=10, rotation=0)
+ax.text(1.5e-3, 3e-25, r"$\nu_s \nu_\alpha \to \Phi$", color=c2, fontsize=10, rotation=0)
+ax.text(1.5e-3, 0.3e-19, r"$\nu_s \nu_s \to \Phi \Phi$", color=c3, fontsize=10, rotation=0)
+ax.text(2.2e-3, 8e-28, r"$\Phi \Phi \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
 
-plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-', color='black', label=r'$\text{BP1}$')
-plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
+plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-', color='black', label=r'$\Phi=X_\mu$')
+plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\Phi=h$')
 
 
-# plt.fill_betweenx([1e-28, 1e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+plt.fill_betweenx([1e-28, 1e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
 plt.loglog([1e-3]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
 #plt.fill_betweenx([1e-28, 1e-8], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 

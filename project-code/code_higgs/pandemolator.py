@@ -21,7 +21,7 @@ fac_abund_stop = 100.
 xi_ratio_stop = 100.
 
 class TimeTempRelation(object):
-    def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=300, m_psi=None, dof_psi=None, k_psi=None):
+    def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=1000, m_psi=None, dof_psi=None, k_psi=None):
         # print('Initializing TimeTempRelation')
         if m_psi is None:
             self.psi_in_SM = True

@@ -189,8 +189,6 @@ load_str = './md_2e-05;mX_4e-04;mh_6e-05;sin22th_1e-15;y_1.8e-03;full_new.dat'
 load_str = './md_2e-05;mX_2e-04;mh_6e-05;sin22th_1e-15;y_1.5e-03;full_new.dat'
 load_str = './md_2e-05;mX_2e-04;mh_6e-05;sin22th_1e-15;y_1.3e-03;full_new.dat'
 load_str = './md_2e-05;mX_6e-05;mh_1.194e-04;sin22th_1e-13;y_2.3e-04;full_new.dat'      # **
-load_str = './md_2e-05;mX_1e-03;mh_6e-05;sin22th_1e-15;y_2.6e-03;full_new.dat'          # interesting 
-load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.5e-03;full_new.dat'          # interesting 
 load_str = './md_2e-05;mX_1.4e-04;mh_2.786e-04;sin22th_1e-15;y_1.5e-03;full_new.dat'        # interesting 
 load_str = './md_2e-05;mX_1.4e-04;mh_1.68e-04;sin22th_1e-15;y_1.5e-03;full_new.dat'         # interesting 
 load_str = './md_2e-05;mX_1.4e-04;mh_6e-05;sin22th_1e-15;y_1.8e-03;full_new.dat'         # interesting 
@@ -232,6 +230,8 @@ load_str = './md_2e-05;mX_1e-04;mh_3e-04;sin22th_1e-1;y_1e-09;full_new.dat'
 load_str = './md_2e-05;mX_1e-04;mh_3e-04;sin22th_1e-11;y_5e-09;full_new.dat'
 load_str = './md_2e-05;mX_1e-04;mh_3e-04;sin22th_1e-11;y_6e-09;full_new.dat'
 load_str = './md_2e-05;mX_1e-04;mh_3e-04;sin22th_1e-11;y_8e-09;full_new.dat'
+load_str = './md_2e-05;mX_1e-03;mh_6e-05;sin22th_1e-15;y_2.6e-03;full_new.dat'          # interesting 
+load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.5e-03;full_new.dat'          # interesting 
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]

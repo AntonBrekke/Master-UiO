@@ -115,8 +115,9 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                 else:
                     C_da = 0.
                     C_aa = 0.
-                    C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True) / 2.
-                    C_aa_dd = C_res_vector.C_34_12(type=0, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True) / 4.
+                    C_da_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 2.
+                    
+                    C_aa_dd = C_res_vector.C_34_12(type=0, nFW=2., nBW=-2., m1=m_d, m2=m_d, m3=m_a, m4=m_a, k1=k_d, k2=k_d, k3=k_a, k4=k_a, T1=T_d, T2=T_d, T3=T_a, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=0., xi4=0., vert=vert_fi, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 4.
 
                 x = m_d / T_a
                 if call.count % 10 == 0:
@@ -157,7 +158,7 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                 else:
                     C_da = 0.
                     C_aa = 0.
-                    C_da_dd = C_res_vector.C_34_12(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=False, thermal_width=True) / 2.
+                    C_da_dd = C_res_vector.C_34_12(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 2.
                     C_aa_dd = 0.#C_res_vector.C_34_12(12, 1., -1., m_d, m_d, m_a, m_a, k_d, k_d, k_a, k_a, T_d, T_d, T_a, T_a, xi_d, xi_d, 0., 0., vert_fi, m_X2, m_Gamma_X2, res_sub=False, thermal_width=True) / 4.
                 # print("C_rhos:", f'{C_X_da:.5e}', f'{C_h_da:.5e}', f'{2.*C_X_aa:.5e}', f'{C_h_aa:.5e}')
                 return C_da + C_aa + C_da_dd + C_aa_dd
@@ -186,7 +187,8 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                     return 2.*(C_X_dd + C_h_dd)
                 elif m_d / T_d - xi_d < 4.:
 
-                    C_dd_X_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True) / 4.
+                    C_dd_X_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 4.
+
                     C_dd_h_dd = C_res_scalar.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el*(m_d2/m_X2)**2, m_phi2=m_h2, m_Gamma_phi2=m_Gamma_h2, res_sub=False, thermal_width=True) / 4.
                 
                     return 2.*(C_dd_X_dd + C_dd_h_dd)
@@ -568,18 +570,24 @@ if __name__ == '__main__':
     load_str = './md_2.15030e-05;mX_6e-05;sin22th_1.32739e-15;y_1.77827e-03;full_new.dat'
     load_str = './md_2.15030e-05;mX_6e-05;sin22th_1.32739e-15;y_1.77827e-03;full_new.dat'
 
+    load_str = './md_2.06914e-05;mX_1.03457e-04;mh_6.20741e-05;sin22th_6.61474e-16;y_1.83218e-03;full.dat'
+
     var_list = load_str.split(';')[:-1]
-    m_d, m_X, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
-    m_d = 20e-6
-    m_X = 5*m_d
-    # m_h = 2.01*m_X
-    # m_h = 1.99*m_X
-    m_h = 3*m_X
-    # m_h = 1.2*m_X
-    # m_h = m_X
+    m_d, m_X, m_h, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
+    # m_d = 20e-6
+    # m_X = 5*m_d
+    # m_h = 3*m_d
     m_a = 0.
-    y = 8e-9
-    sin2_2th = 1e-11
+    # y = 1.53e-3
+    # sin2_2th = 1e-15
+    
+    # BP1 
+    # m_d = 20e-6
+    # m_X = 5*m_d
+    # m_h = 3*m_d
+    # y = 1.53e-3
+    # sin2_2th = 1e-15
+
 
     # Anton: fermion = 1, boson = -1
     k_d = 1.
@@ -605,6 +613,10 @@ if __name__ == '__main__':
     # print(fs_length, fs_length_3, T_kd, T_kd_3, T_d_kd, T_d_kd_3, r_sound, r_sound_3)
     end = time.time()
     print(f'sterile_caller ran in {end-start:.5f}s')
+
+    print(r_sound)
+    print(fs_length)
+
 
     md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1].rstrip('0').rstrip('.')
     mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1].rstrip('0').rstrip('.')

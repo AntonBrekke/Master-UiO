@@ -1370,7 +1370,7 @@ def C_n_XX_dd(m_d, m_X, m_h, k_d, k_X, T_d, xi_d, xi_X, vert, th, m_Gamma_h2, ty
 
     # Anton: Monte-Carlo integration of the 4 integrals from 0 to 1 
     integ = vegas.Integrator(4 * [[0., 1.]])
-    result = integ(kernel, nitn=10, neval=5e3)
+    result = integ(kernel, nitn=10, neval=1e4)
     # if result.mean != 0.:
     #     print("Vegas error pp dd: ", result.sdev/fabs(result.mean), result.mean, result.Q)
     # print("pp dd", result.mean*chem_eq_fac/(256.*(pi**6.)), (exp(2.*xi_d)-exp(2.*xi_X))*th_avg_sigma_v_XX_dd(T_d, m_d, m_phi, vert))
@@ -1401,18 +1401,18 @@ def M2_XX_dd(s, t, m_d2, vert, m_X2):
     return vert*M2 
 
 # @nb.jit(nopython=True, cache=True)
-def ker_C_34_12_s_t_integral(s, t, a, ct_m, ct_p, E1, E3, p1, p3, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, gV1=0, gV2=0, res_sub=False):
+def ker_C_34_12_s_t_integral(s, t, a, ct_m, ct_p, E1, E3, p1, p3, m1, m2, m3, m4, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, res_sub=False):
     m12 = m1*m1
     m32 = m3*m3
     t_add = m12 + m32
     t_m = t_add - 2.*E1*(E3 - p1*p3/E1*ct_m)
     t_p = t_add - 2.*E1*(E3 - p1*p3/E1*ct_p)
 
-    integrand = vector_mediator.M2_gen_new(s, t, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, gV1, gV2, res_sub) * 1/np.sqrt(a*(t - t_m)*(t - t_p))
+    integrand = vector_mediator.M2_gen_new_3(s, t, m1, m2, m3, m4, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, sub=res_sub) * 1/np.sqrt(a*(t - t_m)*(t - t_p))
     return integrand
 
 # @nb.jit(nopython=True, cache=True)
-def ker_C_34_12_s(s, E1, E2, E3, a, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_X2, m_Gamma_X2, gV1, gV2, res_sub):
+def ker_C_34_12_s(s, E1, E2, E3, a, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, res_sub):
     # t = E1**2 + E3**2 - p1**2 + p3**2 + 2*p1*p3*ct
     t = (E1-p1)*(E1+p1) + (E3-p3)*(E3+p3) + 2*p1*p3*ct
     in_res = (ct_max > ct_min)
@@ -1420,12 +1420,12 @@ def ker_C_34_12_s(s, E1, E2, E3, a, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, 
     t_int = np.zeros(s.size)
 
     # Anton: New
-    t_int[in_res] = ker_C_34_12_s_t_integral(s[in_res], t[in_res], a[in_res], ct_m[in_res], ct_p[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_X2, m_Gamma_X2[in_res], gV1, gV2, res_sub)
+    t_int[in_res] = ker_C_34_12_s_t_integral(s[in_res], t[in_res], a[in_res], ct_m[in_res], ct_p[in_res], E1[in_res], E3[in_res], p1[in_res], p3[in_res], m1, m2, m3, m4, vert, m_d2, m_X2, m_h2, m_Gamma_X2[in_res], m_Gamma_h2[in_res], res_sub)
 
     return t_int
 
 # @nb.jit(nopython=True, cache=True)
-def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, gV1, gV2, res_sub, thermal_width):
+def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, res_sub, thermal_width):
     m12 = m1*m1
     m22 = m2*m2
     m32 = m3*m3
@@ -1522,10 +1522,22 @@ def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2,
         E3_integral = sqrt_fac/(T3*m_X) + np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))
         m_Gamma_X_T = sqrt(m_Gamma_X2)*(1.+m_X*T3*np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))/sqrt_fac)
         m_Gamma_X_T2 = m_Gamma_X_T*m_Gamma_X_T
+
+        m_h = sqrt(m_h2)
+        sqrt_arg = (m_h2-4.*m3*m3)*((E1+E2)**2.-m_h2)
+        sqrt_fac = np.sqrt(np.fmax(sqrt_arg, 1e-200))
+        E3p = 0.5*(E12+sqrt_fac/m_h)
+        E3m = 0.5*(E12-sqrt_fac/m_h)
+        exp_3p_xi = np.exp(np.fmin(xi3-E3p/T3, max_exp_arg))
+        exp_3m_xi = np.exp(np.fmin(xi3-E3m/T3, max_exp_arg))
+        E3_integral = sqrt_fac/(T3*m_h) + np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))
+        m_Gamma_h_T = sqrt(m_Gamma_X2)*(1.+m_h*T3*np.log((1.+exp_3p_xi)/(1.+exp_3m_xi))/sqrt_fac)
+        m_Gamma_h_T2 = m_Gamma_h_T*m_Gamma_h_T
     else:
+        m_Gamma_h_T2 = m_Gamma_h2*np.ones(s.size)
         m_Gamma_X_T2 = m_Gamma_X2*np.ones(s.size)
 
-    ker_s = ker_C_34_12_s(s, E1, E2, E3, a, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_X2, m_Gamma_X_T2, gV1, gV2, res_sub)
+    ker_s = ker_C_34_12_s(s, E1, E2, E3, a, ct, p1, p2, p3, ct_min, ct_max, ct_m, ct_p, m1, m2, m3, m4, vert, m_d2, m_X2, m_h2, m_Gamma_X_T2, m_Gamma_h_T2, res_sub)
 
     jac = E1*(log_E1_max-log_E1_min)*E2*(log_E2_max-log_E2_min)*E3*(log_E3_max-log_E3_min)*s*(log_s_max-log_s_min)
     res = jac*p3*dist*ker_s
@@ -1537,7 +1549,7 @@ def ker_C_34_12(x, log_s_min, log_s_max, type, nFW, nBW, m1, m2, m3, m4, k1, k2,
 # note that when using thermal width it is assumed that m3 = m4 = md, T3 = T4 = Td, xi3 = xi4 = xid, xi_phi = 2 xi_d
 # and 3, 4 are fermions, phi is boson
 # Anton: Added Monte-Carlo integral for t-integration
-def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, gV1=0, gV2=0, res_sub=False, thermal_width=True):
+def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, res_sub=False, thermal_width=True):
     # Anton: Integration order is now s, E1, E2, E3, t
     s_min = max((m1+m2)**2., (m3+m4)**2.)*offset # to prevent accuracy problems
     E1_max = max((max_exp_arg + xi1)*T1, 1e1*m1)
@@ -1560,7 +1572,7 @@ def C_34_12(type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1,
     for i in range(len(s_vals)-1):
         @vegas.batchintegrand
         def kernel(x):
-            return ker_C_34_12(x, log(s_vals[i]), log(s_vals[i+1]), type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_X2, m_Gamma_X2, gV1, gV2, res_sub, thermal_width)
+            return ker_C_34_12(x, log(s_vals[i]), log(s_vals[i+1]), type, nFW, nBW, m1, m2, m3, m4, k1, k2, k3, k4, T1, T2, T3, T4, xi1, xi2, xi3, xi4, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, res_sub, thermal_width)
         integ = vegas.Integrator(4 * [[0., 1.]] + [[-1, 1]])
         result = integ(kernel, nitn=10, neval=1e5)
         # print(result.summary())
@@ -1797,12 +1809,107 @@ def sigma_XX_dd_Higgs(s, m_d, m_X, m_h, vert, th, m_Gamma_h2):
     # Anton: divide by symmetry factor 2 for identical particles in phase space integral
     return sigma / 2
 
+# Anton: Added Higgs instead of removing longitudinal by hand
+@nb.jit(nopython=True, cache=True)
+def sigma_Xh_dd_Higgs(s, m_d, m_X, m_h, vert, th, m_Gamma_X2):
+    """
+    Anton: Since sigma ~ int d(cos(theta)) |M|^2 for 2 to 2 process, we must integrate |M|^2 analytically. 
+    Switch integration to t = m_d^2 + m_phi^2 - 2E1*E3 + 2p1*p3*cos(theta), d(cos(theta)) = 1/(2*p1*p3)dt
+    Since sigma is Lorentz invariant, calculate in CM-frame
+    t = (p1-p3)^2 = (E1cm - E3cm)^2 - (p1cm - p3cm)^2
+      = (E1cm - E3cm)^2 - (p1cm^2 + p3cm^2 - 2*p1cm*p3cm*cos(theta))
+    This gives upper and lower bounds (cos(theta)=1, cos(theta)=-1)
+    t_upper = (E1cm - E3cm)^2 - (p1cm - p3cm)^2 = (E1cm-E3cm + (p1cm-p3cm))*(E1cm-E3cm - (p1cm-p3cm))
+    t_lower = (E1cm - E3cm)^2 - (p1cm + p3cm)^2 = (E1cm-E3cm + (p1cm+p3cm))*(E1cm-E3cm - (p1cm+p3cm))
+    s = (p1/3 + p2/4)^2 = (E1/3cm + E2/4cm)^2 
+    sqrt(s) = E1/3cm + E2/4cm
+    Trick: E2/4^2 = E1/3^2 - m1/3^2 + m2/4^2
+    => (sqrt(s) - E1/3cm)^2 = E1/3cm^2 - m1/3^2 + m2/4^2
+    => E1/3cm = (s + m1/3^2 - m2/4^2) / (2*sqrt(s))
+    which would also give momentum 
+    p1/3cm = sqrt(E1/3cm^2 - m1/3^2) = 1/(2*sqrt(s))*sqrt([s - (m1/3 + m2/4)^2]^2 - 4*m1/3^2*m2/4^2)
+    for integration bounds. 
+    Two heavysides - one from integration of phase-space H(E_cm - m3 - m4), one from demanding p1/2cm positive: 
+    H(1/(4*s)*{[s - (m1 + m2)]^2 - 4*m1^2*m2^2}) = H([s - (m1 + m2)^2]^2 - 4*m1^2*m2^2)
+    = H(s - m1 - m2 - 2*m1*m2) = H(s - (m1 + m2)^2) = H(E_cm - m1 - m2)
+    Cross-section:
+    sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*p1cm^2) 
+          * int_{t_lower}^{t_upper} dt |M|^2
+    Note: This function can be vectorized, but is not needed. 
+          Use np.vectorize(sigma_XX_dd)(s, m_d, m_X, vert) instead if array output is wanted.
+    """
+    m_d2 = m_d*m_d
+    m_d4 = m_d2*m_d2
+    m_d6 = m_d2*m_d4
+
+    m_X2 = m_X*m_X
+    m_X4 = m_X2*m_X2
+    m_X6 = m_X2*m_X4
+
+    gss = np.cos(th)**2
+    gss2 = gss*gss
+
+    m_h2 = m_h*m_h
+    m_h4 = m_h2*m_h2
+    m_h6 = m_h2*m_h4
+
+    # off-shell propagators in PVS-scheme 
+    # Can cause problem with e.g. negativity of cross-section
+    sprop = (s-m_X2)/((s-m_X2)**2 + m_Gamma_X2)
+    sprop2 = ((s-m_X2)**2-m_Gamma_X2)/((s-m_X2)**2 + m_Gamma_X2)**2
+
+    # off-shell propagators in CUT-scheme with top-hat cut 
+    # delta = 1e3*np.sqrt(m_Gamma_h2)
+    # x = s-m_h2
+    # hprop = (1 -(x < delta)*(x > -delta)) * 1 / ((s-m_h2 + 1j*m_Gamma_h2))
+    # hprop2 = hprop*hprop.conjugate()
+
+    s2 = s*s
+    s3 = s*s2
+    # Anton: Heavyside-functions
+    if s < 4*m_d**2 or s < (m_X+m_h)**2:
+        return 0. 
+
+    """
+    E1cm = (s + m1*m1 - m2*m2) / (2*np.sqrt(s))
+    E3cm = (s + m3*m3 - m4*m4) / (2*np.sqrt(s))
+    p1cm = np.sqrt((E1cm - m1)*(E1cm + m1))
+    p3cm = np.sqrt((E3cm - m3)*(E3cm + m3))
+
+    E13diff = (m1*m1 - m2*m2 - m3*m3 + m4*m4) / (2*np.sqrt(s))
+    t_upper = (E13diff + (p1cm - p3cm))*(E13diff - (p1cm - p3cm))
+    t_lower = (E13diff + (p1cm + p3cm))*(E13diff - (p1cm + p3cm))
+    """
+
+    # Anton: Make upper and lower integration bounds 
+    E1cm = np.sqrt(s)/2
+    E3cm = (s + m_X2 - m_h2) / (2*np.sqrt(s))
+    # Anton: Three-momenta in CM-frame 
+    p1cm = np.sqrt((E1cm - m_d)*(E1cm + m_d))
+    p3cm = np.sqrt((E3cm - m_X)*(E3cm + m_X))
+
+    # Anton: Upper and lower integration bound 
+    # Anton: Add imaginary unit to avoid trouble with log etc
+    E13diff = (m_h2 - m_X2) / (2*np.sqrt(s))
+    t_upper = (E13diff + (p1cm - p3cm))*(E13diff - (p1cm - p3cm)) + 0j
+    t_lower = (E13diff + (p1cm + p3cm))*(E13diff - (p1cm + p3cm)) + 0j
+
+    # Added Higgs instead of removing longitudinal by hand 
+
+    int_t_M2_upper = (1/(gss2**2*m_X4))*8*vert*((2*gss2**2*m_d2*m_X2*(m_h2-4*m_d2)*(4*m_d2-m_X2))/(m_d2-t_upper)+t_upper*(gss2**2*m_d2*(-4*m_d2-2*m_X2+s)+4*gss2*m_d2*sprop*(m_h2*(m_X2+s)+2*m_d2*m_X2-3*m_X4-s2)-4*sprop2*(m_h4*m_d2*(2*m_X2-s)+m_h2*(m_d2*(-3*m_X4-2*m_X2*s+2*s2)+m_X6)+m_d4*m_X4+m_d2*(11*m_X6-6*m_X4*s+4*m_X2*s2-s3)-2*m_X6*s))+2*m_X2*sprop*t_upper**2*(m_X2*sprop*(m_h2+2*m_d2+m_X2-s)-2*gss2*m_d2)+2*gss2*m_d2*np.log(t_upper-m_d2)*(gss2*m_X2*(m_h2-8*m_d2+m_X2-s)+4*sprop*(m_h4*(-m_d2)+m_h2*(2*m_d2*(m_X2+s)+m_X4-m_X2*s)-m_d2*(9*m_X4-2*m_X2*s+s2)+m_X4*(m_X2+s)))-4/3*m_X4*sprop2*t_upper**3)
+
+    int_t_M2_lower = (1/(gss2**2*m_X4))*8*vert*((2*gss2**2*m_d2*m_X2*(m_h2-4*m_d2)*(4*m_d2-m_X2))/(m_d2-t_lower)+t_lower*(gss2**2*m_d2*(-4*m_d2-2*m_X2+s)+4*gss2*m_d2*sprop*(m_h2*(m_X2+s)+2*m_d2*m_X2-3*m_X4-s2)-4*sprop2*(m_h4*m_d2*(2*m_X2-s)+m_h2*(m_d2*(-3*m_X4-2*m_X2*s+2*s2)+m_X6)+m_d4*m_X4+m_d2*(11*m_X6-6*m_X4*s+4*m_X2*s2-s3)-2*m_X6*s))+2*m_X2*sprop*t_lower**2*(m_X2*sprop*(m_h2+2*m_d2+m_X2-s)-2*gss2*m_d2)+2*gss2*m_d2*np.log(t_lower-m_d2)*(gss2*m_X2*(m_h2-8*m_d2+m_X2-s)+4*sprop*(m_h4*(-m_d2)+m_h2*(2*m_d2*(m_X2+s)+m_X4-m_X2*s)-m_d2*(9*m_X4-2*m_X2*s+s2)+m_X4*(m_X2+s)))-4/3*m_X4*sprop2*t_lower**3)
+
+    sigma = ((int_t_M2_upper - int_t_M2_lower).real / (64.*np.pi*s*p1cm*p1cm))
+    # Anton: divide by symmetry factor 2 for identical particles in phase space integral
+    return sigma
+
 # # # Thermal averages # # # 
 
 def ker_th_avg_sigma_v_XX_dd(log_s, T_d, m_d, m_X, vert):
     s = exp(log_s)
     sqrt_s = sqrt(s)    
-    sigma = sigma_XX_dd_new(s, m_d, m_X, vert)
+    sigma = sigma_XX_dd_Higgs(s, m_d, m_X, vert)
     return s*sigma*(s-4.*m_X*m_X)*sqrt_s*kn(1, sqrt_s/T_d)
 
 # only \int d^3 p3 d^3 p4 sigma v exp(-(E3+E4)/T)/(2 pi)^6
@@ -1817,10 +1924,10 @@ def th_avg_sigma_v_XX_dd(T_d, m_d, m_X, vert):
     return res*T_d/(32.*(pi**4.))
     # return res/(8.*(m_phi**4.)*T_d*(kn(2, m_phi/T_d)**2.))
 
-def ker_th_avg_sigma_v_33_11(log_s, m1, m2, m3, T, vert, m_X2, m_Gamma_X2, res_sub):
+def ker_th_avg_sigma_v_33_11(log_s, m1, m2, m3, T, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, res_sub):
     s = exp(log_s)
     sqrt_s = sqrt(s)
-    sigma = vector_mediator.sigma_gen(s, m3, m3, m1, m2, vert, m_X2, m_Gamma_X2, sub=res_sub)
+    sigma = vector_mediator.sigma_gen_new(s, m1, m2, m3, m4, vert, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, sub=False)
     # print(log_s, s*sigma*(s-4.*m1*m1)*sqrt_s*kn(1, sqrt_s/T3))
     return s*sigma*(s-4.*m3*m3)*sqrt_s*kn(1, sqrt_s/T)
 
@@ -2703,10 +2810,12 @@ if __name__ == '__main__':
     ax.grid(True)
 
     vert_XX_dd = y**4 * np.cos(th)**8
+    vert_Xh_dd = y**4 * np.cos(th)**8
     s_sigma = 10**(np.linspace(np.log10(s_min), 5.424, int(1e4)))
     # sigma_XX_dd_val = np.vectorize(sigma_XX_dd)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
     sigma_XX_dd_val_new = np.vectorize(sigma_XX_dd_new)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
     sigma_XX_dd_val_Higgs = np.vectorize(sigma_XX_dd_Higgs)(s=s_sigma, m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_XX_dd, th=th, m_Gamma_h2=m_Gamma_h2)
+    sigma_Xh_dd_val = np.vectorize(sigma_Xh_dd_Higgs)(s=s_sigma, m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_Xh_dd, th=th, m_Gamma_X2=m_Gamma_X2)
     # sigma_pp_dd_val = np.vectorize(sigma_pp_dd)(s=s_sigma, m_d=m_d, m_phi=m_X, vert=vert_XX_dd)
 
     # Color lines based on which index element has, for debugging purposes
@@ -2723,6 +2832,7 @@ if __name__ == '__main__':
     # ax.plot(s_sigma, sigma_XX_dd_val, color='r', label=r'$\sigma_{N_1}$')
     ax.plot(s_sigma, sigma_XX_dd_val_Higgs, color='tab:blue', label=r'Remove longitudinal by Higgs')
     ax.plot(s_sigma, sigma_XX_dd_val_new, color='r', label=r'Remove longitudinal by hand')
+    ax.plot(s_sigma, sigma_Xh_dd_val, color='tab:orange', label=r'Remove longitudinal by Higgs')
     # Anton: Asymptotic s --> inf value for sigma, sigma ~ g^4*ms^2/(pi*mx^4) = g^4/(pi*m_ratio^2*m_s^2)
     # => Increase m_s or m_ratio gives decrease in asymptotic value 
     ax.axhline(vert_XX_dd*m_d**2/(m_X**4*np.pi), color='gray', linestyle='--')

@@ -75,10 +75,10 @@ r_sound_3 = data[:,16].reshape((nx, ny))
 # data = np.loadtxt('rm_3.00e+00_y_relic_20x30x70.dat')
 # nx, ny = 20, 20
 # data = np.loadtxt('rm_3.00e+00_y_relic_20x20x50_new.dat')
+nx, ny = 20, 20
+data = np.loadtxt('rm_3.00e+00_y_relic_20x20x60_new.dat')
 nx, ny = 20, 40
 data = np.loadtxt('rm_3.00e+00_y_relic_20x40x60_new.dat')
-# nx, ny = 20, 20
-# data = np.loadtxt('rm_3.00e+00_y_relic_20x20x60_new.dat')
 nx, ny = 20, 80
 data = np.loadtxt('rm_3.00e+00_y_relic_20x80x70_new.dat')
 
@@ -112,29 +112,29 @@ t_life = 3e12*(1e-10/sin22th)*((1e-6/md)**5.)
 # y[nans]= np.interp(x(nans), x(~nans), y[~nans])
 
 from scipy.interpolate import griddata
-# Function for interpolating nan-values in 2D array
+# Anton: Function for interpolating nan-values in 2D array
 def fill_nan(data, method='linear'):
-    # Create x and y coordinate grids for the data
+    # Anton: Create x and y coordinate grids for the data
     ny, nx = data.shape
     x, y = np.meshgrid(np.arange(nx), np.arange(ny))
     
-    # Flatten the arrays for use with griddata
+    # Anton: Flatten the arrays for use with griddata
     x_flat = x.flatten()
     y_flat = y.flatten()
     data_flat = data.flatten()
     
-    # Identify valid (non-NaN) points
+    # Anton: Identify valid (non-NaN) points. ~ shortcut for 'not'
     valid = ~np.isnan(data_flat)
     points_valid = np.vstack((x_flat[valid], y_flat[valid])).T
     values_valid = data_flat[valid]
     
-    # Points where data is NaN
+    # Anton: Points where data is NaN. ~ shortcut for 'not'
     points_missing = np.vstack((x_flat[~valid], y_flat[~valid])).T
     
-    # Interpolate the missing data
+    # Anton: Interpolate the missing data
     data_flat[~valid] = griddata(points_valid, values_valid, points_missing, method=method)
     
-    # Reshape back to the original data shape
+    # Anton: Reshape back to the original data shape
     return data_flat.reshape(data.shape)
 
 y = fill_nan(y, method='cubic')
@@ -189,8 +189,11 @@ plt.plot(np.log10(1e6*extp_proj[:,0]), np.log10(extp_proj[:,1]), color='black', 
 
 # SELF-INTERACTIONS
 self_int_const = cf.conv_cm2_g
-sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*md/(4.*np.pi*(mphi**4.))
-sigma_self_int = 3*sigma_self_int       # Vector mediator give 3x enhancement
+sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*md/(4.*np.pi*mphi**4.)
+sigma_self_int = 16*sigma_self_int       # Vector mediator give 16x enhancement
+# mX = 5*md
+# mh = 3*md
+# sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*(4*md*(mh**2-md**2)**2)/(mh**4*mX**4*np.pi)
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const)], colors='#A300CC', linewidths=1.3, zorder=-5)
 plt.contourf(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const), np.log10(1e6*self_int_const)], colors='#A300CC', alpha=0.25, zorder=-5)
 
@@ -222,9 +225,9 @@ ip3 = interp1d(y3, x3, kind='linear')
 
 Y1 = np.linspace(-14.38, -12, 100)
 X1 = [ip1(y) for y in Y1]
-Y2 = np.linspace(-15.81, -14.35, 100)
+Y2 = np.linspace(-15.28, -14.35, 100)
 X2 = [ip2(y) for y in Y2]
-Y3 = np.linspace(-17.04, -15.78, 100)
+Y3 = np.linspace(-16.8, -15.28, 100)
 X3 = [ip3(y) for y in Y3]
 
 plt.plot(X1, Y1, zorder=-3, color='darkorange', linestyle='--')
@@ -272,17 +275,17 @@ plt.xlim(0, np.log10(300))
 plt.ylim(-18, -8)
 
 props = dict(boxstyle='round', facecolor='white', alpha=0.8, linewidth=1, edgecolor="0.8")
-ax.text(1.9, -8.75, "$m_\phi = 3 m_s$", color='black', fontsize=12, bbox=props)
+ax.text(1.9, -8.75, "$m_X = 3 m_s$", color='black', fontsize=12, bbox=props)
 
 ax.xaxis.set_label_text(r"$m_s\;\;[\mathrm{keV}]$")
-# ax.xaxis.set_major_locator(xMajorLocator)
-# ax.xaxis.set_minor_locator(xMinorLocator)
-# ax.xaxis.set_major_formatter(xMajorFormatter)
+ax.xaxis.set_major_locator(xMajorLocator)
+ax.xaxis.set_minor_locator(xMinorLocator)
+ax.xaxis.set_major_formatter(xMajorFormatter)
 
 ax.yaxis.set_label_text(r"$\sin^2 (2 \theta)$")
-# ax.yaxis.set_major_locator(yMajorLocator)
-# ax.yaxis.set_minor_locator(yMinorLocator)
-# ax.yaxis.set_major_formatter(yMajorFormatter)
+ax.yaxis.set_major_locator(yMajorLocator)
+ax.yaxis.set_minor_locator(yMinorLocator)
+ax.yaxis.set_major_formatter(yMajorFormatter)
 plt.tight_layout()
 # plt.savefig('plot_md_sin22th_rm_3_0_vector.pdf')
 plt.show()

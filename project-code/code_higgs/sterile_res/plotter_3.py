@@ -41,26 +41,26 @@ ax.yaxis.set_ticks_position('both')
 for axis in ['top','bottom','left','right']:
     ax.spines[axis].set_linewidth(0.5)
 
-nx, ny = 23, 101
-data = np.loadtxt('rm_3.00e+00_y_relic.dat')
-# nx, ny = 23, 111
-# data = np.loadtxt('rm_5.00e+00_y_relic.dat')
-md = data[:,0].reshape((nx, ny))
-mphi = data[:,1].reshape((nx, ny))
-sin22th = data[:,2].reshape((nx,ny))
-y = data[:,3].reshape((nx, ny))
-Odh2 = data[:,4].reshape((nx, ny))
-Odh2_no_spin_stat = data[:,5].reshape((nx, ny))
-xtherm = data[:,6].reshape((nx, ny))
-xdtherm = data[:,7].reshape((nx, ny))
-fs_length = data[:,9].reshape((nx, ny))
-fs_length_3 = data[:,10].reshape((nx, ny))
-T_kd = data[:,11].reshape((nx, ny))
-T_kd_3 = data[:,12].reshape((nx, ny))
-T_d_kd = data[:,13].reshape((nx, ny))
-T_d_kd_3 = data[:,14].reshape((nx, ny))
-r_sound = data[:,15].reshape((nx, ny))
-r_sound_3 = data[:,16].reshape((nx, ny))
+# nx, ny = 23, 101
+# data = np.loadtxt('rm_3.00e+00_y_relic.dat')
+# # nx, ny = 23, 111
+# # data = np.loadtxt('rm_5.00e+00_y_relic.dat')
+# md = data[:,0].reshape((nx, ny))
+# mphi = data[:,1].reshape((nx, ny))
+# sin22th = data[:,2].reshape((nx,ny))
+# y = data[:,3].reshape((nx, ny))
+# Odh2 = data[:,4].reshape((nx, ny))
+# Odh2_no_spin_stat = data[:,5].reshape((nx, ny))
+# xtherm = data[:,6].reshape((nx, ny))
+# xdtherm = data[:,7].reshape((nx, ny))
+# fs_length = data[:,9].reshape((nx, ny))
+# fs_length_3 = data[:,10].reshape((nx, ny))
+# T_kd = data[:,11].reshape((nx, ny))
+# T_kd_3 = data[:,12].reshape((nx, ny))
+# T_d_kd = data[:,13].reshape((nx, ny))
+# T_d_kd_3 = data[:,14].reshape((nx, ny))
+# r_sound = data[:,15].reshape((nx, ny))
+# r_sound_3 = data[:,16].reshape((nx, ny))
 
 
 # nx, ny = 20, 20
@@ -82,26 +82,30 @@ data = np.loadtxt('rm_3.00e+00_y_relic_20x40x60_new.dat')
 nx, ny = 20, 80
 data = np.loadtxt('rm_3.00e+00_y_relic_20x80x70_new.dat')
 
+nx, ny = 20, 40
+data = np.loadtxt('rmXd_5.00e+00_rmhd_3.00e+00_y_relic_test_20x40x60.dat')
+
 # Removed max_step=1. in pandemolator for this one -- terrible result...
 # nx, ny = 30, 30
 # data = np.loadtxt('rm_3.00e+00_y_relic_30x30x60_new.dat')
 
 md = data[:,0].reshape((nx, ny))
-mphi = data[:,1].reshape((nx, ny))
-sin22th = data[:,2].reshape((nx,ny))
-y = data[:,3].reshape((nx, ny))
-Odh2 = data[:,4].reshape((nx, ny))
+mX = data[:,1].reshape((nx, ny))
+mh = data[:,2].reshape((nx, ny))
+sin22th = data[:,3].reshape((nx,ny))
+y = data[:,4].reshape((nx, ny))
+Odh2 = data[:,5].reshape((nx, ny))
 # Odh2_no_spin_stat = data[:,5].reshape((nx, ny))
-xtherm = data[:,5].reshape((nx, ny))
-xdtherm = data[:,6].reshape((nx, ny))
-fs_length = data[:,8].reshape((nx, ny))
-fs_length_3 = data[:,9].reshape((nx, ny))
-T_kd = data[:,10].reshape((nx, ny))
-T_kd_3 = data[:,11].reshape((nx, ny))
-T_d_kd = data[:,12].reshape((nx, ny))
-T_d_kd_3 = data[:,13].reshape((nx, ny))
-r_sound = data[:,14].reshape((nx, ny))
-r_sound_3 = data[:,15].reshape((nx, ny))
+xtherm = data[:,6].reshape((nx, ny))
+xdtherm = data[:,7].reshape((nx, ny))
+fs_length = data[:,9].reshape((nx, ny))
+fs_length_3 = data[:,10].reshape((nx, ny))
+T_kd = data[:,11].reshape((nx, ny))
+T_kd_3 = data[:,12].reshape((nx, ny))
+T_d_kd = data[:,13].reshape((nx, ny))
+T_d_kd_3 = data[:,14].reshape((nx, ny))
+r_sound = data[:,15].reshape((nx, ny))
+r_sound_3 = data[:,16].reshape((nx, ny))
 
 # These just became nan for some reason
 # r_sound[np.isnan(r_sound)] = 0.34
@@ -189,7 +193,7 @@ plt.plot(np.log10(1e6*extp_proj[:,0]), np.log10(extp_proj[:,1]), color='black', 
 
 # SELF-INTERACTIONS
 self_int_const = cf.conv_cm2_g
-sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*md/(4.*np.pi*(mphi**4.))
+sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*md/(4.*np.pi*(mh**4.))
 sigma_self_int = 3*sigma_self_int       # Vector mediator give 3x enhancement
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const)], colors='#A300CC', linewidths=1.3, zorder=-5)
 plt.contourf(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const), np.log10(1e6*self_int_const)], colors='#A300CC', alpha=0.25, zorder=-5)
