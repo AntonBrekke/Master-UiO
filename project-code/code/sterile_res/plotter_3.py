@@ -81,6 +81,8 @@ nx, ny = 20, 40
 data = np.loadtxt('rm_3.00e+00_y_relic_20x40x60_new.dat')
 nx, ny = 20, 80
 data = np.loadtxt('rm_3.00e+00_y_relic_20x80x70_new.dat')
+nx, ny = 20, 80
+data = np.loadtxt('rm_3.00e+00_y_relic_20x80x70_new.dat')
 
 # Removed max_step=1. in pandemolator for this one -- terrible result...
 # nx, ny = 30, 30
@@ -193,7 +195,7 @@ sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*md/(4.*np
 sigma_self_int = 16*sigma_self_int       # Vector mediator give 16x enhancement
 # mX = 5*md
 # mh = 3*md
-# sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*(4*md*(mh**2-md**2)**2)/(mh**4*mX**4*np.pi)
+# sigma_self_int = (y**4.)*(np.cos(0.5*np.arcsin(np.sqrt(sin22th)))**8.)*(4*md*(md**2-mh**2)**2)/(mh**4*mX**4*np.pi)
 plt.contour(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const)], colors='#A300CC', linewidths=1.3, zorder=-5)
 plt.contourf(np.log10(1e6*md), np.log10(sin22th), np.log10(sigma_self_int), levels=[np.log10(self_int_const), np.log10(1e6*self_int_const)], colors='#A300CC', alpha=0.25, zorder=-5)
 
@@ -240,8 +242,8 @@ load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;
 # BENCHMARK POINTS
 md_B1 = 1.12884e-05
 sin22th_B1 = 2.42446e-13
-md_B2 = 2.15e-05
-sin22th_B2 = 1.2e-15
+md_B2 = 1.5e-05
+sin22th_B2 = 9e-15
 plt.plot(np.log10(1e6*md_B1), np.log10(sin22th_B1), marker='*', color='tomato')
 plt.plot(np.log10(1e6*md_B2), np.log10(sin22th_B2), marker='*', color='tomato')
 
@@ -278,14 +280,14 @@ props = dict(boxstyle='round', facecolor='white', alpha=0.8, linewidth=1, edgeco
 ax.text(1.9, -8.75, "$m_X = 3 m_s$", color='black', fontsize=12, bbox=props)
 
 ax.xaxis.set_label_text(r"$m_s\;\;[\mathrm{keV}]$")
-ax.xaxis.set_major_locator(xMajorLocator)
-ax.xaxis.set_minor_locator(xMinorLocator)
-ax.xaxis.set_major_formatter(xMajorFormatter)
+# ax.xaxis.set_major_locator(xMajorLocator)
+# ax.xaxis.set_minor_locator(xMinorLocator)
+# ax.xaxis.set_major_formatter(xMajorFormatter)
 
 ax.yaxis.set_label_text(r"$\sin^2 (2 \theta)$")
-ax.yaxis.set_major_locator(yMajorLocator)
-ax.yaxis.set_minor_locator(yMinorLocator)
-ax.yaxis.set_major_formatter(yMajorFormatter)
+# ax.yaxis.set_major_locator(yMajorLocator)
+# ax.yaxis.set_minor_locator(yMinorLocator)
+# ax.yaxis.set_major_formatter(yMajorFormatter)
 plt.tight_layout()
 # plt.savefig('plot_md_sin22th_rm_3_0_vector.pdf')
 plt.show()

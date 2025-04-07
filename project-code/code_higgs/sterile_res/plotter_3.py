@@ -84,6 +84,8 @@ data = np.loadtxt('rm_3.00e+00_y_relic_20x80x70_new.dat')
 
 nx, ny = 20, 40
 data = np.loadtxt('rmXd_5.00e+00_rmhd_3.00e+00_y_relic_test_20x40x60.dat')
+nx, ny = 20, 20
+data = np.loadtxt('rmXd_5.00e+00_rmhd_3.00e+00_y_relic_test_20x20x60.dat')
 
 # Removed max_step=1. in pandemolator for this one -- terrible result...
 # nx, ny = 30, 30
@@ -116,29 +118,29 @@ t_life = 3e12*(1e-10/sin22th)*((1e-6/md)**5.)
 # y[nans]= np.interp(x(nans), x(~nans), y[~nans])
 
 from scipy.interpolate import griddata
-# Function for interpolating nan-values in 2D array
+# Anton: Function for interpolating nan-values in 2D array
 def fill_nan(data, method='linear'):
-    # Create x and y coordinate grids for the data
+    # Anton: Create x and y coordinate grids for the data
     ny, nx = data.shape
     x, y = np.meshgrid(np.arange(nx), np.arange(ny))
     
-    # Flatten the arrays for use with griddata
+    # Anton: Flatten the arrays for use with griddata
     x_flat = x.flatten()
     y_flat = y.flatten()
     data_flat = data.flatten()
     
-    # Identify valid (non-NaN) points
+    # Anton: Identify valid (non-NaN) points
     valid = ~np.isnan(data_flat)
     points_valid = np.vstack((x_flat[valid], y_flat[valid])).T
     values_valid = data_flat[valid]
     
-    # Points where data is NaN
+    # Anton: Points where data is NaN
     points_missing = np.vstack((x_flat[~valid], y_flat[~valid])).T
     
-    # Interpolate the missing data
+    # Anton: Interpolate the missing data
     data_flat[~valid] = griddata(points_valid, values_valid, points_missing, method=method)
     
-    # Reshape back to the original data shape
+    # Anton: Reshape back to the original data shape
     return data_flat.reshape(data.shape)
 
 y = fill_nan(y, method='cubic')
@@ -220,20 +222,20 @@ x3, y3 = get_xy(cs3)
 # plt.plot(x2[71:-18], y2[71:-18])
 # plt.plot(x3[18:], y3[18:])
 
-ip1 = interp1d(y1, x1, kind='linear')
-ip2 = interp1d(y2, x2, kind='linear')
-ip3 = interp1d(y3, x3, kind='linear')
+# ip1 = interp1d(y1, x1, kind='linear')
+# ip2 = interp1d(y2, x2, kind='linear')
+# ip3 = interp1d(y3, x3, kind='linear')
 
-Y1 = np.linspace(-14.38, -12, 100)
-X1 = [ip1(y) for y in Y1]
-Y2 = np.linspace(-15.81, -14.35, 100)
-X2 = [ip2(y) for y in Y2]
-Y3 = np.linspace(-17.04, -15.78, 100)
-X3 = [ip3(y) for y in Y3]
+# Y1 = np.linspace(-14.38, -12, 100)
+# X1 = [ip1(y) for y in Y1]
+# Y2 = np.linspace(-15.81, -14.35, 100)
+# X2 = [ip2(y) for y in Y2]
+# Y3 = np.linspace(-17.04, -15.78, 100)
+# X3 = [ip3(y) for y in Y3]
 
-plt.plot(X1, Y1, zorder=-3, color='darkorange', linestyle='--')
-plt.plot(X2, Y2, zorder=-3, color='#ff7b7b', linestyle='--')
-plt.plot(X3, Y3, zorder=-3, color='#A300CC', linestyle='--')
+# plt.plot(X1, Y1, zorder=-3, color='darkorange', linestyle='--')
+# plt.plot(X2, Y2, zorder=-3, color='#ff7b7b', linestyle='--')
+# plt.plot(X3, Y3, zorder=-3, color='#A300CC', linestyle='--')
 
 load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
 load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;full_new.dat'

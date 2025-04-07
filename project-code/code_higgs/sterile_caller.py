@@ -89,7 +89,7 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                 # Done RIS subtraction for Higgs diagram in C_n_XX_dd
                 CX_XX_dd = C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, m_h=m_h, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, th=th, m_Gamma_h2=m_Gamma_h2, type=0) / 4. # symmetry factor 1/4
                 # Higgs-fermion vertex: 2i*md/mx * (cth**2, sth**2, -sth*cth) * g
-                Ch_hh_dd = C_res_scalar.C_n_pp_dd(m_d=m_d, m_phi=m_h, k_d=k_d, k_phi=k_h, T_d=T_d, xi_d=xi_d, xi_phi=xi_h, vert=vert_el*(4*m_d2/m_X2)**2, type=0) / 4.
+                Ch_hh_dd = C_res_scalar.C_n_pp_dd(m_d=m_d, m_phi=m_h, k_d=k_d, k_phi=k_h, T_d=T_d, xi_d=xi_d, xi_phi=xi_h, vert=vert_el*(4*m_d2/m_X2)**2, type=0) / 4.      # symmetry factor 1/4
                 if not off_shell:
                     # Anton: C_dd cancels/vanish for n = n_d + 2*n_X + 2*n_h
                     CX_X_da = C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_X_da, type=0)
@@ -571,15 +571,17 @@ if __name__ == '__main__':
     load_str = './md_2.15030e-05;mX_6e-05;sin22th_1.32739e-15;y_1.77827e-03;full_new.dat'
 
     load_str = './md_2.06914e-05;mX_1.03457e-04;mh_6.20741e-05;sin22th_6.61474e-16;y_1.83218e-03;full.dat'
+    load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_7.4438e-14;y_3.32879e-04;full.dat'
+    load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.12534e-16;y_3.74363e-03;full.dat'
 
     var_list = load_str.split(';')[:-1]
     m_d, m_X, m_h, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
-    # m_d = 20e-6
+    # m_d = 2e-5
     # m_X = 5*m_d
     # m_h = 3*m_d
     m_a = 0.
-    # y = 1.53e-3
-    # sin2_2th = 1e-15
+    # y = 1.072e-3
+    # sin2_2th = 2.5e-15
     
     # BP1 
     # m_d = 20e-6
