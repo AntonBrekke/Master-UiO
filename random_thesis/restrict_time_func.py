@@ -25,11 +25,13 @@ if __name__ == '__main__':
         iterator = future.result()
 
         result_list = []
-
+        openfile = open("./write_live_data_folder/data.dat", "w")
         while True:
+            openfile = open("./write_live_data_folder/data.dat", "a")
             try:
                 result = next(iterator)
                 result_list.append(result)
+                openfile.write(str(result)+'\n')
             except TimeoutError as error:
                 print(f"function took longer than {error} seconds")
             except StopIteration:

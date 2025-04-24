@@ -232,6 +232,24 @@ load_str = './md_2e-05;mX_1e-04;mh_3e-04;sin22th_1e-11;y_6e-09;full_new.dat'
 load_str = './md_2e-05;mX_1e-04;mh_3e-04;sin22th_1e-11;y_8e-09;full_new.dat'
 load_str = './md_2e-05;mX_1e-03;mh_6e-05;sin22th_1e-15;y_2.6e-03;full_new.dat'          # interesting 
 load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.5e-03;full_new.dat'          # interesting 
+load_str = './md_2e-05;mX_6e-05;mh_5e-05;sin22th_1e-16;y_3e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_5e-05;sin22th_5e-16;y_1.5e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_5e-05;sin22th_5e-16;y_1.5e-03;full_new.dat'
+load_str = './md_2e-05;mX_5e-05;mh_6e-05;sin22th_5e-16;y_1.5e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_5e-05;sin22th_5e-16;y_1.8e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_3e-15;y_1.6e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_3e-15;y_8e-04;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_3e-15;y_9e-04;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_3e-15;y_9e-04;full_new.dat'
+load_str = './md_2e-05;mX_5e-05;mh_1e-04;sin22th_3e-15;y_2e-04;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_2e-15;y_1.1e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_2e-15;y_1e-03;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_2e-15;y_1.05e-03;full_new.dat'
+load_str = './md_1.35388e-06;mX_6.76938e-06;mh_4.06163e-06;sin22th_7.01704e-15;y_4.45923e-04;full_new.dat'
+load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_3e-15;y_8.98e-04;full_new.dat'     # Perfect
+load_str = './md_2e-05;mX_6e-05;mh_5e-05;sin22th_3e-15;y_9.12e-04;full_new.dat'         # Perfect
+load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'     # Perfect
+
 data = np.loadtxt(load_str)
 
 T_SM = data[:,1]
@@ -245,10 +263,14 @@ nd = data[:,10]
 nX = data[:,11]
 nh = data[:,12]
 
+c1 = '#7bc043'      # green
+c2 = '#f37736'      # orange
+c3 = '#13b9af'      # blue
+
 # Mass: 1e-6 * X GeV = X keV
 var_list = load_str.split(';')[:-1]
 md, mX, mh, sin22th, y = [eval(s.split('_')[-1]) for s in var_list]
-print(f'md: {md:.2e}, mX: {mX:.2e}, sin22th: {sin22th:.2e}, y: {y:.2e}')
+print(f'md: {md:.2e}, mX: {mX:.2e}, mh: {mh:.2e}, sin22th: {sin22th:.2e}, y: {y:.2e}')
 mY_relic = cf.omega_d0 * cf.rho_crit0_h2 / cf.s0        # m*Y = m*n/s = Omega * rho_c0 / s0
 
 T_grid_dw = np.logspace(np.log10(1.4e-3), 1, 400)
@@ -267,17 +289,20 @@ if True:
 
     x1, y1 = np.array([*x1_dw0[::-1], *x1_tr0, 1e3]), np.array([*y1_dw0[::-1], *y1_tr0, y1_tr0[-1]])
 
-    ax1.loglog(x1_tr, y1_tr, color='#7bc043', zorder=-1)
-    ax1.loglog(x1_dw[x1_dw < 1e-3], y1_dw[x1_dw < 1e-3], color='r', zorder=-1)
+    ax1.loglog(x1, y1, color=c1, zorder=-1)
+    # ax1.loglog(x1_tr, y1_tr, color='#7bc043', zorder=-1)
+    # ax1.loglog(x1_dw[x1_dw < 1e-3], y1_dw[x1_dw < 1e-3], color='r', zorder=-1)
 
-    # ax1.fill_betweenx([1e-23, 1e5], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+    ax1.fill_betweenx([1e-28, 1e5], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
     # ax1.fill_betweenx([1e-23, 1e-18], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 
     #ax1.text(8e-5, 2e-21, 'Thermalization', fontsize=10, color='darkorange')
     #ax1.text(5e-4, 1.3e-19, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
     #ax1.text(5e-4, 1e-22, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
-    ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
-    ax2.plot([1e-3]*2, [1e-2, 2e0], ls=':', color='0', zorder=-2)
+    ax1.axvline([1e-3], ls=':', color='0', zorder=-2)
+    ax2.axvline([1e-3], ls=':', color='0', zorder=-2)
+    # ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
+    # ax2.plot([1e-3]*2, [1e-2, np.max(Td/T_nu)*1.5], ls=':', color='0', zorder=-2)
 
     ax1.text(1.5e-4, 8e-21, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
     ax1.text(1.5e-4, 8e-22, r'$\mathrm{Thermalization}$', fontsize=8, color='0', horizontalalignment='center')
@@ -285,15 +310,18 @@ if True:
     #ax1.text(4.5e-5, 1e-22, r'$\hspace{-0.55cm}\mathrm{Therma-}\\\mathrm{lization}\\\mathrm{ }\hspace{0.2cm}\rightarrow$', fontsize=10, color='0')
 
 
-    ax1.loglog(md/T_nu, mX*nX/ent, color='#f37736', ls='-', zorder=-4)
-    ax1.loglog(md/T_nu, mh*nh/ent, color='#13b9af', ls='-', zorder=-4)
+    ax1.loglog(md/T_nu, mh*nh/ent, color=c2, ls='-', zorder=-4)
+    ax1.loglog(md/T_nu, mX*nX/ent, color=c3, ls='-', zorder=-4)
 
-    ax1.loglog([1e-8, 1e3], [mY_relic, mY_relic], color='0.65', ls='-.', zorder=-2)
-    ax1.text(3e-5, 1e-11, r'$\Omega_s h^2 = 0.12$', fontsize=11, color='0.65')
+    ax1.loglog([1e-8, 1e3], [mY_relic, mY_relic], color='0.55', ls='-.', zorder=-2)
+    ax1.text(3e-5, 1e-11, r'$\Omega_s h^2 = 0.12$', fontsize=11, color='0.55')
 
-    ax1.text(2.5, 1e-11, r'$\nu_s$', color='#7bc043', fontsize=11)
-    ax1.text(2.0, 1e-16, r'$X$', color='#f37736', fontsize=11)
-    ax1.text(2.0, 1e-21, r'$h$', color='#13b9af', fontsize=11)
+    YX_max = np.max(mX*nX/ent)
+    Yh_max = np.max(mh*nh/ent)
+    Ys_max = np.max(y1)
+    ax1.text(md/T_nu[np.where(mX*nX/ent==YX_max)], Ys_max*1e-2, r'$\nu_s$', color=c1, fontsize=11)
+    ax1.text(md/T_nu[np.where(mX*nX/ent==YX_max)], YX_max*1e-2, r'$X$', color=c3, fontsize=11)
+    ax1.text(md/T_nu[np.where(mh*nh/ent==Yh_max)]*3, Yh_max*1e-1, r'$h$', color=c2, fontsize=11)
 
     ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-' , color='black', label=r'$\text{BP1}$')
     ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
@@ -326,8 +354,8 @@ if True:
 
     # ylim + 6 will be shown
     ax1.set_ylim(1e-25, 2e-8)
-    ax2.set_ylim(1e-2, 2e0)
-    ax1.set_title(fr'$\sin^2(2\theta)$={sin22th:.1e}, $y$={y:.1e}\\$m_d$={md:.1e}, $m_X$={mX:.1e}, $m_h$={mh:.1e}', fontsize=12)
+    ax2.set_ylim(np.min(Td/T_nu)*0.5, np.max(Td/T_nu)*1.5)
+    # ax1.set_title(fr'$\sin^2(2\theta)$={sin22th:.1e}, $y$={y:.1e}\\$m_d$={md:.1e}, $m_X$={mX:.1e}, $m_h$={mh:.1e}', fontsize=12)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
     # plt.savefig(f'dens_evo_{load_str.replace("./", "").replace(".dat","")}_final.pdf')

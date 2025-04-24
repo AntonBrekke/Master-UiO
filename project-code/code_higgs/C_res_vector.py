@@ -1896,9 +1896,9 @@ def sigma_Xh_dd_Higgs(s, m_d, m_X, m_h, vert, th, m_Gamma_X2):
 
     # Added Higgs instead of removing longitudinal by hand 
 
-    int_t_M2_upper = (1/(gss2**2*m_X4))*8*vert*((2*gss2**2*m_d2*m_X2*(m_h2-4*m_d2)*(4*m_d2-m_X2))/(m_d2-t_upper)+t_upper*(gss2**2*m_d2*(-4*m_d2-2*m_X2+s)+4*gss2*m_d2*sprop*(m_h2*(m_X2+s)+2*m_d2*m_X2-3*m_X4-s2)-4*sprop2*(m_h4*m_d2*(2*m_X2-s)+m_h2*(m_d2*(-3*m_X4-2*m_X2*s+2*s2)+m_X6)+m_d4*m_X4+m_d2*(11*m_X6-6*m_X4*s+4*m_X2*s2-s3)-2*m_X6*s))+2*m_X2*sprop*t_upper**2*(m_X2*sprop*(m_h2+2*m_d2+m_X2-s)-2*gss2*m_d2)+2*gss2*m_d2*np.log(t_upper-m_d2)*(gss2*m_X2*(m_h2-8*m_d2+m_X2-s)+4*sprop*(m_h4*(-m_d2)+m_h2*(2*m_d2*(m_X2+s)+m_X4-m_X2*s)-m_d2*(9*m_X4-2*m_X2*s+s2)+m_X4*(m_X2+s)))-4/3*m_X4*sprop2*t_upper**3)
+    int_t_M2_upper = (1/(gss2*m_X4))*8*vert*((2*gss2*m_d2*m_X2*(m_h2-4*m_d2)*(4*m_d2-m_X2))/(m_d2-t_upper)+t_upper*(gss2*m_d2*(-4*m_d2-2*m_X2+s)+4*gss*m_d2*sprop*(m_h2*(m_X2+s)+2*m_d2*m_X2-3*m_X4-s2)-4*sprop2*(m_h4*m_d2*(2*m_X2-s)+m_h2*(m_d2*(-3*m_X4-2*m_X2*s+2*s2)+m_X6)+m_d4*m_X4+m_d2*(11*m_X6-6*m_X4*s+4*m_X2*s2-s3)-2*m_X6*s))+2*m_X2*sprop*t_upper**2*(m_X2*sprop*(m_h2+2*m_d2+m_X2-s)-2*gss*m_d2)+2*gss*m_d2*np.log(t_upper-m_d2)*(gss*m_X2*(m_h2-8*m_d2+m_X2-s)+4*sprop*(m_h4*(-m_d2)+m_h2*(2*m_d2*(m_X2+s)+m_X4-m_X2*s)-m_d2*(9*m_X4-2*m_X2*s+s2)+m_X4*(m_X2+s)))-4/3*m_X4*sprop2*t_upper**3)
 
-    int_t_M2_lower = (1/(gss2**2*m_X4))*8*vert*((2*gss2**2*m_d2*m_X2*(m_h2-4*m_d2)*(4*m_d2-m_X2))/(m_d2-t_lower)+t_lower*(gss2**2*m_d2*(-4*m_d2-2*m_X2+s)+4*gss2*m_d2*sprop*(m_h2*(m_X2+s)+2*m_d2*m_X2-3*m_X4-s2)-4*sprop2*(m_h4*m_d2*(2*m_X2-s)+m_h2*(m_d2*(-3*m_X4-2*m_X2*s+2*s2)+m_X6)+m_d4*m_X4+m_d2*(11*m_X6-6*m_X4*s+4*m_X2*s2-s3)-2*m_X6*s))+2*m_X2*sprop*t_lower**2*(m_X2*sprop*(m_h2+2*m_d2+m_X2-s)-2*gss2*m_d2)+2*gss2*m_d2*np.log(t_lower-m_d2)*(gss2*m_X2*(m_h2-8*m_d2+m_X2-s)+4*sprop*(m_h4*(-m_d2)+m_h2*(2*m_d2*(m_X2+s)+m_X4-m_X2*s)-m_d2*(9*m_X4-2*m_X2*s+s2)+m_X4*(m_X2+s)))-4/3*m_X4*sprop2*t_lower**3)
+    int_t_M2_lower = (1/(gss2*m_X4))*8*vert*((2*gss2*m_d2*m_X2*(m_h2-4*m_d2)*(4*m_d2-m_X2))/(m_d2-t_lower)+t_lower*(gss2*m_d2*(-4*m_d2-2*m_X2+s)+4*gss*m_d2*sprop*(m_h2*(m_X2+s)+2*m_d2*m_X2-3*m_X4-s2)-4*sprop2*(m_h4*m_d2*(2*m_X2-s)+m_h2*(m_d2*(-3*m_X4-2*m_X2*s+2*s2)+m_X6)+m_d4*m_X4+m_d2*(11*m_X6-6*m_X4*s+4*m_X2*s2-s3)-2*m_X6*s))+2*m_X2*sprop*t_lower**2*(m_X2*sprop*(m_h2+2*m_d2+m_X2-s)-2*gss*m_d2)+2*gss*m_d2*np.log(t_lower-m_d2)*(gss*m_X2*(m_h2-8*m_d2+m_X2-s)+4*sprop*(m_h4*(-m_d2)+m_h2*(2*m_d2*(m_X2+s)+m_X4-m_X2*s)-m_d2*(9*m_X4-2*m_X2*s+s2)+m_X4*(m_X2+s)))-4/3*m_X4*sprop2*t_lower**3)
 
     sigma = ((int_t_M2_upper - int_t_M2_lower).real / (64.*np.pi*s*p1cm*p1cm))
     # Anton: divide by symmetry factor 2 for identical particles in phase space integral
@@ -1954,12 +1954,13 @@ if __name__ == '__main__':
     import matplotlib.pyplot as plt
     import time
 
-    m_ratio = 3
+    m_ratio_dX = 3
+    m_ratio_hX = 1
 
-    m_d = 1e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
+    m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
     m_a = 0.
-    m_X = m_ratio*m_d       # MeV-scale dark photon
-    m_h = 3*m_X
+    m_X = m_ratio_dX*m_d       # MeV-scale dark photon
+    m_h = m_ratio_hX*m_X
     sin2_2th = 1e-15
     y = 1.3e-3
     th = 0.5*np.arcsin(np.sqrt(sin2_2th))
@@ -2638,21 +2639,93 @@ if __name__ == '__main__':
         return sigma / 2
         return sigma_Depta / 2
 
-    ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral_new_3(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_el, th=th, m_Gamma_h2=m_Gamma_h2)
+    # X X -> d d
+    # Anton: Removed longitudinal component by hand 
+    @nb.jit(nopython=True, cache=True)
+    def sigma_XX_dd_violate_unitarity(s, m_d, m_X, vert):
+        """
+        Anton: Since sigma ~ int d(cos(theta)) |M|^2 for 2 to 2 process, we must integrate |M|^2 analytically. 
+        Switch integration to t = m_d^2 + m_phi^2 - 2E1*E3 + 2p1*p3*cos(theta), d(cos(theta)) = 1/(2*p1*p3)dt
+        Since sigma is Lorentz invariant, calculate in CM-frame
+        t = (p1-p3)^2 = (E1cm - E3cm)^2 - (p1cm - p3cm)^2
+        = (E1cm - E3cm)^2 - (p1cm^2 + p3cm^2 - 2*p1cm*p3cm*cos(theta))
+        This gives upper and lower bounds (cos(theta)=1, cos(theta)=-1)
+        t_upper = (E1cm - E3cm)^2 - (p1cm - p3cm)^2 = (E1cm-E3cm + (p1cm-p3cm))*(E1cm-E3cm - (p1cm-p3cm))
+        t_lower = (E1cm - E3cm)^2 - (p1cm + p3cm)^2 = (E1cm-E3cm + (p1cm+p3cm))*(E1cm-E3cm - (p1cm+p3cm))
+        s = (p1/3 + p2/4)^2 = (E1/3cm + E2/4cm)^2 
+        sqrt(s) = E1/3cm + E2/4cm
+        Trick: E2/4^2 = E1/3^2 - m1/3^2 + m2/4^2
+        => (sqrt(s) - E1/3cm)^2 = E1/3cm^2 - m1/3^2 + m2/4^2
+        => E1/3cm = (s + m1/3^2 - m2/4^2) / (2*sqrt(s))
+        which would also give momentum 
+        p1/3cm = sqrt(E1/3cm^2 - m1/3^2) = 1/(2*sqrt(s))*sqrt([s - (m1/3 + m2/4)^2]^2 - 4*m1/3^2*m2/4^2)
+        for integration bounds. 
+        Two heavysides - one from integration of phase-space H(E_cm - m3 - m4), one from demanding p1/2cm positive: 
+        H(1/(4*s)*{[s - (m1 + m2)]^2 - 4*m1^2*m2^2}) = H([s - (m1 + m2)^2]^2 - 4*m1^2*m2^2)
+        = H(s - m1 - m2 - 2*m1*m2) = H(s - (m1 + m2)^2) = H(E_cm - m1 - m2)
+        Cross-section:
+        sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*p1cm^2) 
+            * int_{t_lower}^{t_upper} dt |M|^2
+        Note: This function can be vectorized, but is not needed. 
+            Use np.vectorize(sigma_XX_dd)(s, m_d, m_X, vert) instead if array output is wanted.
+        """
+        m_d2 = m_d*m_d
+        m_d4 = m_d2*m_d2
+        m_d6 = m_d2*m_d4
+        m_d8 = m_d4*m_d4
+        m_X2 = m_X*m_X
+        m_X4 = m_X2*m_X2
+        m_X6 = m_X2*m_X4
+        m_X8 = m_X4*m_X4
 
-    # ker_C_n_XX_dd_s_t_integral_val_new = ker_C_n_XX_dd_s_t_integral_new(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, vert=vert_el)
+        m_h = 3*m_X
+        m_h2 = m_h*m_h
+        m_h4 = m_h2*m_h2
 
-    # ker_C_n_pp_dd_s_t_integral_val = ker_C_n_pp_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=vert_el)
+        s2 = s*s
+        s3 = s*s2
+        # Anton: Heavyside-functions
+        if s < 4*m_d**2 or s < 4*m_X**2:
+            return 0. 
 
-    # ker_C_n_pp_dd_s_t_integral_val_Depta = ker_C_n_pp_dd_s_t_integral_Depta(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=1)
+        # Anton: Three-momenta in CM-frame 
+        p1cm = np.sqrt(0.25*s - m_d2)
+        p3cm = np.sqrt(0.25*s - m_X2)
 
-    # ker_C_n_pp_dd_s_t_integral_val_me = ker_C_n_pp_dd_s_t_integral_me(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=vert_el)
+        # Anton: Upper and lower integration bound 
+        # Anton: Add imaginary unit to avoid trouble with log etc
+        t_upper = -(p1cm - p3cm)**2 + 0j
+        t_lower = -(p1cm + p3cm)**2 + 0j
 
-    ker_C_n_pp_dd_s_t_integral_val_previous = ker_C_n_pp_dd_s_t_integral_previous_project(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_phi=m_X, vert=vert_el)
+        # Longitudinal removed by hand  
+        # int_t_M2_upper = 8*vert*((m_X2-6*m_d2)**2/(-m_d2-2*m_X2+s+t_upper)+(m_X2-6*m_d2)**2/(t_upper-m_d2)+((24*m_d4+m_d2*(12*s-40*m_X2)+4*m_X4+s2)*(np.log(t_upper-m_d2)-np.log(-m_d2-2*m_X2+s+t_upper)))/(2*m_X2-s)-2*t_upper)
 
-    ker_C_n_pp_dd_s_t_integral_val_new = ker_C_n_pp_dd_s_t_integral_new_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_phi=m_X, vert=vert_el)
+        # int_t_M2_lower = 8*vert*((m_X2-6*m_d2)**2/(-m_d2-2*m_X2+s+t_lower)+(m_X2-6*m_d2)**2/(t_lower-m_d2)+((24*m_d4+m_d2*(12*s-40*m_X2)+4*m_X4+s2)*(np.log(t_lower-m_d2)-np.log(-m_d2-2*m_X2+s+t_lower)))/(2*m_X2-s)-2*t_lower)
 
-    ker_C_n_XX_dd_s_t_integral_val_Higgs = ker_C_n_XX_dd_s_t_integral_Higgs_new(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_el*(4*m_d2/m_X2)**2, th=th, m_Gamma_h2=m_Gamma_h2)
+        # With longitudinal 
+        int_t_M2_upper = 8*vert*((m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_upper)-(m_X2-4*m_d2)**2/(m_d2-t_upper)+(4*m_d2*t_upper*(s-4*m_X2))/m_X4+((4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*(np.log(m_d2-t_upper)-np.log(m_d2+2*m_X2-s-t_upper)))/(2*m_X6-m_X4*s)-2*t_upper)
+
+        int_t_M2_lower = 8*vert*((m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_lower)-(m_X2-4*m_d2)**2/(m_d2-t_lower)+(4*m_d2*t_lower*(s-4*m_X2))/m_X4+((4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*(np.log(m_d2-t_lower)-np.log(m_d2+2*m_X2-s-t_lower)))/(2*m_X6-m_X4*s)-2*t_lower)
+
+        sigma = ((int_t_M2_upper - int_t_M2_lower).real / (64.*np.pi*s*p1cm*p1cm))
+        # Anton: divide by symmetry factor 2 for identical particles in phase space integral
+        return sigma / 2
+
+    # ker_C_n_XX_dd_s_t_integral_val = ker_C_n_XX_dd_s_t_integral_new_3(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_el, th=th, m_Gamma_h2=m_Gamma_h2)
+
+    # # ker_C_n_XX_dd_s_t_integral_val_new = ker_C_n_XX_dd_s_t_integral_new(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, vert=vert_el)
+
+    # # ker_C_n_pp_dd_s_t_integral_val = ker_C_n_pp_dd_s_t_integral(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=vert_el)
+
+    # # ker_C_n_pp_dd_s_t_integral_val_Depta = ker_C_n_pp_dd_s_t_integral_Depta(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=1)
+
+    # # ker_C_n_pp_dd_s_t_integral_val_me = ker_C_n_pp_dd_s_t_integral_me(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1, E3=E3, p1=p1, p3=p3, m_d=m_d, m_phi=m_X, vert=vert_el)
+
+    # ker_C_n_pp_dd_s_t_integral_val_previous = ker_C_n_pp_dd_s_t_integral_previous_project(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_phi=m_X, vert=vert_el)
+
+    # ker_C_n_pp_dd_s_t_integral_val_new = ker_C_n_pp_dd_s_t_integral_new_2(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_phi=m_X, vert=vert_el)
+
+    # ker_C_n_XX_dd_s_t_integral_val_Higgs = ker_C_n_XX_dd_s_t_integral_Higgs_new(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_el*(4*m_d2/m_X2)**2, th=th, m_Gamma_h2=m_Gamma_h2)
 
     # ker_C_n_XX_dd_s_t_integral_val_Higgs_no_long = ker_C_n_XX_dd_s_t_integral_Higgs_new_no_long(ct_min=ct_min[in_res], ct_max=ct_max[in_res], ct_p=ct_p[in_res], ct_m=ct_m[in_res], a=a[in_res], s=s[in_res], E1=E1_[in_res], E3=E3_[in_res], p1=p1_[in_res], p3=p3_[in_res], m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_el*(4*m_d2/m_X2)**2, th=th, m_Gamma_h2=m_Gamma_h2)
     # print(f'ker_C_n_XX_dd_s_t_integral ran in {time.time()-time1}s')
@@ -2661,30 +2734,30 @@ if __name__ == '__main__':
     # print(C_n_XX_dd_val)
 
   
-    fig = plt.figure()
-    ax = fig.add_subplot(121)
-    ax2 = fig.add_subplot(122)
+    # fig = plt.figure()
+    # ax = fig.add_subplot(121)
+    # ax2 = fig.add_subplot(122)
 
-    # print(np.max(ker_C_n_XX_dd_s_t_integral_val), np.max(ker_C_n_XX_dd_s_t_integral_val_new))
-    # x = ln(s/s_min) / ln(s_max/s_min)
-    ax.plot(s[in_res], (ker_C_n_XX_dd_s_t_integral_val), 'r', label='XX_dd')
-    # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val, 'tab:blue', label='pp_dd')
-    # ax.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_me, 'tab:blue', label='pp_dd')
-    # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_Depta, 'tab:green', label='pp_dd_Depta')
-    ax2.plot(s[in_res], (ker_C_n_pp_dd_s_t_integral_val_previous), 'tab:green', label='pp_dd_previous')
-    # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_Higgs_no_long, 'tab:green', label='XX_dd_Higgs_no_long')
-    ax2.plot(s[in_res], (ker_C_n_XX_dd_s_t_integral_val_Higgs), 'tab:orange', label='XX_dd_Higgs')
-    ax2.plot(s[in_res], (ker_C_n_pp_dd_s_t_integral_val_new), 'tab:blue', label='pp_dd_new')
-    # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_new, 'tab:blue', label='XX_dd_new')
-    ax.set_xscale('log')
-    # ax.set_yscale('log')
-    ax2.set_xscale('log')
-    # ax2.set_yscale('log')
+    # # print(np.max(ker_C_n_XX_dd_s_t_integral_val), np.max(ker_C_n_XX_dd_s_t_integral_val_new))
+    # # x = ln(s/s_min) / ln(s_max/s_min)
+    # ax.plot(s[in_res], (ker_C_n_XX_dd_s_t_integral_val), 'r', label='XX_dd')
+    # # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val, 'tab:blue', label='pp_dd')
+    # # ax.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_me, 'tab:blue', label='pp_dd')
+    # # ax2.plot(s[in_res], ker_C_n_pp_dd_s_t_integral_val_Depta, 'tab:green', label='pp_dd_Depta')
+    # ax2.plot(s[in_res], (ker_C_n_pp_dd_s_t_integral_val_previous), 'tab:green', label='pp_dd_previous')
+    # # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_Higgs_no_long, 'tab:green', label='XX_dd_Higgs_no_long')
+    # ax2.plot(s[in_res], (ker_C_n_XX_dd_s_t_integral_val_Higgs), 'tab:orange', label='XX_dd_Higgs')
+    # ax2.plot(s[in_res], (ker_C_n_pp_dd_s_t_integral_val_new), 'tab:blue', label='pp_dd_new')
+    # # ax2.plot(s[in_res], ker_C_n_XX_dd_s_t_integral_val_new, 'tab:blue', label='XX_dd_new')
+    # ax.set_xscale('log')
+    # # ax.set_yscale('log')
+    # ax2.set_xscale('log')
+    # # ax2.set_yscale('log')
             
-    ax.legend()
-    ax2.legend()
-    fig.tight_layout()
-    plt.show()
+    # ax.legend()
+    # ax2.legend()
+    # fig.tight_layout()
+    # plt.show()
 
 
     s_min = 4*m_d**2
@@ -2806,16 +2879,59 @@ if __name__ == '__main__':
 
     from matplotlib import collections  as mc
 
-    fig, ax = plt.subplots()
+    # plt.style.use('ggplot')
+    # colors = plt.rcParams['axes.prop_cycle'].by_key()['color']   
+    # plt.style.use('default')
+    # plt.rcParams['axes.prop_cycle'] = plt.cycler(color=colors)
+    # print(colors[0])
+
+    def get_figsize(columnwidth, wf=1.0, hf=(5.**0.5-1.0)/2.0):
+        """Parameters:
+        - wf [float]:  width fraction in columnwidth units
+        - hf [float]:  height fraction in columnwidth units.
+                        Set by default to golden ratio.
+        - columnwidth [float]: width of the column in latex. Get this from LaTeX 
+                                using \showthe\columnwidth
+        Returns:  [fig_width, fig_height]: that should be given to matplotlib
+        """
+        fig_width_pt = columnwidth*wf 
+        inches_per_pt = 1.0/72.27               # Convert pt to inch
+        fig_width = fig_width_pt*inches_per_pt  # width in inches
+        fig_height = fig_width*hf      # height in inches
+        return [fig_width, fig_height]
+
+    ggplot_red = "#E24A33"
+    ch = 'crimson' # crimson
+    c1 = '#797ef6' # orchid
+    c2 = '#1aa7ec' # sky blue
+    c3 = '#4adede' # turquoise
+    c4 = '#ffa62b' # gold
+    c5 = '#1e2f97' # dark blue
+
+    plt.rc('text', usetex=True)
+    plt.rc('font', family='serif')
+    # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+    plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+    params = {'axes.labelsize': 10,
+              'axes.titlesize': 10,
+              'font.size': 10 } # extend as needed
+    # print(plt.rcParams.keys())
+    plt.rcParams.update(params)
+
+    columnwidth = 418.25368     # pt, given by \showthe\textwidth in LaTeX
+    fig = plt.figure(figsize=get_figsize(columnwidth, wf=1.0), dpi=150, edgecolor="white")
+    ax = fig.add_subplot()
     ax.grid(True)
 
     vert_XX_dd = y**4 * np.cos(th)**8
     vert_Xh_dd = y**4 * np.cos(th)**8
-    s_sigma = 10**(np.linspace(np.log10(s_min), 5.424, int(1e4)))
-    # sigma_XX_dd_val = np.vectorize(sigma_XX_dd)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
+    s_min = 4*m_X2
+    # s_sigma = 10**(np.linspace(np.log10(s_min), 5.424, int(1e4)))
+    s_sigma = 10**(np.linspace(np.log10(s_min), 2, int(1e4)))
+    sigma_XX_dd_val = np.vectorize(sigma_XX_dd_violate_unitarity)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
     sigma_XX_dd_val_new = np.vectorize(sigma_XX_dd_new)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
     sigma_XX_dd_val_Higgs = np.vectorize(sigma_XX_dd_Higgs)(s=s_sigma, m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_XX_dd, th=th, m_Gamma_h2=m_Gamma_h2)
-    sigma_Xh_dd_val = np.vectorize(sigma_Xh_dd_Higgs)(s=s_sigma, m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_Xh_dd, th=th, m_Gamma_X2=m_Gamma_X2)
+    # sigma_Xh_dd_val = np.vectorize(sigma_Xh_dd_Higgs)(s=s_sigma, m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_Xh_dd, th=th, m_Gamma_X2=m_Gamma_X2)
     # sigma_pp_dd_val = np.vectorize(sigma_pp_dd)(s=s_sigma, m_d=m_d, m_phi=m_X, vert=vert_XX_dd)
 
     # Color lines based on which index element has, for debugging purposes
@@ -2828,25 +2944,51 @@ if __name__ == '__main__':
     # colorbar = fig.colorbar(ax_collection, ax=ax)
 
     # ax.plot(s, sigma*s*(s - 4*m_X**2), linestyle='none')        # |M|^2 integrated over t 
-    ax.axvline(4*m_X**2, color='k', linestyle='--')
-    # ax.plot(s_sigma, sigma_XX_dd_val, color='r', label=r'$\sigma_{N_1}$')
-    ax.plot(s_sigma, sigma_XX_dd_val_Higgs, color='tab:blue', label=r'Remove longitudinal by Higgs')
-    ax.plot(s_sigma, sigma_XX_dd_val_new, color='r', label=r'Remove longitudinal by hand')
-    ax.plot(s_sigma, sigma_Xh_dd_val, color='tab:orange', label=r'Remove longitudinal by Higgs')
+    ax.axvline(2*m_X*1e6, color='k', linestyle='--')
+    lw = 2
+    ax.plot(np.sqrt(s_sigma)*1e6, sigma_XX_dd_val_Higgs, color=c4, label=r'Unitarity restored by Higgs', lw=lw)
+    ax.plot(np.sqrt(s_sigma)*1e6, sigma_XX_dd_val, color=ch, label=r'Unitarity violation', lw=lw)
+    ax.plot(np.sqrt(s_sigma)*1e6, sigma_XX_dd_val_new, color=c2, label=r'Remove longitudinal by hand', lw=lw)
+    # ax.plot(np.sqrt(s_sigma)*1e6, sigma_Xh_dd_val, color='tab:orange', label=r'Something else')
     # Anton: Asymptotic s --> inf value for sigma, sigma ~ g^4*ms^2/(pi*mx^4) = g^4/(pi*m_ratio^2*m_s^2)
     # => Increase m_s or m_ratio gives decrease in asymptotic value 
-    ax.axhline(vert_XX_dd*m_d**2/(m_X**4*np.pi), color='gray', linestyle='--')
+    ax.axhline(vert_XX_dd*m_d**2/(m_X**4*np.pi), color='0.55', linestyle=':', zorder=-1)
     # ax.plot(s_sigma, sigma_pp_dd_val, color='tab:blue', label='sigma scalar')
     # ax.plot(s_sigma, np.max(2*sigma_XX_dd_val_new)*s_min/s_sigma, 'grey', linestyle='--', zorder=-1)
     # ax.plot(s_sigma, sigma_XX_dd_val_new[1000]/np.log(s_sigma[1000])**2*np.log(s_sigma)**2, 'grey', linestyle='--', zorder=-1)
-    mass_ratio_string = r"$m_{Z'}=$" + f"{m_ratio}" + r"$m_{N}$"
-    ax.set_title(mass_ratio_string, fontsize=14)
+    m_d_str = f"{m_d:.5e}".split('e')
+    m_d_num = m_d_str[0].rstrip('0').replace('.', '')
+    if m_d_str[1][0] == '-': m_d_exp = "-" + m_d_str[1][1:].lstrip('0')
+    else: m_d_exp = m_d_str[1].lstrip('0')
+    m_d_str = f"{m_d_num}" + "0"*(6+eval(m_d_exp))
+    m_d_str = r"$m_s=\,\,$"+m_d_str+"$\,$keV\n"
+
+    m_X_str = f"{m_X:.5e}".split('e')
+    m_X_num = m_X_str[0].rstrip('0').replace('.', '')
+    if m_X_str[1][0] == '-': m_X_exp = "-" + m_X_str[1][1:].lstrip('0')
+    else: m_X_exp = m_X_str[1].lstrip('0')
+    m_X_str = f"{m_X_num}" + "0"*(6+eval(m_X_exp))
+    m_X_str = r"$m_X=\,\,$"+m_X_str+"$\,$keV\n"
+
+    m_h_str = f"{m_h:.5e}".split('e')
+    m_h_num = m_h_str[0].rstrip('0').replace('.', '')
+    if m_h_str[1][0] == '-': m_h_exp = "-" + m_h_str[1][1:].lstrip('0')
+    else: m_h_exp = m_h_str[1].lstrip('0')
+    m_h_str = f"{m_h_num}" + "0"*(6+eval(m_h_exp))
+    m_h_str = r"$m_h=\,\,$"+m_h_str+"$\,$keV"
+
+    masses_string = m_d_str + m_X_str + m_h_str
+    ax.text(np.sqrt(s_sigma[-1])*1e6, 2e-5, masses_string, color='k', ha='right', va='top')
     ax.set_xscale('log')
     ax.set_yscale('log')
-    ax.set_xlabel(r'$s$', fontsize=16)
-    ax.set_ylabel(r'$\sigma$', fontsize=16)
-    ax.legend(prop={'size':12})
+    ax.set_xlim(np.sqrt(s_min)*1e6*0.5)
+    ax.set_xlabel(r'$\sqrt{s}\;\;[\mathrm{keV}]$')
+    ax.set_ylabel(r'$\sigma_{\nu_s\nu_s\to XX}(s)\;\;[\mathrm{GeV^{-2}}]$')
+    # ax.tick_params(axis='both')
+    ax.legend()
     fig.tight_layout()
+    # plt.savefig(f'./thesis_figs/unitarity_violation_decoupling_Higgs.pdf')
+    # plt.savefig(f'./thesis_figs/unitarity_violation_2.pdf')
     plt.show()
 
     # res_XX_dd = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0)

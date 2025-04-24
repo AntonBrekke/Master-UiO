@@ -25,28 +25,57 @@ import C_res_vector
 import C_res_scalar
 import C_res_vector_no_spin_stat
 import vector_mediator
+import scalar_mediator 
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif', size=14)
 # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 
-def make_rate_file(m_d, m_X, M2_dd, M2_da, M2_aa, vert_el, n_d_grid, T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid, H_grid, filename):
+def make_rate_file(m_d, m_X, m_h, M2_X_dd, M2_X_da, M2_X_aa, M2_h_dd, M2_h_da, M2_h_aa, M2_h_XX, vert_el, th, n_d_grid, T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid, xi_h_grid, H_grid, m_Gamma_h2, filename):
+    m_d2 = m_d*m_d
+    m_X2 = m_X*m_X
     time_start = time.time()
     print('Get C_X_dd')
-    C_X_dd = np.array([-2.*C_res_vector.C_n_3_12(m_d, m_d, m_X, k_d, k_d, k_X, T_d, T_d, T_d, xi_d, xi_d, xi_X, M2_dd, type=-1) / 2. for T_d, xi_d, xi_X in zip(T_d_grid, xi_d_grid, xi_X_grid)])
+    C_X_dd = np.array([-2.*C_res_vector.C_n_3_12(m_d, m_d, m_X, k_d, k_d, k_X, T_d, T_d, T_d, xi_d, xi_d, xi_X, M2_X_dd, type=-1) / 2. for T_d, xi_d, xi_X in zip(T_d_grid, xi_d_grid, xi_X_grid)])
+    print('Get C_h_dd')
+    C_h_dd = np.array([-2.*C_res_vector.C_n_3_12(m_d, m_d, m_h, k_d, k_d, k_h, T_d, T_d, T_d, xi_d, xi_d, xi_h, M2_h_dd, type=-1) / 2. for T_d, xi_d, xi_h in zip(T_d_grid, xi_d_grid, xi_h_grid)])
+    
     print('Get C_dd_X')
-    C_dd_X = np.array([2.*C_res_vector.C_n_3_12(m_d, m_d, m_X, k_d, k_d, k_X, T_d, T_d, T_d, xi_d, xi_d, xi_X, M2_dd, type=1) / 2. for T_d, xi_d, xi_X in zip(T_d_grid, xi_d_grid, xi_X_grid)])
+    C_dd_X = np.array([2.*C_res_vector.C_n_3_12(m_d, m_d, m_X, k_d, k_d, k_X, T_d, T_d, T_d, xi_d, xi_d, xi_X, M2_X_dd, type=1) / 2. for T_d, xi_d, xi_X in zip(T_d_grid, xi_d_grid, xi_X_grid)])
+    print('Get C_dd_h')
+    C_dd_h = np.array([2.*C_res_vector.C_n_3_12(m_d, m_d, m_h, k_d, k_d, k_h, T_d, T_d, T_d, xi_d, xi_d, xi_h, M2_h_dd, type=1) / 2. for T_d, xi_d, xi_h in zip(T_d_grid, xi_d_grid, xi_h_grid)])
+    
     print('Get C_X_da')
-    C_X_da = np.array([-C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_X, T_d, T_a, T_d, xi_d, 0., xi_X, M2_da, type=-1) for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    C_X_da = np.array([-C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_X, T_d, T_a, T_d, xi_d, 0., xi_X, M2_X_da, type=-1) for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    print('Get C_h_da')
+    C_h_da = np.array([-C_res_vector.C_n_3_12(m_d, m_a, m_h, k_d, k_a, k_X, T_d, T_a, T_d, xi_d, 0., xi_h, M2_h_da, type=-1) for T_d, T_a, xi_d, xi_h in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_h_grid)])
+    
     print('Get C_da_X')
-    C_da_X = np.array([C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_X, T_d, T_a, T_d, xi_d, 0., xi_X, M2_da, type=1) for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    C_da_X = np.array([C_res_vector.C_n_3_12(m_d, m_a, m_X, k_d, k_a, k_X, T_d, T_a, T_d, xi_d, 0., xi_X, M2_X_da, type=1) for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    print('Get C_da_h')
+    C_da_h = np.array([C_res_vector.C_n_3_12(m_d, m_a, m_h, k_d, k_a, k_h, T_d, T_a, T_d, xi_d, 0., xi_h, M2_h_da, type=1) for T_d, T_a, xi_d, xi_h in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_h_grid)])
+    
     print('Get C_X_aa')
-    C_X_aa = np.array([-2.*C_res_vector.C_n_3_12(m_a, m_a, m_X, k_d, k_a, k_X, T_a, T_a, T_d, 0., 0., xi_X, M2_aa, type=-1) / 2. for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    C_X_aa = np.array([-2.*C_res_vector.C_n_3_12(m_a, m_a, m_X, k_d, k_a, k_X, T_a, T_a, T_d, 0., 0., xi_X, M2_X_aa, type=-1) / 2. for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    print('Get C_h_aa')
+    C_h_aa = np.array([-2.*C_res_vector.C_n_3_12(m_a, m_a, m_h, k_d, k_a, k_h, T_a, T_a, T_d, 0., 0., xi_h, M2_h_aa, type=-1) / 2. for T_d, T_a, xi_d, xi_h in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_h_grid)])
+    
     print('Get C_aa_X')
-    C_aa_X = np.array([2.*C_res_vector.C_n_3_12(m_a, m_a, m_X, k_d, k_a, k_X, T_a, T_a, T_d, 0., 0., xi_X, M2_aa, type=1) / 2. for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    C_aa_X = np.array([2.*C_res_vector.C_n_3_12(m_a, m_a, m_X, k_d, k_a, k_X, T_a, T_a, T_d, 0., 0., xi_X, M2_X_aa, type=1) / 2. for T_d, T_a, xi_d, xi_X in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_X_grid)])
+    print('Get C_aa_h')
+    C_aa_h = np.array([2.*C_res_vector.C_n_3_12(m_a, m_a, m_h, k_d, k_a, k_h, T_a, T_a, T_d, 0., 0., xi_h, M2_h_aa, type=1) / 2. for T_d, T_a, xi_d, xi_h in zip(T_d_grid, T_nu_grid, xi_d_grid, xi_h_grid)])
+    
     print('Get C_XX_dd_both')
-    C_XX_dd_both = np.array([2.*C_res_vector.C_n_XX_dd(m_d, m_X, k_d, k_X, T_d, xi_d, xi_X, vert_el, type=2) / 4. for T_d, xi_d, xi_X in zip(T_d_grid, xi_d_grid, xi_X_grid)])
+    C_XX_dd_both = np.array([2.*C_res_vector.C_n_XX_dd(m_d, m_X, m_h, k_d, k_X, T_d, xi_d, xi_X, vert_el, th, m_Gamma_h2, type=2) / 4. for T_d, xi_d, xi_X in zip(T_d_grid, xi_d_grid, xi_X_grid)])
+    print('Get C_hh_dd_both')
+    C_hh_dd_both = np.array([2.*C_res_scalar.C_n_pp_dd(m_d, m_h, k_d, k_h, T_d, xi_d, xi_h, vert_el*(4*m_d2/m_X2)**2, type=2) / 4. for T_d, xi_d, xi_h in zip(T_d_grid, xi_d_grid, xi_h_grid)])
+
+    print('Get C_h_XX')
+    C_h_XX = np.array([-C_res_vector.C_n_3_12(m_X, m_X, m_h, k_X, k_X, k_h, T_d, T_d, T_d, xi_X, xi_X, xi_h, M2_h_XX, type=-1) / 2. for T_d, xi_h, xi_X in zip(T_d_grid, xi_h_grid, xi_X_grid)])
+    print('Get C_XX_h')
+    C_XX_h = np.array([C_res_vector.C_n_3_12(m_X, m_X, m_h, k_X, k_X, k_h, T_d, T_d, T_d, xi_X, xi_X, xi_h, M2_h_XX, type=1) / 2. for T_d, xi_h, xi_X in zip(T_d_grid, xi_h_grid, xi_X_grid)])
+
     # C_dd_dd = np.array([C_res_vector_no_spin_stat.C_12_34(m_d, m_d, m_d, m_d, k_d, k_d, T_d, T_d, xi_d, xi_d, vert_el, m_X2, m_Gamma_X2, type=0, res_sub=True) / 4. for T_d, xi_d in zip(T_d_grid, xi_d_grid)])
     # C_da_dd = np.array([C_res_vector_no_spin_stat.C_12_34(m_d, m_a, m_d, m_d, k_d, k_a, T_d, T_a, xi_d, 0., vert_tr, m_X2, m_Gamma_X2, type=0, res_sub=True) / 2. for T_d, T_a, xi_d in zip(T_d_grid, T_nu_grid, xi_d_grid)])
     C_dd_dd = np.zeros(T_d_grid.size)#np.array([C_res_vector.C_34_12(0, 1., 0., m_d, m_d, m_d, m_d, k_d, k_d, k_d, k_d, T_d, T_d, T_d, T_d, xi_d, xi_d, xi_d, xi_d, vert_el, m_X2, m_Gamma_X2, res_sub=False) / 4. for T_d, xi_d in zip(T_d_grid, xi_d_grid)])
@@ -55,9 +84,36 @@ def make_rate_file(m_d, m_X, M2_dd, M2_da, M2_aa, vert_el, n_d_grid, T_d_grid, T
     C_aa_dd = np.zeros(T_d_grid.size)#np.array([C_res_vector.C_34_12(0, 2., 0., m_d, m_d, m_a, m_a, k_d, k_d, k_a, k_a, T_d, T_d, T_a, T_a, xi_d, xi_d, 0., 0., vert_fi, m_X2, m_Gamma_X2) / 4. for T_d, T_a, xi_d in zip(T_d_grid, T_nu_grid, xi_d_grid)])
     C_dd_aa = np.zeros(T_d_grid.size)#np.array([C_res_vector.C_34_12(0, 0., 2., m_d, m_d, m_a, m_a, k_d, k_d, k_a, k_a, T_d, T_d, T_a, T_a, xi_d, xi_d, 0., 0., vert_fi, m_X2, m_Gamma_X2) / 2. for T_d, T_a, xi_d in zip(T_d_grid, T_nu_grid, xi_d_grid)])
     C_XX_dd = -C_XX_dd_both[:,0]
-    C_dd_XX = C_XX_dd_both[:,1] 
+    C_dd_XX = C_XX_dd_both[:,1]
+    C_hh_dd = -C_hh_dd_both[:,0]
+    C_dd_hh = C_hh_dd_both[:,1]
 
-    np.savetxt(filename, np.column_stack((m_d/T_nu_grid, H_grid, C_X_dd/n_d_grid, C_dd_X/n_d_grid, C_X_da/n_d_grid, C_da_X/n_d_grid, C_X_aa/n_d_grid, C_aa_X/n_d_grid, C_XX_dd/n_d_grid, C_dd_XX/n_d_grid, C_dd_dd/n_d_grid, C_da_dd/n_d_grid, C_dd_da/n_d_grid, C_aa_dd/n_d_grid, C_dd_aa/n_d_grid)))
+    np.savetxt(filename, np.column_stack((
+        m_d/T_nu_grid, 
+        H_grid, 
+        C_X_dd/n_d_grid, 
+        C_dd_X/n_d_grid, 
+        C_h_dd/n_d_grid, 
+        C_dd_h/n_d_grid, 
+        C_X_da/n_d_grid, 
+        C_da_X/n_d_grid, 
+        C_h_da/n_d_grid, 
+        C_da_h/n_d_grid, 
+        C_X_aa/n_d_grid, 
+        C_aa_X/n_d_grid, 
+        C_h_aa/n_d_grid, 
+        C_aa_h/n_d_grid, 
+        C_XX_dd/n_d_grid, 
+        C_dd_XX/n_d_grid, 
+        C_hh_dd/n_d_grid, 
+        C_dd_hh/n_d_grid, 
+        C_dd_dd/n_d_grid, 
+        C_da_dd/n_d_grid, 
+        C_dd_da/n_d_grid, 
+        C_aa_dd/n_d_grid, 
+        C_dd_aa/n_d_grid,
+        C_h_XX/n_d_grid,
+        C_XX_h/n_d_grid)))
     print(f'Made file {filename} in {time.time()-time_start}s')
 
 # load_str_1 = './md_2.48163e-06;mX_7.44489e-06;sin22th_1.4251e-12;y_2.76291e-05;full.dat'
@@ -75,36 +131,44 @@ load_str_2 = './md_5.13483e-05;mX_1.54045e-04;sin22th_1.19378e-15;y_2.23145e-03;
 load_str_1 = './md_1.12884e-05;mX_3.38651e-05;sin22th_2.42446e-13;y_1.34284e-04;full_new.dat'
 load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;full_new.dat'
 
+load_str_1 = './md_2.06914e-05;mX_1.03457e-04;mh_6.20741e-05;sin22th_6.61474e-16;y_1.83218e-03;full_new.dat'     # Perfect
+load_str_2 = './md_1.35388e-06;mX_6.76938e-06;mh_4.06163e-06;sin22th_7.01704e-15;y_4.45923e-04;full_new.dat'     # Perfect
+
 data_1 = np.loadtxt(load_str_1)
 data_2 = np.loadtxt(load_str_2)
 
 var_list_1 = load_str_1.split(';')[:-1]
-m_d_1, m_X_1, sin2_2th_1, y_1 = [eval(s.split('_')[-1]) for s in var_list_1]
-print(f'md_1: {m_d_1:.2e}, mX_1: {m_X_1:.2e}, sin22th_1: {sin2_2th_1:.2e}, y_1: {y_1:.2e}')
+m_d_1, m_X_1, m_h_1, sin2_2th_1, y_1 = [eval(s.split('_')[-1]) for s in var_list_1]
+print(f'md_1: {m_d_1:.2e}, mX_1: {m_X_1:.2e}, mh_1: {m_h_1:.2e}, sin22th_1: {sin2_2th_1:.2e}, y_1: {y_1:.2e}')
 
 var_list_2 = load_str_2.split(';')[:-1]
-m_d_2, m_X_2, sin2_2th_2, y_2 = [eval(s.split('_')[-1]) for s in var_list_2]
-print(f'md_2: {m_d_2:.2e}, mX_2: {m_X_2:.2e}, sin22th_2: {sin2_2th_2:.2e}, y_2: {y_2:.2e}')
+m_d_2, m_X_2, m_h_2, sin2_2th_2, y_2 = [eval(s.split('_')[-1]) for s in var_list_2]
+print(f'md_2: {m_d_2:.2e}, mX_2: {m_X_2:.2e}, mh_2: {m_h_2:.2e}, sin22th_2: {sin2_2th_2:.2e}, y_2: {y_2:.2e}')
 
 md_str_1 = f'{m_d_1:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d_1:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 mX_str_1 = f'{m_X_1:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X_1:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+mh_str_1 = f'{m_h_1:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_h_1:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 sin22th_str_1 = f'{sin2_2th_1:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th_1:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 y_str_1 = f'{y_1:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y_1:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 
 md_str_2 = f'{m_d_2:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d_2:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 mX_str_2 = f'{m_X_2:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X_2:.5e}'.split('e')[1].rstrip('0').rstrip('.')
+mh_str_2 = f'{m_h_2:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_h_2:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 sin22th_str_2 = f'{sin2_2th_2:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{sin2_2th_2:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 y_str_2 = f'{y_2:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{y_2:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 
 k_d = 1.
 k_a = 1.
 k_X = -1.
+k_h = -1
 dof_d = 2.
 dof_X = 3.
+dof_h = 1.
 m_a = 0.
 
 m_d2_1 = m_d_1*m_d_1
 m_X2_1 = m_X_1*m_X_1
+m_h2_1 = m_h_1*m_h_1
 th_1 = 0.5*asin(sqrt(sin2_2th_1))
 c_th_1 = cos(th_1)
 s_th_1 = sin(th_1)
@@ -112,6 +176,7 @@ y2_1 = y_1*y_1
 
 m_d2_2 = m_d_2*m_d_2
 m_X2_2 = m_X_2*m_X_2
+m_h2_2 = m_h_2*m_h_2
 th_2 = 0.5*asin(sqrt(sin2_2th_2))
 c_th_2 = cos(th_2)
 s_th_2 = sin(th_2)
@@ -130,15 +195,24 @@ m_a2 = m_a*m_a
 # M2_da_2 = 2.*y2_2*(s_th_2**2.)*(c_th_2**2.)/m_X2_2 * (m_X2_2 - m_d2_2)*(2*m_X2_2 + m_d2_2)
 
 # Anton: Test if new Feynman rules work.
-M2_dd_1 = 4*y2_1*(c_th_1**4.)*(m_X2_1-6*m_d2_1)
-M2_da_1 = 4*y2_1*(s_th_1**2.)*(c_th_1**2.)*(m_X2_1-m_d2_1)
-M2_aa_1 = 4.*y2_1*(s_th_1**4.)*m_X2_1
-M2_dd_2 = 4*y2_2*(c_th_2**4.)*(m_X2_2-6*m_d2_2)
-M2_da_2 = 4*y2_2*(s_th_2**2.)*(c_th_2**2.)*(m_X2_2-m_d2_2)
-M2_aa_2 = 4.*y2_2*(s_th_2**4.)*m_X2_2
+M2_X_dd_1 = 4*y2_1*(c_th_1**4.)*(m_X2_1-4*m_d2_1)
+M2_X_da_1 = 4*y2_1*(s_th_1**2.)*(c_th_1**2.)*(m_X2_1-m_d2_1)*(1 + m_d2_1/(2*m_X2_1))
+M2_X_aa_1 = 4.*y2_1*(s_th_1**4.)*m_X2_1
+M2_h_dd_1 = 2*(4*y2_1*m_d2_1/m_X2_1)*(c_th_1**4)*(m_h2_1-4*m_d2_1)
+M2_h_da_1 = 2*(4*y2_1*m_d2_1/m_X2_1)*(c_th_1**2)*(s_th_1**2)*(m_h2_1-m_d2_1)
+M2_h_aa_1 = 2*(4*y2_1*m_d2_1/m_X2_1)*(s_th_1**4)*m_h2_1
+M2_h_XX_1 = 4*y2_1*(m_h2_1**2/m_X2_1-4*m_h2_1+12*m_X2_1)
 
-print(f'M2_dd_1: {M2_dd_1:3e}, M2_da_1: {M2_da_1:3e}, M2_aa_1: {M2_aa_1:3e}')
-print(f'M2_dd_2: {M2_dd_2:3e}, M2_da_2: {M2_da_2:3e}, M2_aa_2: {M2_aa_2:3e}')
+M2_X_dd_2 = 4*y2_2*(c_th_2**4.)*(m_X2_2-4*m_d2_2)
+M2_X_da_2 = 4*y2_2*(s_th_2**2.)*(c_th_2**2.)*(m_X2_2-m_d2_2)*(1 + m_d2_2/(2*m_X2_2))
+M2_X_aa_2 = 4.*y2_2*(s_th_2**4.)*m_X2_2
+M2_h_dd_2 = 2*(4*y2_2*m_d2_2/m_X2_2)*(c_th_2**4)*(m_h2_2-4*m_d2_2)
+M2_h_da_2 = 2*(4*y2_2*m_d2_2/m_X2_2)*(c_th_2**2)*(s_th_2**2)*(m_h2_2-m_d2_2)
+M2_h_aa_2 = 2*(4*y2_2*m_d2_2/m_X2_2)*(s_th_2**4)*m_h2_2
+M2_h_XX_2 = 4*y2_2*(m_h2_2**2/m_X2_2-4*m_h2_2+12*m_X2_2)
+
+# print(f'M2_dd_1: {M2_X_dd_1:3e}, M2_da_1: {M2_da_1:3e}, M2_aa_1: {M2_aa_1:3e}')
+# print(f'M2_dd_2: {M2_dd_2:3e}, M2_da_2: {M2_da_2:3e}, M2_aa_2: {M2_aa_2:3e}')
 
 vert_fi_1 = y2_1*y2_1*(c_th_1**4.)*(s_th_1**4.)
 vert_tr_1 = y2_1*y2_1*(c_th_1**6.)*(s_th_1**2.)
@@ -148,10 +222,15 @@ vert_fi_2 = y2_2*y2_2*(c_th_2**4.)*(s_th_2**4.)
 vert_tr_2 = y2_2*y2_2*(c_th_2**6.)*(s_th_2**2.)
 vert_el_2 = y2_2*y2_2*(c_th_2**8.)
 
-Gamma_X_1 = vector_mediator.Gamma_X_new(y_1, th_1, m_X_1, m_d_1)
-Gamma_X_2 = vector_mediator.Gamma_X_new(y_2, th_2, m_X_2, m_d_2)
+Gamma_X_1 = vector_mediator.Gamma_X_new(y=y_1, th=th_1, m_X=m_X_1, m_d=m_d_1)
+Gamma_h_1 = scalar_mediator.Gamma_phi(y=y_1, th=th_1, m_phi=m_h_1, m_d=m_d_1, m_X=m_X_1)
 m_Gamma_X2_1 = m_X2_1*Gamma_X_1*Gamma_X_1
+m_Gamma_h2_1 = m_h2_1*Gamma_h_1*Gamma_h_1
+
+Gamma_X_2 = vector_mediator.Gamma_X_new(y=y_2, th=th_2, m_X=m_X_2, m_d=m_d_2)
+Gamma_h_2 = scalar_mediator.Gamma_phi(y=y_2, th=th_2, m_phi=m_h_2, m_d=m_d_2, m_X=m_X_2)
 m_Gamma_X2_2 = m_X2_2*Gamma_X_2*Gamma_X_2
+m_Gamma_h2_2 = m_h2_2*Gamma_h_2*Gamma_h_2
 
 data_evo_1 = np.loadtxt(load_str_1)
 data_evo_2 = np.loadtxt(load_str_2)
@@ -180,9 +259,12 @@ sf_grid_1 = data_evo_1[::i_skip,5]
 T_d_grid_1 = data_evo_1[::i_skip,6]
 xi_d_grid_1 = data_evo_1[::i_skip,7]
 xi_X_grid_1 = data_evo_1[::i_skip,8]
-n_d_grid_1 = data_evo_1[::i_skip,9]
-n_X_grid_1 = data_evo_1[::i_skip,10]
+xi_h_grid_1 = data_evo_1[::i_skip,9]
+n_d_grid_1 = data_evo_1[::i_skip,10]
+n_X_grid_1 = data_evo_1[::i_skip,11]
+n_h_grid_1 = data_evo_1[::i_skip,12]
 n_nu_grid_1 = 2.*0.75*(cf.zeta3/cf.pi2)*(T_nu_grid_1**3.)
+
 
 t_grid_2 = data_evo_2[::i_skip,0]
 T_SM_grid_2 = data_evo_2[::i_skip,1]
@@ -193,65 +275,98 @@ sf_grid_2 = data_evo_2[::i_skip,5]
 T_d_grid_2 = data_evo_2[::i_skip,6]
 xi_d_grid_2 = data_evo_2[::i_skip,7]
 xi_X_grid_2 = data_evo_2[::i_skip,8]
-n_d_grid_2 = data_evo_2[::i_skip,9]
-n_X_grid_2 = data_evo_2[::i_skip,10]
+xi_h_grid_2 = data_evo_2[::i_skip,9]
+n_d_grid_2 = data_evo_2[::i_skip,10]
+n_X_grid_2 = data_evo_2[::i_skip,11]
+n_h_grid_2 = data_evo_2[::i_skip,12]
 n_nu_grid_2 = 2.*0.75*(cf.zeta3/cf.pi2)*(T_nu_grid_2**3.)
 
-filename_1 = f'rates_md_{md_str_1};mX_{mX_str_1};sin22th_{sin22th_str_1};y_{y_str_1};full.dat'
-filename_2 = f'rates_md_{md_str_2};mX_{mX_str_2};sin22th_{sin22th_str_2};y_{y_str_2};full.dat'
+filename_1 = f'rates_md_{md_str_1};mX_{mX_str_1};mh_{mh_str_1};sin22th_{sin22th_str_1};y_{y_str_1};full.dat'
+filename_2 = f'rates_md_{md_str_2};mX_{mX_str_2};mh_{mh_str_2};sin22th_{sin22th_str_2};y_{y_str_2};full.dat'
 
 make_rates_file_1_by_force = False
 make_rates_file_2_by_force = False
 
 # Anton: Check if file exists -- if not, create it 
 if not os.path.isfile('./' + filename_1) or make_rates_file_1_by_force:
-    make_rate_file(m_d=m_d_1, m_X=m_X_1, 
-                   M2_dd=M2_dd_1, M2_da=M2_da_1, M2_aa=M2_aa_1, vert_el=vert_el_1,
-                   n_d_grid=n_d_grid_1, T_d_grid=T_d_grid_1, T_nu_grid=T_nu_grid_1, 
-                   xi_d_grid=xi_d_grid_1, xi_X_grid=xi_X_grid_1, H_grid=H_grid_1,
+    make_rate_file(m_d=m_d_1, m_X=m_X_1, m_h=m_h_1, 
+                   M2_X_dd=M2_X_dd_1, M2_X_da=M2_X_da_1, M2_X_aa=M2_X_aa_1, 
+                   M2_h_dd=M2_h_dd_1, M2_h_da=M2_h_da_1, M2_h_aa=M2_h_aa_1, M2_h_XX=M2_h_XX_1,
+                   vert_el=vert_el_1, th=th_1, 
+                   n_d_grid=n_d_grid_1, 
+                   T_d_grid=T_d_grid_1, T_nu_grid=T_nu_grid_1, 
+                   xi_d_grid=xi_d_grid_1, xi_X_grid=xi_X_grid_1, xi_h_grid=xi_h_grid_1, 
+                   H_grid=H_grid_1, 
+                   m_Gamma_h2=m_Gamma_h2_1, 
                    filename=filename_1)
     
 if not os.path.isfile('./' + filename_2) or make_rates_file_2_by_force:
-    make_rate_file(m_d=m_d_2, m_X=m_X_2, 
-                   M2_dd=M2_dd_2, M2_da=M2_da_2, M2_aa=M2_aa_2, vert_el=vert_el_2,
-                   n_d_grid=n_d_grid_2, T_d_grid=T_d_grid_2, T_nu_grid=T_nu_grid_2, 
-                   xi_d_grid=xi_d_grid_2, xi_X_grid=xi_X_grid_2, H_grid=H_grid_2,
+    make_rate_file(m_d=m_d_2, m_X=m_X_2, m_h=m_h_2, 
+                   M2_X_dd=M2_X_dd_2, M2_X_da=M2_X_da_2, M2_X_aa=M2_X_aa_2, 
+                   M2_h_dd=M2_h_dd_2, M2_h_da=M2_h_da_2, M2_h_aa=M2_h_aa_2, M2_h_XX=M2_h_XX_2,
+                   vert_el=vert_el_2, th=th_2, 
+                   n_d_grid=n_d_grid_2, 
+                   T_d_grid=T_d_grid_2, T_nu_grid=T_nu_grid_2, 
+                   xi_d_grid=xi_d_grid_2, xi_X_grid=xi_X_grid_2, xi_h_grid=xi_h_grid_2, 
+                   H_grid=H_grid_2, 
+                   m_Gamma_h2=m_Gamma_h2_2, 
                    filename=filename_2)
 
 data_1 = np.loadtxt(filename_1)
 data_2 = np.loadtxt(filename_2)
 
-x_grid_1 = data_1[:,0]
-H_1 = data_1[:,1]
-C_X_dd_1 = data_1[:,2]
-C_dd_X_1 = data_1[:,3]
-C_X_da_1 = data_1[:,4]
-C_da_X_1 = data_1[:,5]
-C_X_aa_1 = data_1[:,6]
-C_aa_X_1 = data_1[:,7]
-C_XX_dd_1 = data_1[:,8]
-C_dd_XX_1 = data_1[:,9]
-C_dd_dd_1 = data_1[:,10]
-C_da_dd_1 = data_1[:,11]
-C_dd_da_1 = data_1[:,12]
-C_aa_dd_1 = data_1[:,13]
-C_dd_aa_1 = data_1[:,14]
+data_skip = 1
+x_grid_1 = data_1[::data_skip,0]
+H_1 = data_1[::data_skip,1]
+C_X_dd_1 = data_1[::data_skip,2]
+C_dd_X_1 = data_1[::data_skip,3]
+C_h_dd_1 = data_1[::data_skip,4]
+C_dd_h_1 = data_1[::data_skip,5]
+C_X_da_1 = data_1[::data_skip,6]
+C_da_X_1 = data_1[::data_skip,7]
+C_h_da_1 = data_1[::data_skip,8]
+C_da_h_1 = data_1[::data_skip,9]
+C_X_aa_1 = data_1[::data_skip,10]
+C_aa_X_1 = data_1[::data_skip,11]
+C_h_aa_1 = data_1[::data_skip,12]
+C_aa_h_1 = data_1[::data_skip,13]
+C_XX_dd_1 = data_1[::data_skip,14]
+C_dd_XX_1 = data_1[::data_skip,15]
+C_hh_dd_1 = data_1[::data_skip,16]
+C_dd_hh_1 = data_1[::data_skip,17]
+C_dd_dd_1 = data_1[::data_skip,18]
+C_da_dd_1 = data_1[::data_skip,19]
+C_dd_da_1 = data_1[::data_skip,20]
+C_aa_dd_1 = data_1[::data_skip,21]
+C_dd_aa_1 = data_1[::data_skip,22]
+C_h_XX_1 = data_1[::data_skip,23]
+C_XX_h_1 = data_1[::data_skip,24]
 
-x_grid_2 = data_2[:,0]
-H_2 = data_2[:,1]
-C_X_dd_2 = data_2[:,2]
-C_dd_X_2 = data_2[:,3]
-C_X_da_2 = data_2[:,4]
-C_da_X_2 = data_2[:,5]
-C_X_aa_2 = data_2[:,6]
-C_aa_X_2 = data_2[:,7]
-C_XX_dd_2 = data_2[:,8]
-C_dd_XX_2 = data_2[:,9]
-C_dd_dd_2 = data_2[:,10]
-C_da_dd_2 = data_2[:,11]
-C_dd_da_2 = data_2[:,12]
-C_aa_dd_2 = data_2[:,13]
-C_dd_aa_2 = data_2[:,14]
+x_grid_2 = data_2[::data_skip,0]
+H_2 = data_2[::data_skip,1]
+C_X_dd_2 = data_2[::data_skip,2]
+C_dd_X_2 = data_2[::data_skip,3]
+C_h_dd_2 = data_2[::data_skip,4]
+C_dd_h_2 = data_2[::data_skip,5]
+C_X_da_2 = data_2[::data_skip,6]
+C_da_X_2 = data_2[::data_skip,7]
+C_h_da_2 = data_2[::data_skip,8]
+C_da_h_2 = data_2[::data_skip,9]
+C_X_aa_2 = data_2[::data_skip,10]
+C_aa_X_2 = data_2[::data_skip,11]
+C_h_aa_2 = data_2[::data_skip,12]
+C_aa_h_2 = data_2[::data_skip,13]
+C_XX_dd_2 = data_2[::data_skip,14]
+C_dd_XX_2 = data_2[::data_skip,15]
+C_hh_dd_2 = data_2[::data_skip,16]
+C_dd_hh_2 = data_2[::data_skip,17]
+C_dd_dd_2 = data_2[::data_skip,18]
+C_da_dd_2 = data_2[::data_skip,19]
+C_dd_da_2 = data_2[::data_skip,20]
+C_aa_dd_2 = data_2[::data_skip,21]
+C_dd_aa_2 = data_2[::data_skip,22]
+C_h_XX_2 = data_2[::data_skip,23]
+C_XX_h_2 = data_2[::data_skip,24]
 
 # plt.loglog(x_grid, C_da_dd/C_da_X, color='dodgerblue')
 # plt.show()
@@ -283,30 +398,49 @@ yMajorLocator = FixedLocator(ytMajor)
 yMinorLocator = FixedLocator(ytMinor)
 yMajorFormatter = FixedFormatter(ylMajor)
 
-ch = 'crimson'
-c1 = '#797ef6' #'#5170d7'
-c2 = '#1aa7ec' #'mediumorchid'
-c3 = '#4adede' #'crimson'   
-c5 = '#1e2f97' #'#f0944d'
+ch = 'crimson' # crimson
+c1 = '#797ef6' # orchid
+c2 = '#1aa7ec' # sky blue
+c3 = '#4adede' # turquoise
+c4 = '#1e2f97' # dark blue
 
-c4 = '#ffa62b'
+c5 = '#ffa62b' # gold
+c6 = '#5db04f' # green
+c7 = '#61929e' # teal
+c8 = '#c53a80' # pink
 
 # Anton: 1e6 to make GeV to keV 
-plt.loglog(x_grid_1, 1e6*3*H_1, color=ch, ls='-', zorder=0) #83781B
+plt.loglog(x_grid_1, 1e6*H_1, color=ch, ls='-', zorder=0) #83781B
+
 plt.loglog(x_grid_1, 1e6*abs(C_dd_X_1), color=c1, ls='-', zorder=-4) #114B5F
 plt.loglog(x_grid_1, 1e6*abs(C_da_X_1), color=c2, ls='-', zorder=-4) #458751
 # plt.loglog(x_grid_1, 1e6*abs(C_X_aa_1), color='brown', ls='-')
 # plt.loglog(x_grid_1, 1e6*abs(C_aa_X_1), color='purple', ls='-')
 plt.loglog(x_grid_1, 1e6*abs(C_dd_XX_1), color=c3, ls='-', zorder=-4) #95190C
-plt.loglog(x_grid_1, 1e6*abs(C_XX_dd_1), color=c5, ls='-', zorder=-4) #D02411
+plt.loglog(x_grid_1, 1e6*abs(C_XX_dd_1), color=c4, ls='-', zorder=-4) #D02411
 
-plt.loglog(x_grid_2, 1e6*3*H_2, color=ch, ls='--', zorder=0, dashes=(3.8,1.65)) #83781B
-plt.loglog(x_grid_2, 1e6*abs(C_dd_X_2), color=c1, ls='--', zorder=-4, dashes=(3.8,1.65)) #114B5F
-plt.loglog(x_grid_2, 1e6*abs(C_da_X_2), color=c2, ls='--', zorder=-4, dashes=(3.8,1.65)) #458751
-# plt.loglog(x_grid_2, 1e6*abs(C_X_aa_2), color='brown', ls='--')
-# plt.loglog(x_grid_2, 1e6*abs(C_aa_X_2), color='purple', ls='--')
-plt.loglog(x_grid_2, 1e6*abs(C_dd_XX_2), color=c3, ls='--', zorder=-4, dashes=(3.8,1.65)) #95190C
-plt.loglog(x_grid_2, 1e6*abs(C_XX_dd_2), color=c5, ls='--', zorder=-4, dashes=(3.8,1.65)) #D02411
+plt.loglog(x_grid_1, 1e6*abs(C_dd_h_1), color=c5, ls='-', zorder=-4) #114B5F
+plt.loglog(x_grid_1, 1e6*abs(C_da_h_1), color=c6, ls='-', zorder=-4) #458751
+# plt.loglog(x_grid_1, 1e6*abs(C_h_aa_1), color='brown', ls='--')
+# plt.loglog(x_grid_1, 1e6*abs(C_aa_h_1), color='purple', ls='--')
+plt.loglog(x_grid_1, 1e6*abs(C_dd_hh_1), color=c7, ls='-', zorder=-4) #95190C
+plt.loglog(x_grid_1, 1e6*abs(C_hh_dd_1), color=c8, ls='-', zorder=-4) #D02411
+
+plt.loglog(x_grid_2, 1e6*H_2, color=ch, ls='--', zorder=0) #83781B
+
+plt.loglog(x_grid_2, 1e6*abs(C_dd_X_2), color=c1, ls='--', zorder=-4) #114B5F
+plt.loglog(x_grid_2, 1e6*abs(C_da_X_2), color=c2, ls='--', zorder=-4) #458751
+# plt.loglog(x_grid_2, 1e6*abs(C_X_aa_2), color='brown', ls='-')
+# plt.loglog(x_grid_2, 1e6*abs(C_aa_X_2), color='purple', ls='-')
+plt.loglog(x_grid_2, 1e6*abs(C_dd_XX_2), color=c3, ls='--', zorder=-4) #95190C
+plt.loglog(x_grid_2, 1e6*abs(C_XX_dd_2), color=c4, ls='--', zorder=-4) #D02411
+
+plt.loglog(x_grid_2, 1e6*abs(C_dd_h_2), color=c5, ls='--', zorder=-4) #114B5F
+plt.loglog(x_grid_2, 1e6*abs(C_da_h_2), color=c6, ls='--', zorder=-4) #458751
+# plt.loglog(x_grid_2, 1e6*abs(C_h_aa_2), color='brown', ls='--')
+# plt.loglog(x_grid_2, 1e6*abs(C_aa_h_2), color='purple', ls='--')
+plt.loglog(x_grid_2, 1e6*abs(C_dd_hh_2), color=c7, ls='--', zorder=-4) #95190C
+plt.loglog(x_grid_2, 1e6*abs(C_hh_dd_2), color=c8, ls='--', zorder=-4) #D02411
 
 plt.text(1.5e-4, 8e-21, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
 plt.text(1.5e-4, 8e-22, r'$\mathrm{Thermalization}$', fontsize=8, color='0', horizontalalignment='center')

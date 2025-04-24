@@ -90,6 +90,10 @@ load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_3.66524e-16;y_2.89428e-03;
 
 # load_str_1 = './md_2.48163e-06;mX_7.44489e-06;sin22th_1.4251e-12;y_2.76291e-05;full_new.dat'
 # load_str_2 = './md_2.06914e-05;mX_6.20741e-05;sin22th_1.12534e-16;y_4.80046e-03;full_new.dat'
+
+load_str_1 = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_3e-15;y_8.98e-04;full_new.dat'     # Perfect
+load_str_2 = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'     # Perfect
+
 data_1 = np.loadtxt(load_str_1)
 data_2 = np.loadtxt(load_str_2)
 
@@ -99,8 +103,10 @@ ent_1 = data_1[:,3]
 Td_1 = data_1[:,6]
 xid_1 = data_1[:,7]
 xiX_1 = data_1[:,8]
-nd_1 = data_1[:,9]
-nX_1 = data_1[:,10]
+xih_1 = data_1[:,9]
+nd_1 = data_1[:,10]
+nX_1 = data_1[:,11]
+nh_1 = data_1[:,12]
 
 T_SM_2 = data_2[:,1]
 T_nu_2 = data_2[:,2]
@@ -108,16 +114,22 @@ ent_2 = data_2[:,3]
 Td_2 = data_2[:,6]
 xid_2 = data_2[:,7]
 xiX_2 = data_2[:,8]
-nd_2 = data_2[:,9]
-nX_2 = data_2[:,10]
+xih_2 = data_2[:,9]
+nd_2 = data_2[:,10]
+nX_2 = data_2[:,11]
+nh_2 = data_2[:,12]
+
+c1 = '#7bc043'      # green
+c2 = '#f37736'      # orange
+c3 = '#13b9af'      # blue
 
 # Mass: 1e-6 * X GeV = X keV
 var_list_1 = load_str_1.split(';')[:-1]
-md_1, mX_1, sin22th_1, y_1 = [eval(s.split('_')[-1]) for s in var_list_1]
+md_1, mX_1, mh_1, sin22th_1, y_1 = [eval(s.split('_')[-1]) for s in var_list_1]
 print(f'md_1: {md_1:.2e}, mX_1: {mX_1:.2e}, sin22th_1: {sin22th_1:.2e}, y_1: {y_1:.2e}')
 
 var_list_2 = load_str_2.split(';')[:-1]
-md_2, mX_2, sin22th_2, y_2 = [eval(s.split('_')[-1]) for s in var_list_2]
+md_2, mX_2, mh_2, sin22th_2, y_2 = [eval(s.split('_')[-1]) for s in var_list_2]
 print(f'md_2: {md_2:.2e}, mX_2: {mX_2:.2e}, sin22th_2: {sin22th_2:.2e}, y_2: {y_2:.2e}')
 
 
@@ -155,26 +167,27 @@ if True:
     # ax1.loglog(x_tr_2, y_tr_2, color='#7bc043', ls='--', zorder=-1)
     # ax1.loglog(x_dw_1[x_dw_1 < 1e-3], y_dw_1[x_dw_1 < 1e-3], color='r', ls='-', zorder=-1)
     # ax1.loglog(x_dw_2[x_dw_2 < 1e-3], y_dw_2[x_dw_2 < 1e-3], color='r', ls='--', zorder=-1)
-    ax1.loglog(x1, y1, color='#7bc043', ls='-', zorder=-1)
-    ax1.loglog(x2, y2, color='#7bc043', ls='--', zorder=-1, dashes=(3.8,1.65))
+    ax1.loglog(x1, y1, color=c1, ls='-', zorder=-1)
+    ax1.loglog(x2, y2, color=c1, ls='--', zorder=-1, dashes=(3.8,1.65))
 
-    ax1.fill_betweenx([1e-23, 1e5], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+    ax1.fill_betweenx([1e-28, 1e5], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
     # ax1.fill_betweenx([1e-23, 1e-18], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 
     #ax1.text(8e-5, 2e-21, 'Thermalization', fontsize=10, color='darkorange')
     #ax1.text(5e-4, 1.3e-19, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
     #ax1.text(5e-4, 1e-22, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
-    ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
-    ax2.plot([1e-3]*2, [1e-2, 2e0], ls=':', color='0', zorder=-2)
+    ax1.axvline([1e-3], ls=':', color='0', zorder=-2)
+    ax2.axvline([1e-3], ls=':', color='0', zorder=-2)
 
     ax1.text(1.5e-4, 8e-21, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
     ax1.text(1.5e-4, 8e-22, r'$\mathrm{Thermalization}$', fontsize=8, color='0', horizontalalignment='center')
     ax1.text(1.5e-4, 8e-23, r'$\rightarrow$', fontsize=8, color='0', horizontalalignment='center')
     #ax1.text(4.5e-5, 1e-22, r'$\hspace{-0.55cm}\mathrm{Therma-}\\\mathrm{lization}\\\mathrm{ }\hspace{0.2cm}\rightarrow$', fontsize=10, color='0')
 
-
-    ax1.loglog(md_1/T_nu_1, mX_1*nX_1/ent_1, color='#f37736', ls='-', zorder=-4)
-    ax1.loglog(md_2/T_nu_2, mX_2*nX_2/ent_2, color='#f37736', ls='--', zorder=-4, dashes=(3.8,1.6))
+    ax1.loglog(md_1/T_nu_1, mh_1*nh_1/ent_1, color=c2, ls='-', zorder=-4)
+    ax1.loglog(md_1/T_nu_1, mX_1*nX_1/ent_1, color=c3, ls='-', zorder=-4)
+    ax1.loglog(md_2/T_nu_2, mh_2*nh_2/ent_2, color=c2, ls='--', zorder=-4, dashes=(3.8,1.6))
+    ax1.loglog(md_2/T_nu_2, mX_2*nX_2/ent_2, color=c3, ls='--', zorder=-4, dashes=(3.8,1.6))
 
     ax1.loglog([1e-8, 1e3], [mY_relic, mY_relic], color='0.65', ls='-.', zorder=-2)
     ax1.text(3e-5, 1e-11, r'$\Omega_s h^2 = 0.12$', fontsize=11, color='0.65')
@@ -214,7 +227,7 @@ if True:
 
     # ylim + 6 will be shown
     ax1.set_ylim(1e-25, 2e-8)
-    ax2.set_ylim(1e-2, 2e0)
+    ax2.set_ylim(min(np.min(Td_1/T_nu_1)*0.5, np.min(Td_2/T_nu_2)*0.5), max(np.max(Td_1/T_nu_1)*1.5, np.max(Td_2/T_nu_2)*1.5))
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
     # plt.savefig(f'dens_evo_BP1_BP2.pdf')

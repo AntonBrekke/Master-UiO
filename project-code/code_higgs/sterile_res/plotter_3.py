@@ -86,6 +86,10 @@ nx, ny = 20, 40
 data = np.loadtxt('rmXd_5.00e+00_rmhd_3.00e+00_y_relic_test_20x40x60.dat')
 nx, ny = 20, 20
 data = np.loadtxt('rmXd_5.00e+00_rmhd_3.00e+00_y_relic_test_20x20x60.dat')
+nx, ny = 20, 39
+data = np.loadtxt('rmXd_3.00e+00_rmhd_3.00e+00_y_relic_test_20x40x60_test.dat')
+
+data = data[:-8]
 
 # Removed max_step=1. in pandemolator for this one -- terrible result...
 # nx, ny = 30, 30

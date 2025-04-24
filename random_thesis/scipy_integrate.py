@@ -13,26 +13,35 @@ Try max_step = np.inf vs. max_step = 1, max_step = 1e-2 etc.
 a = 1
 k = 100
 
+A = 100
+
 def fprime(x, y):
     # RHS of the ODE 
     # return [np.exp(-a*x)*(k*np.cos(k*x)-a*np.sin(k*x))]
-    # return [(1 - 2*(x>0))*x]
+    """
+    Stiff equation: solution is just y = 1/A*cos(x). 
+    However, any small deviations in y from the true solution will be grossly amplified. 
+    This forces the solver to take extremely small steps, which is why the solver is so slow.
+    Biggest impact on RK45
+    """
+    return -10000*(A*y-np.cos(x)) - 1/A*np.sin(x)
+    
     return [np.sin(k*x)/(k*x)]
 
 def event_zero(x, y):
     return y
 
-x0 = 1
-x1 = 5
+x0 = 0
+x1 = 10
 Nx = 1e4
 x = np.linspace(x0, x1, int(Nx))
-y0 = np.array([1])          # y(x0) = y0
+y0 = np.array([1/A])          # y(x0) = y0
 
 dx = x[1]-x[0]
 atol = 0
-rtol = 1e-3
+rtol = 1e-4
 
-max_step = 4e-2
+max_step = np.inf
 
 sol_RK45 = solve_ivp(fun=fprime, t_span=(x0, x1), y0=y0, method='RK45', t_eval=x, events=[event_zero], atol=atol, rtol=rtol, max_step=max_step)
 sol_Radau = solve_ivp(fun=fprime, t_span=(x0, x1), y0=y0, method='Radau', t_eval=x, events=[event_zero], atol=atol, rtol=rtol, max_step=max_step)

@@ -36,7 +36,14 @@ import scalar_mediator
 load_str = './md_2e-05;mX_6e-05;mh_1.206e-04;sin22th_1e-15;y_1e-04;full_new.dat'
 load_str = './md_2e-05;mX_6e-05;mh_1.194e-04;sin22th_1e-15;y_1.1e-03;full_new.dat'
 load_str = './md_2.06914e-05;mX_1.03457e-04;mh_6.20741e-05;sin22th_6.61474e-16;y_1.83218e-03;full_new.dat'
+load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.43845e-15;y_1.24594e-03;full.dat'
+load_str = './md_2e-05;mX_6e-05;mh_5e-05;sin22th_3e-15;y_9.12e-04;full_new.dat'         # Perfect
+load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.43845e-15;y_1.24594e-03;full_new.dat'
+load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'
+load_str = './md_1.35388e-06;mX_6.76938e-06;mh_4.06163e-06;sin22th_7.01704e-15;y_4.45923e-04;full_new.dat'
 
+
+force_write = False
 
 var_list = load_str.split(';')[:-1]
 m_d, m_X, m_h, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
@@ -134,7 +141,7 @@ n_nu_grid = 2.*0.75*(cf.zeta3/cf.pi2)*(T_nu_grid**3.)
 
 filename = f'rates_md_{md_str};mX_{mX_str};mh_{mh_str};sin22th_{sin22th_str};y_{y_str};full.dat'
 # Anton: Check if file exists -- if not, create it 
-if not os.path.isfile('./' + filename):
+if not os.path.isfile('./' + filename) or force_write:
 # if True:
     time_start = time.time()
     print('Get C_X_dd')
@@ -219,7 +226,7 @@ if not os.path.isfile('./' + filename):
 
 data = np.loadtxt(filename)
 
-data_skip = 5 
+data_skip = 1
 x_grid = data[::data_skip,0]
 H = data[::data_skip,1]
 C_X_dd = data[::data_skip,2]
@@ -276,32 +283,30 @@ yMajorLocator = FixedLocator(ytMajor)
 yMinorLocator = FixedLocator(ytMinor)
 yMajorFormatter = FixedFormatter(ylMajor)
 
-ch = 'crimson'
-c1 = '#797ef6' #'#5170d7'
-c2 = '#1aa7ec' #'mediumorchid'
-c3 = '#4adede' #'crimson'
-c5 = '#1e2f97' #'#f0944d'
-
-c4 = '#ffa62b'
-
+ch = 'crimson' # crimson
+c1 = '#797ef6' # orchid
+c2 = '#1aa7ec' # sky blue
+c3 = '#4adede' # turquoise
+c4 = '#ffa62b' # gold
+c5 = '#1e2f97' # dark blue
 print(np.max(abs(C_X_aa)))
 print(np.max(abs(C_aa_X)))
 
 # Anton: 1e6 to make GeV to keV 
 # plt.loglog(x_grid, 1e6*H, color=ch, ls='-', zorder=0) #83781B
-plt.loglog(x_grid, 1e6*3*H, color=ch, ls='-', zorder=0) #83781B
+plt.loglog(x_grid, 1e6*H, color=ch, ls='-', zorder=0) #83781B
 
 plt.loglog(x_grid, 1e6*abs(C_dd_X), color=c1, ls='-', zorder=-4) #114B5F
 plt.loglog(x_grid, 1e6*abs(C_da_X), color=c2, ls='-', zorder=-4) #458751
-plt.loglog(x_grid, 1e6*abs(C_X_aa), color='brown', ls='-')
-plt.loglog(x_grid, 1e6*abs(C_aa_X), color='purple', ls='-')
+# plt.loglog(x_grid, 1e6*abs(C_X_aa), color='brown', ls='-')
+# plt.loglog(x_grid, 1e6*abs(C_aa_X), color='purple', ls='-')
 plt.loglog(x_grid, 1e6*abs(C_dd_XX), color=c3, ls='-', zorder=-4) #95190C
 plt.loglog(x_grid, 1e6*abs(C_XX_dd), color=c5, ls='-', zorder=-4) #D02411
 
 plt.loglog(x_grid, 1e6*abs(C_dd_h), color=c1, ls='--', zorder=-4) #114B5F
 plt.loglog(x_grid, 1e6*abs(C_da_h), color=c2, ls='--', zorder=-4) #458751
-plt.loglog(x_grid, 1e6*abs(C_h_aa), color='brown', ls='--')
-plt.loglog(x_grid, 1e6*abs(C_aa_h), color='purple', ls='--')
+# plt.loglog(x_grid, 1e6*abs(C_h_aa), color='brown', ls='--')
+# plt.loglog(x_grid, 1e6*abs(C_aa_h), color='purple', ls='--')
 plt.loglog(x_grid, 1e6*abs(C_dd_hh), color=c3, ls='--', zorder=-4) #95190C
 plt.loglog(x_grid, 1e6*abs(C_hh_dd), color=c5, ls='--', zorder=-4) #D02411
 
@@ -316,16 +321,17 @@ plt.text(1.5e-4, 8e-23, r'$\rightarrow$', fontsize=8, color='0', horizontalalign
 
 ax.text(2e-4, 3e-14, r"$3H$", color=ch, fontsize=10, rotation=0)
 ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow \Phi$", color=c1, fontsize=10, rotation=0)
-ax.text(1.5e-3, 3e-25, r"$\nu_s \nu_\alpha \to \Phi$", color=c2, fontsize=10, rotation=0)
-ax.text(1.5e-3, 0.3e-19, r"$\nu_s \nu_s \to \Phi \Phi$", color=c3, fontsize=10, rotation=0)
-ax.text(2.2e-3, 8e-28, r"$\Phi \Phi \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
+ax.text(1.3e-3, 5e-28, r"$\nu_s \nu_\alpha \to \Phi$", color=c2, fontsize=10, rotation=0)
+ax.text(1.3e-3, 1e-23, r"$\nu_s \nu_s \to \Phi \Phi$", color=c3, fontsize=10, rotation=0)
+ax.text(8e-2, 8e-28, r"$\Phi \Phi \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
 
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-', color='black', label=r'$\Phi=X_\mu$')
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\Phi=h$')
 
-
-plt.fill_betweenx([1e-28, 1e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
-plt.loglog([1e-3]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
+x_therm = 1e-3
+plt.fill_betweenx([1e-28, 1e0], 1e-5, x_therm, color='white', alpha=1, zorder=-3)
+plt.loglog([x_therm]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
+# plt.loglog([1e-3]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
 #plt.fill_betweenx([1e-28, 1e-8], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 
 # N = 1000
@@ -354,5 +360,5 @@ ax.set_ylim(1e-28, 1e-8)
 plt.tight_layout()
 fig_str = f'rates_evo_md_{md_str};mX_{mX_str};mh_{mh_str};sin22th_{sin22th_str};y_{y_str}.pdf'
 print(f'saved {fig_str}')
-# plt.savefig(fig_str)
+plt.savefig(fig_str)
 plt.show()

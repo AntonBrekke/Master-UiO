@@ -122,11 +122,12 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                 x = m_d / T_a
                 if call.count % 10 == 0:
                     call.x_list.append(x)
-                    call.C_list.append([CX_XX_dd, Ch_hh_dd])
+                    call.C_list.append([CX_XX_dd, Ch_hh_dd, Ch_h_XX])
                     i = call.count // 10
                     if i > 0: 
                         plt.loglog([call.x_list[i-1], call.x_list[i]], [abs(call.C_list[i-1][0]), abs(call.C_list[i][0])], color='r', marker='o', markersize=3)
                         plt.loglog([call.x_list[i-1], call.x_list[i]], [abs(call.C_list[i-1][1]), abs(call.C_list[i][1])], color='tab:blue', marker='o', markersize=3)
+                        plt.loglog([call.x_list[i-1], call.x_list[i]], [abs(call.C_list[i-1][2]), abs(call.C_list[i][2])], color='tab:green', marker='o', markersize=3)
                         plt.pause(0.05)
                 call.count += 1
 
@@ -196,6 +197,7 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                 C_dd_X_dd_gon_gel = C_res_vector_no_spin_stat.C_dd_dd_gon_gel(m_d=m_d, k_d=k_d, T_d=T_d, xi_d=xi_d, vert_el=vert_el, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=False) / 4.
                 C_dd_h_dd_gon_gel = C_res_scalar_no_spin_stat.C_dd_dd_gon_gel(m_d=m_d, k_d=k_d, T_d=T_d, xi_d=xi_d, vert_el=vert_el*(4*m_d2/m_X2)**2, m_phi2=m_h2, m_Gamma_phi2=m_Gamma_h2, res_sub=False) / 4.
 
+                # Anton: Lacks the cross-term 
                 return 2.*(C_dd_X_dd_gon_gel + C_dd_h_dd_gon_gel)
         else:
             print("Implementation needs to be updated...")
@@ -573,15 +575,18 @@ if __name__ == '__main__':
     load_str = './md_2.06914e-05;mX_1.03457e-04;mh_6.20741e-05;sin22th_6.61474e-16;y_1.83218e-03;full.dat'
     load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_7.4438e-14;y_3.32879e-04;full.dat'
     load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.12534e-16;y_3.74363e-03;full.dat'
+    load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.43845e-15;y_1.24594e-03;full.dat'
+    load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'
+    load_str = './md_1.35388e-06;mX_6.76938e-06;mh_4.06163e-06;sin22th_7.01704e-15;y_4.45923e-04;full.dat'
 
     var_list = load_str.split(';')[:-1]
     m_d, m_X, m_h, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
-    # m_d = 2e-5
-    # m_X = 5*m_d
-    # m_h = 3*m_d
     m_a = 0.
-    # y = 1.072e-3
-    # sin2_2th = 2.5e-15
+    m_d = 2e-5
+    m_X = 5*m_d
+    m_h = 3*m_d
+    y = 1.5e-3
+    sin2_2th = 1e-15
     
     # BP1 
     # m_d = 20e-6

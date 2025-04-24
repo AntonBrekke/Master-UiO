@@ -14,14 +14,14 @@ from scipy.special import kn
 t_max = 1e16 / cf.hbar
 
 rtol_ode = 1e-6
-rtol_ode_pan = 1e-6
+rtol_ode_pan = 1e-4
 rtol_int = 1e-4
 
 fac_abund_stop = 100.
 xi_ratio_stop = 100.
 
 class TimeTempRelation(object):
-    def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=1000, m_psi=None, dof_psi=None, k_psi=None):
+    def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=300, m_psi=None, dof_psi=None, k_psi=None):
         # print('Initializing TimeTempRelation')
         if m_psi is None:
             self.psi_in_SM = True
@@ -399,7 +399,7 @@ class Pandemolator(object):
                 event_abund.terminal = True
                 event_abund.direction = -1
                 print(f'Start solve_ivp i_max > 0')
-                sol_xi0 = solve_ivp(self.der_xi_0, [self.log_x_pts[i_max], self.log_x_pts[-1]], [rho0*(sf0**4.)], t_eval=self.log_x_pts[i_max:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='RK45', first_step=self.log_x_pts[i_max+1]-self.log_x_pts[i_max])
+                sol_xi0 = solve_ivp(self.der_xi_0, [self.log_x_pts[i_max], self.log_x_pts[-1]], [rho0*(sf0**4.)], t_eval=self.log_x_pts[i_max:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='LSODA', first_step=self.log_x_pts[i_max+1]-self.log_x_pts[i_max])
                 print(f'End solve_ivp i_max > 0')
                 i_xi_nonzero = i_max + sol_xi0.t.size - 1
 

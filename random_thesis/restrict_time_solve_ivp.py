@@ -30,7 +30,7 @@ def sol_RHS(params):
 
     y0 = np.array([1])
     sol = solve_ivp(fun=RHS, t_span=(ti, tf), args=(k, w), y0=y0, method=method, t_eval=t, events=[event_zero], atol=atol, rtol=rtol, max_step=max_step)
-    return w, k, sol.success, w-k
+    return w, k, sol.success*10, w-k
 
 def event_zero(t, y, k, w):
     return y
@@ -58,16 +58,22 @@ if __name__ == '__main__':
 
         iw = 0
         ik = 0
+        openfile = open("./write_live_data_folder/live_data_solve_ivp.dat", "w")
         while True:
+            openfile = open("./write_live_data_folder/live_data_solve_ivp.dat", "a")
             try:
                 result = next(iterator)
+                # result = np.array(result)
                 result_list.append(result)
+                openfile.write(str(result).strip('()').replace(',', '')+'\n')
             except StopIteration:
                 break
             except TimeoutError as error:
                 w = w_grid[iw]
                 k = k_grid[ik]
-                result_list.append((w, k, np.nan, w-k))
+                result = (w, k, np.nan, w-k)
+                result_list.append(result)
+                openfile.write(str(result).strip('()').replace(',', '')+'\n')
                 print(f"function took longer than {timeout} seconds")
             except ProcessExpired as error:
                 print("%s. Exit code: %d" % (error, error.exitcode))
@@ -79,10 +85,13 @@ if __name__ == '__main__':
                 if ik == nk:
                     ik = 0
                     iw += 1
+                openfile.close()
 
     import matplotlib.pyplot as plt
     # print(result_list)
+    data = np.loadtxt("./write_live_data_folder/live_data_solve_ivp.dat")
+    print(data)
     results = np.array(result_list).reshape(len(result_list), 4)
     params_final =  results[:,:-1]
     print(params_final)
-    np.savetxt(f'restrict_time_solve_ivp.dat', results)
+    # np.savetxt(f'./write_live_data_folder/restrict_time_solve_ivp.dat', results)

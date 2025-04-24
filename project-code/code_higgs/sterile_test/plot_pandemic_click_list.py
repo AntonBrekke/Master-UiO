@@ -105,8 +105,10 @@ def plot_pandemic(load_str):
     #ax1.text(8e-5, 2e-21, 'Thermalization', fontsize=10, color='darkorange')
     #ax1.text(5e-4, 1.3e-19, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
     #ax1.text(5e-4, 1e-22, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
-    ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
-    ax2.plot([1e-3]*2, [1e-2, 2e0], ls=':', color='0', zorder=-2)
+    ax1.axvline([1e-3], ls=':', color='0', zorder=-2)
+    ax2.axvline([1e-3], ls=':', color='0', zorder=-2)
+    # ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
+    # ax2.plot([1e-3]*2, [1e-2, np.max(Td/T_nu)*1.5], ls=':', color='0', zorder=-2)
 
     ax1.text(1.5e-4, 8e-21, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
     ax1.text(1.5e-4, 8e-22, r'$\mathrm{Thermalization}$', fontsize=8, color='0', horizontalalignment='center')
@@ -156,7 +158,7 @@ def plot_pandemic(load_str):
 
     # ylim + 6 will be shown
     ax1.set_ylim(1e-25, 2e-8)
-    ax2.set_ylim(1e-2, 2e0)
+    ax2.set_ylim(np.min(Td/T_nu)*0.5, np.max(Td/T_nu)*1.5)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)
     # plt.savefig(f'dens_evo_{load_str.replace("./", "").replace(".dat","")}_final.pdf')
