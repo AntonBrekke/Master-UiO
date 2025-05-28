@@ -135,12 +135,14 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                 return C_da + 2.*C_aa + C_da_dd + C_aa_dd + 2.*CX_XX_dd + 2.*Ch_hh_dd - 2.*Ch_h_XX
             # rho = rho_d + rho_X + rho_h
             def C_rho(T_a, T_d, xi_d, xi_X, xi_h):
-                if T_a < min(m_X / 50., m_h/50.):
+                if T_a < min(m_X/50., m_h/50.):
                     return 0.
                 if not off_shell:
                     # Decay/inverse decay
                     # Anton: type=2: C[X] + C[d] = int (E_x - E_d)*delta(E_x-E_d-E_a)*(f_s*f_a*(1-kX*f_X) - f_X*(1-kd*f_d)*(1-ka*f_a)) = int E_a*delta(E_x-E_d-E_a)*(f_s*f_a*(1-kX*f_X) - f_X*(1-kd*f_d)*(1-ka*f_a)) = C[a]
+
                     # Trick to avoid computation for both X and d, and only do for a once 
+                    # C[X]_X<->ad + C[d]_X<->ad = -C[a]_X<->ad = C_rho_3_12(type=2)
                     C_X_da = C_res_vector.C_rho_3_12(type=2, m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_X_da)
                     C_X_aa = C_res_vector.C_rho_3_12(type=3, m1=m_a, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_a, T2=T_a, T3=T_d, xi1=0., xi2=0., xi3=xi_X, M2=M2_X_aa) / 2. # symmetry factor 1/2
 
@@ -157,21 +159,41 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
                     C_da_dd = 0.
                     C_aa_dd = 0.
                 else:
+                    # Anton: Not up-to-date
                     C_da = 0.
                     C_aa = 0.
-                    C_da_dd = C_res_vector.C_34_12(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 2.
+                    C_da_X_dd = C_res_vector.C_34_12(type=4, nFW=1., nBW=-1., m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=0., vert=vert_tr, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 2.
+                    C_da_h_dd = C_res_scalar.C_34_12(type=4, nFW=1, nBW=-1, m1=m_d, m2=m_d, m3=m_d, m4=m_a, k1=k_d, k2=k_d, k3=k_d, k4=k_a, T1=T_d, T2=T_d, T3=T_d, T4=T_a, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_tr*(4*m_d2/m_X2)**2, m_phi2=m_h2, m_Gamma_phi2=m_Gamma_h2, res_sub=False, thermal_width=True) / 2.
+                    C_da_dd = C_da_X_dd + C_da_h_dd
                     C_aa_dd = 0.#C_res_vector.C_34_12(12, 1., -1., m_d, m_d, m_a, m_a, k_d, k_d, k_a, k_a, T_d, T_d, T_a, T_a, xi_d, xi_d, 0., 0., vert_fi, m_X2, m_Gamma_X2, res_sub=False, thermal_width=True) / 4.
                 # print("C_rhos:", f'{C_X_da:.5e}', f'{C_h_da:.5e}', f'{2.*C_X_aa:.5e}', f'{C_h_aa:.5e}')
                 return C_da + C_aa + C_da_dd + C_aa_dd
             
             def C_xi0(T_a, T_d, xi_d, xi_X, xi_h):
+                # Anton: C_n with xi=0
                 if T_a < min(m_X / 50., m_h/50.):
                     return 0.
                 C_XX_dd = np.abs(C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, m_h=m_h, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, th=th, m_Gamma_h2=m_Gamma_h2, type=1) / 4.)
+
                 C_dd_XX = np.abs(C_res_vector.C_n_XX_dd(m_d=m_d, m_X=m_X, m_h=m_h, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, th=th, m_Gamma_h2=m_Gamma_h2, type=-1) / 4.)
 
-                C_hh_dd = np.abs(C_res_scalar.C_n_pp_dd(m_d=m_d, m_phi=m_h, k_d=k_d, k_phi=k_h, T_d=T_d, xi_d=xi_d, xi_phi=xi_X, vert=vert_el*(4*m_d2/m_X2)**2, type=1) / 4.)
                 C_dd_hh = np.abs(C_res_scalar.C_n_pp_dd(m_d=m_d, m_phi=m_h, k_d=k_d, k_phi=k_h, T_d=T_d, xi_d=xi_d, xi_phi=xi_h, vert=vert_el*(4*m_d2/m_X2)**2, type=-1) / 4.)
+                C_hh_dd = np.abs(C_res_scalar.C_n_pp_dd(m_d=m_d, m_phi=m_h, k_d=k_d, k_phi=k_h, T_d=T_d, xi_d=xi_d, xi_phi=xi_X, vert=vert_el*(4*m_d2/m_X2)**2, type=1) / 4.)
+                
+                
+                # Anton: Rates will always be larger than 2-to-2
+
+                # C_X_da = np.abs(C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_X_da, type=-1))
+
+                # C_da_X = np.abs(C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_X, k1=k_d, k2=k_a, k3=k_X, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_X, M2=M2_X_da, type=1))
+            
+                # C_h_da = np.abs(C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_h, k1=k_d, k2=k_a, k3=k_h, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_h, M2=M2_h_da, type=-1))
+
+                # C_da_h = np.abs(C_res_vector.C_n_3_12(m1=m_d, m2=m_a, m3=m_h, k1=k_d, k2=k_a, k3=k_h, T1=T_d, T2=T_a, T3=T_d, xi1=xi_d, xi2=0., xi3=xi_h, M2=M2_h_da, type=1))
+
+                # C_h_XX = np.abs(C_res_vector.C_n_3_12(m1=m_X, m2=m_X, m3=m_h, k1=k_X, k2=k_X, k3=k_h, T1=T_d, T2=T_d, T3=T_d, xi1=xi_X, xi2=xi_X, xi3=xi_h, M2=M2_h_XX, type=-1)) / 2.
+
+                # C_XX_h = np.abs(C_res_vector.C_n_3_12(m1=m_X, m2=m_X, m3=m_h, k1=k_X, k2=k_X, k3=k_h, T1=T_d, T2=T_d, T3=T_d, xi1=xi_X, xi2=xi_X, xi3=xi_h, M2=M2_h_XX, type=1)) / 2.
 
                 return min(2.*C_XX_dd, 2.*C_dd_XX, 2.*C_hh_dd, 2.*C_dd_hh)
             
@@ -187,14 +209,13 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
 
                     return 2.*(C_X_dd + C_h_dd)
                 elif m_d / T_d - xi_d < 4.:
-
-                    C_dd_X_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 4.
-
-                    C_dd_h_dd = C_res_scalar.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el*(m_d2/m_X2)**2, m_phi2=m_h2, m_Gamma_phi2=m_Gamma_h2, res_sub=False, thermal_width=True) / 4.
+                    
+                    # Anton: Includes X and h propagator 
+                    C_dd_dd = C_res_vector.C_34_12(type=0, nFW=1., nBW=0., m1=m_d, m2=m_d, m3=m_d, m4=m_d, k1=k_d, k2=k_d, k3=k_d, k4=k_d, T1=T_d, T2=T_d, T3=T_d, T4=T_d, xi1=xi_d, xi2=xi_d, xi3=xi_d, xi4=xi_d, vert=vert_el, m_d2=m_d2, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False, thermal_width=True) / 4.
                 
-                    return 2.*(C_dd_X_dd + C_dd_h_dd)
+                    return 2.*(C_dd_dd)
                 
-                C_dd_X_dd_gon_gel = C_res_vector_no_spin_stat.C_dd_dd_gon_gel(m_d=m_d, k_d=k_d, T_d=T_d, xi_d=xi_d, vert_el=vert_el, m_X2=m_X2, m_Gamma_X2=m_Gamma_X2, res_sub=False) / 4.
+                C_dd_X_dd_gon_gel = C_res_vector_no_spin_stat.C_dd_dd_gon_gel(m_d=m_d, k_d=k_d, T_d=T_d, xi_d=xi_d, vert_el=vert_el, m_X2=m_X2, m_h2=m_h2, m_Gamma_X2=m_Gamma_X2, m_Gamma_h2=m_Gamma_h2, res_sub=False) / 4.
                 C_dd_h_dd_gon_gel = C_res_scalar_no_spin_stat.C_dd_dd_gon_gel(m_d=m_d, k_d=k_d, T_d=T_d, xi_d=xi_d, vert_el=vert_el*(4*m_d2/m_X2)**2, m_phi2=m_h2, m_Gamma_phi2=m_Gamma_h2, res_sub=False) / 4.
 
                 # Anton: Lacks the cross-term 
@@ -300,8 +321,8 @@ def call(m_d, m_X, m_h, m_a, k_d, k_X, k_h, k_a, dof_d, dof_X, dof_h, sin2_2th, 
     ent_grid = np.array([cf.s_SM_no_nu(T)+cf.s_nu(T_nu) for T, T_nu in zip(Ttrel.T_SM_grid, Ttrel.T_nu_grid)])
     sf_norm_today = (cf.s0/ent_grid)**(1./3.)
     T_d_dw = cf.T_d_dw(m_d) # temperature of maximal d production by Dodelson-Widrow mechanism
-    i_ic = np.argmax(Ttrel.T_nu_grid < T_d_dw)
-    i_end = np.argmax(Ttrel.T_nu_grid < m_d/2e1)
+    i_ic = np.argmax(Ttrel.T_nu_grid < T_d_dw)      # Anton: Start when T_nu < T_dw
+    i_end = np.argmax(Ttrel.T_nu_grid < m_d/2e1)    # Anton: End when T_nu < 20/m_d <--> 20 < m_d/T_nu
     sf_ic_norm_0 = (cf.s0/(cf.s_SM_no_nu(Ttrel.T_SM_grid[i_ic]) + cf.s_nu(Ttrel.T_nu_grid[i_ic])))**(1./3.)
     n_ic = cf.n_0_dw(m_d, th) / (sf_ic_norm_0**3.)
     rho_ic = n_ic * cf.avg_mom_0_dw(m_d) / sf_ic_norm_0
@@ -576,18 +597,62 @@ if __name__ == '__main__':
     load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_7.4438e-14;y_3.32879e-04;full.dat'
     load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.12534e-16;y_3.74363e-03;full.dat'
     load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.43845e-15;y_1.24594e-03;full.dat'
-    load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'
-    load_str = './md_1.35388e-06;mX_6.76938e-06;mh_4.06163e-06;sin22th_7.01704e-15;y_4.45923e-04;full.dat'
+    load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.43845e-15;y_1.24594e-03;full.dat'
+    # load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'
+    # load_str = './md_1.35388e-06;mX_6.76938e-06;mh_4.06163e-06;sin22th_7.01704e-15;y_4.45923e-04;full.dat'
 
+    # # Super weird effect ? 
+    # load_str = './md_5.13483e-05;mX_2.56742e-04;mh_1.54045e-04;sin22th_3.66524e-16;y_3.36087e-03;full.dat'
+
+    ### Benchmark Points ###:
+    BP = 1
+    if BP == 1:
+        # BP1
+        load_str = './md_1.12884e-05;mX_5.64419e-05;mh_3.38651e-05;sin22th_1.83298e-13;y_1.93457e-04;full_new.dat'  
+    elif BP  == 2:
+        # BP2
+        load_str = './md_2.1e-05;mX_1.05e-04;mh_6.3e-05;sin22th_1.6e-15;y_1.282e-03;full_new.dat'   
+    else: None 
+
+
+    load_str = './md_5.13483e-05;mX_2.56742e-04;mh_1.54045e-04;sin22th_3.66524e-16;y_3.36087e-03;full.dat' 
+
+    # load_str = './md_2.1e-05;mX_1.05e-04;mh_6.3e-05;sin22th_1.5e-15;y_1.4e-03;full_new.dat'    
     var_list = load_str.split(';')[:-1]
     m_d, m_X, m_h, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
     m_a = 0.
-    m_d = 2e-5
-    m_X = 5*m_d
-    m_h = 3*m_d
-    y = 1.5e-3
-    sin2_2th = 1e-15
-    
+    m_d = 1e-5
+    m_X = 2.5*m_d
+    m_h = 2.5*m_X
+    y = 5e-7
+    sin2_2th = 5e-14
+
+    # load_str = './md_2.1e-05;mX_1.05e-04;mh_6.3e-05;sin22th_1.6e-15;y_1.282e-03;full_new.dat'   
+    # m_d = 2.1e-5
+    # m_X = 5*m_d
+    # m_h = 3*m_d
+    # y = 1.2813e-3
+    # sin2_2th = 1.6e-15
+
+    # load_str_3 = './md_4e-06;mX_2e-05;mh_1.2e-05;sin22th_3e-15;y_8.36e-04;full_new.dat'    
+    # m_d = 5e-6
+    # m_X = 5*m_d
+    # m_h = 3*m_d
+    # y = 8.6805e-4
+    # sin2_2th = 3e-15
+
+    # m_d = 1e-5
+    # m_X = 2.5*m_d
+    # m_h = 2.5*m_X
+    # y = 3e-8
+    # sin2_2th = 3e-11
+
+    # m_d = 1e-5
+    # m_X = 5*m_d
+    # m_h = 3*m_d
+    # y = 5e-3
+    # sin2_2th = 3e-16
+
     # BP1 
     # m_d = 20e-6
     # m_X = 5*m_d
@@ -596,7 +661,7 @@ if __name__ == '__main__':
     # sin2_2th = 1e-15
 
 
-    # Anton: fermion = 1, boson = -1
+    # Anton: fermion = 1, boson = -1 (I did not choose this convention..)
     k_d = 1.
     k_a = 1.
     k_X = -1.

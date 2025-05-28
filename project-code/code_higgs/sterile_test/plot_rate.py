@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 import numpy as np
 import matplotlib.pyplot as plt
 from math import cos, sin, asin, sqrt, exp
@@ -27,10 +25,42 @@ import C_res_vector_no_spin_stat
 import vector_mediator
 import scalar_mediator
 
-# plt.rc('text', usetex=True)
-# plt.rc('font', family='serif', size=14)
-# # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-# plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+def get_figsize(columnwidth, wf=1.0, hf=(5.**0.5-1.0)/2.0):
+    """Parameters:
+    - wf [float]:  width fraction in columnwidth units
+    - hf [float]:  height fraction in columnwidth units.
+                    Set by default to golden ratio.
+    - columnwidth [float]: width of the column in latex. Get this from LaTeX 
+                            using \showthe\columnwidth
+    Returns:  [fig_width, fig_height]: that should be given to matplotlib
+    """
+    fig_width_pt = columnwidth*wf 
+    inches_per_pt = 1.0/72.27               # Convert pt to inch
+    fig_width = fig_width_pt*inches_per_pt  # width in inches
+    fig_height = fig_width*hf      # height in inches
+    return [fig_width, fig_height]
+
+ggplot_red = "#E24A33"
+ch = 'crimson' # crimson
+c1 = '#797ef6' # orchid
+c2 = '#1aa7ec' # sky blue
+c3 = '#4adede' # turquoise
+c4 = '#ffa62b' # gold
+c5 = '#1e2f97' # dark blue
+
+columnwidth = 418.25368     # pt, given by \showthe\textwidth in LaTeX
+
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
+plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+params = {'axes.labelsize': 10,
+            'axes.titlesize': 10,
+            'font.size': 8} # extend as needed
+# print(plt.rcParams.keys())
+plt.rcParams.update(params)
+
+
 
 # load_str = './md_1.08264e-05;mX_3.24791e-05;sin22th_1.1721e-16;y_3.8676e-03;full_new.dat'
 load_str = './md_2e-05;mX_6e-05;mh_1.206e-04;sin22th_1e-15;y_1e-04;full_new.dat'
@@ -39,17 +69,45 @@ load_str = './md_2.06914e-05;mX_1.03457e-04;mh_6.20741e-05;sin22th_6.61474e-16;y
 load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.43845e-15;y_1.24594e-03;full.dat'
 load_str = './md_2e-05;mX_6e-05;mh_5e-05;sin22th_3e-15;y_9.12e-04;full_new.dat'         # Perfect
 load_str = './md_1.52831e-05;mX_7.64153e-05;mh_4.58492e-05;sin22th_1.43845e-15;y_1.24594e-03;full_new.dat'
-load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'
 load_str = './md_1.35388e-06;mX_6.76938e-06;mh_4.06163e-06;sin22th_7.01704e-15;y_4.45923e-04;full_new.dat'
+load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'
 
+# Funny, and very interesting 
+load_str = './md_5.13483e-05;mX_2.56742e-04;mh_1.54045e-04;sin22th_3.66524e-16;y_3.36087e-03;full.dat'
 
 force_write = False
+save_fig = True
+sample_data_skip = 10
+plot_data_skip = 1
+x_therm = 1e-3
 
+### Benchmark Points ###:
+BP = 2
+if BP == 1:
+    # BP1
+    load_str = './md_1.12884e-05;mX_5.64419e-05;mh_3.38651e-05;sin22th_1.83298e-13;y_1.93457e-04;full_new.dat' 
+    x_therm = 2e-3
+if BP  == 2:
+    # BP2
+    load_str = './md_2.1e-05;mX_1.05e-04;mh_6.3e-05;sin22th_1.5e-15;y_1.313e-03;full_new.dat'
+    x_therm = 2e-3
+if BP  == 3:
+    # BP3
+    load_str = './md_4e-06;mX_2e-05;mh_1.2e-05;sin22th_3e-15;y_8.36e-04;full_new.dat'  
+    x_therm = 2e-3
+if BP == 4:
+    # BP4
+    load_str = './md_5.13483e-05;mX_2.56742e-04;mh_1.54045e-04;sin22th_3.66524e-16;y_3.36087e-03;full_new.dat' 
+    x_therm = 7e-4
+else: None  
+
+# load_str = './md_2.33572e-04;mX_1.16786e-03;mh_7.00716e-04;sin22th_1.26638e-14;y_8.76604e-04;full.dat'
+# load_str = './md_2.33572e-04;mX_1.16786e-03;mh_7.00716e-04;sin22th_1.26638e-14;y_8.76604e-04;full.dat'
 var_list = load_str.split(';')[:-1]
 m_d, m_X, m_h, sin2_2th, y = [eval(s.split('_')[-1]) for s in var_list]
 m_a = 0.
 
-print(m_d, m_X, m_h, sin2_2th, y)
+print(m_d, m_X, m_h, sin2_2th, y, np.sqrt(2)*m_d/m_X*y)
 
 md_str = f'{m_d:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_d:.5e}'.split('e')[1].rstrip('0').rstrip('.')
 mX_str = f'{m_X:.5e}'.split('e')[0].rstrip('0').rstrip('.') + 'e' + f'{m_X:.5e}'.split('e')[1].rstrip('0').rstrip('.')
@@ -85,7 +143,6 @@ y2 = y*y
 # M2_aa = 4.*y2*(s_th**4.)*m_X2
 # M2_da = 4.*y2*(s_th**2.)*(c_th**2.)/m_X2 * (m_X2 - m_d2)*(2*m_X2 + m_d2)
 
-# Anton: Removed longitudonal component of spin sum
 M2_X_dd = 4*y2*(c_th**4.)*(m_X2-4*m_d2)
 M2_X_da = 4*y2*(s_th**2.)*(c_th**2.)*(m_X2-m_d2)*(1 + m_d2/(2*m_X2))
 M2_X_aa = 4.*y2*(s_th**4.)*m_X2
@@ -123,20 +180,19 @@ data_evo = np.loadtxt(load_str)
 10: n_X_grid_sol (n_phi_grid_sol)
 """
 
-i_skip = 5
-t_grid = data_evo[::i_skip,0]
-T_SM_grid = data_evo[::i_skip,1]
-T_nu_grid = data_evo[::i_skip,2]
-ent_grid = data_evo[::i_skip, 3]
-H_grid = data_evo[::i_skip,4]
-sf_grid = data_evo[::i_skip,5]
-T_d_grid = data_evo[::i_skip,6]
-xi_d_grid = data_evo[::i_skip,7]
-xi_X_grid = data_evo[::i_skip,8]
-xi_h_grid = data_evo[::i_skip,9]
-n_d_grid = data_evo[::i_skip,10]
-n_X_grid = data_evo[::i_skip,11]
-n_h_grid = data_evo[::i_skip,12]
+t_grid = data_evo[::sample_data_skip,0]
+T_SM_grid = data_evo[::sample_data_skip,1]
+T_nu_grid = data_evo[::sample_data_skip,2]
+ent_grid = data_evo[::sample_data_skip, 3]
+H_grid = data_evo[::sample_data_skip,4]
+sf_grid = data_evo[::sample_data_skip,5]
+T_d_grid = data_evo[::sample_data_skip,6]
+xi_d_grid = data_evo[::sample_data_skip,7]
+xi_X_grid = data_evo[::sample_data_skip,8]
+xi_h_grid = data_evo[::sample_data_skip,9]
+n_d_grid = data_evo[::sample_data_skip,10]
+n_X_grid = data_evo[::sample_data_skip,11]
+n_h_grid = data_evo[::sample_data_skip,12]
 n_nu_grid = 2.*0.75*(cf.zeta3/cf.pi2)*(T_nu_grid**3.)
 
 filename = f'rates_md_{md_str};mX_{mX_str};mh_{mh_str};sin22th_{sin22th_str};y_{y_str};full.dat'
@@ -226,32 +282,31 @@ if not os.path.isfile('./' + filename) or force_write:
 
 data = np.loadtxt(filename)
 
-data_skip = 1
-x_grid = data[::data_skip,0]
-H = data[::data_skip,1]
-C_X_dd = data[::data_skip,2]
-C_dd_X = data[::data_skip,3]
-C_h_dd = data[::data_skip,4]
-C_dd_h = data[::data_skip,5]
-C_X_da = data[::data_skip,6]
-C_da_X = data[::data_skip,7]
-C_h_da = data[::data_skip,8]
-C_da_h = data[::data_skip,9]
-C_X_aa = data[::data_skip,10]
-C_aa_X = data[::data_skip,11]
-C_h_aa = data[::data_skip,12]
-C_aa_h = data[::data_skip,13]
-C_XX_dd = data[::data_skip,14]
-C_dd_XX = data[::data_skip,15]
-C_hh_dd = data[::data_skip,16]
-C_dd_hh = data[::data_skip,17]
-C_dd_dd = data[::data_skip,18]
-C_da_dd = data[::data_skip,19]
-C_dd_da = data[::data_skip,20]
-C_aa_dd = data[::data_skip,21]
-C_dd_aa = data[::data_skip,22]
-C_h_XX = data[::data_skip,23]
-C_XX_h = data[::data_skip,24]
+x_grid  = data[::plot_data_skip, 0]
+H       = data[::plot_data_skip, 1]
+C_X_dd  = data[::plot_data_skip, 2]
+C_dd_X  = data[::plot_data_skip, 3]
+C_h_dd  = data[::plot_data_skip, 4]
+C_dd_h  = data[::plot_data_skip, 5]
+C_X_da  = data[::plot_data_skip, 6]
+C_da_X  = data[::plot_data_skip, 7]
+C_h_da  = data[::plot_data_skip, 8]
+C_da_h  = data[::plot_data_skip, 9]
+C_X_aa  = data[::plot_data_skip, 10]
+C_aa_X  = data[::plot_data_skip, 11]
+C_h_aa  = data[::plot_data_skip, 12]
+C_aa_h  = data[::plot_data_skip, 13]
+C_XX_dd = data[::plot_data_skip, 14]
+C_dd_XX = data[::plot_data_skip, 15]
+C_hh_dd = data[::plot_data_skip, 16]
+C_dd_hh = data[::plot_data_skip, 17]
+C_dd_dd = data[::plot_data_skip, 18]
+C_da_dd = data[::plot_data_skip, 19]
+C_dd_da = data[::plot_data_skip, 20]
+C_aa_dd = data[::plot_data_skip, 21]
+C_dd_aa = data[::plot_data_skip, 22]
+C_h_XX  = data[::plot_data_skip, 23]
+C_XX_h  = data[::plot_data_skip, 24]
 
 # plt.loglog(x_grid, C_da_dd/C_da_X, color='dodgerblue')
 # plt.show()
@@ -261,14 +316,10 @@ C_XX_h = data[::data_skip,24]
 # plt.show()
 # exit(1)
 
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif', size=14)
-# plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
-plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+fig = plt.figure(figsize=get_figsize(columnwidth, wf=0.6, hf=0.9), dpi=150, edgecolor="white")
+ax = fig.add_subplot()
 
-fig = plt.figure(figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white")
-ax = fig.add_subplot(1,1,1)
-ax.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
+ax.tick_params(axis='both', which='both', direction="in", width=0.5)
 ax.xaxis.set_ticks_position('both')
 ax.yaxis.set_ticks_position('both')
 for axis in ['top','bottom','left','right']:
@@ -289,8 +340,6 @@ c2 = '#1aa7ec' # sky blue
 c3 = '#4adede' # turquoise
 c4 = '#ffa62b' # gold
 c5 = '#1e2f97' # dark blue
-print(np.max(abs(C_X_aa)))
-print(np.max(abs(C_aa_X)))
 
 # Anton: 1e6 to make GeV to keV 
 # plt.loglog(x_grid, 1e6*H, color=ch, ls='-', zorder=0) #83781B
@@ -298,39 +347,116 @@ plt.loglog(x_grid, 1e6*H, color=ch, ls='-', zorder=0) #83781B
 
 plt.loglog(x_grid, 1e6*abs(C_dd_X), color=c1, ls='-', zorder=-4) #114B5F
 plt.loglog(x_grid, 1e6*abs(C_da_X), color=c2, ls='-', zorder=-4) #458751
-# plt.loglog(x_grid, 1e6*abs(C_X_aa), color='brown', ls='-')
-# plt.loglog(x_grid, 1e6*abs(C_aa_X), color='purple', ls='-')
+plt.loglog(x_grid, 1e6*abs(C_X_aa), color='brown', ls='-')
+plt.loglog(x_grid, 1e6*abs(C_aa_X), color='purple', ls='-')
 plt.loglog(x_grid, 1e6*abs(C_dd_XX), color=c3, ls='-', zorder=-4) #95190C
 plt.loglog(x_grid, 1e6*abs(C_XX_dd), color=c5, ls='-', zorder=-4) #D02411
 
 plt.loglog(x_grid, 1e6*abs(C_dd_h), color=c1, ls='--', zorder=-4) #114B5F
 plt.loglog(x_grid, 1e6*abs(C_da_h), color=c2, ls='--', zorder=-4) #458751
-# plt.loglog(x_grid, 1e6*abs(C_h_aa), color='brown', ls='--')
-# plt.loglog(x_grid, 1e6*abs(C_aa_h), color='purple', ls='--')
+plt.loglog(x_grid, 1e6*abs(C_h_aa), color='brown', ls='--')
+plt.loglog(x_grid, 1e6*abs(C_aa_h), color='purple', ls='--')
 plt.loglog(x_grid, 1e6*abs(C_dd_hh), color=c3, ls='--', zorder=-4) #95190C
 plt.loglog(x_grid, 1e6*abs(C_hh_dd), color=c5, ls='--', zorder=-4) #D02411
+
+# Funny how close this got to T_nu_dec! 
+# T_nu_dec = (24*np.pi*(m_X/m_d)**(3/2)*m_X**2*Gamma_X)**(1/5)
+# plt.axvline(m_d/T_nu_dec)
+# T_nu_dec = 1.38e-3       # GeV
+# plt.axvline(m_d/T_nu_dec, ls='--', color='k')
+
+# # Happened at 2*T_nu_dec  
+# T_nu_dec = 2*T_nu_dec       # GeV
+# T_nu_dec = 55*m_d       # GeV
+# plt.axvline(m_d/T_nu_dec, color='gray')
+# plt.plot(m_d/T_nu_grid, sf_grid**(-3))
+# T_nu_dec = 8*m_X
+# plt.axvline(m_d/T_nu_dec)
+# T_nu_dec = 16*m_X
+# plt.axvline(m_d/T_nu_dec)
+
 
 # plt.loglog(x_grid, 1e6*abs(C_h_XX), color='r', ls='--', zorder=-4) 
 # plt.loglog(x_grid, 1e6*abs(C_XX_h), color='blue', ls='--', zorder=-4) 
 
-plt.text(1.5e-4, 8e-21, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
-plt.text(1.5e-4, 8e-22, r'$\mathrm{Thermalization}$', fontsize=8, color='0', horizontalalignment='center')
-plt.text(1.5e-4, 8e-23, r'$\rightarrow$', fontsize=8, color='0', horizontalalignment='center')
+x_therm_index = np.where(np.min(np.abs(x_grid-x_therm)) == np.abs(x_grid-x_therm))
+dark_therm_x = 10**((np.log10(x_therm) + np.log10(x_grid)[0]) / 2)
+dark_therm_x_index = np.where(np.min(np.abs(x_grid-2e-4)) == np.abs(x_grid-2e-4))
+plt.text(dark_therm_x, 8e-21, r'$\mathrm{Dark}$', color='0', horizontalalignment='center')
+plt.text(dark_therm_x, 8e-22, r'$\mathrm{Thermalization}$', color='0', horizontalalignment='center')
+plt.text(dark_therm_x, 8e-23, r'$\rightarrow$', color='0', horizontalalignment='center')
 #plt.text(4.5e-5, 1e-22, r'$\hspace{-0.55cm}\mathrm{Therma-}\\\mathrm{lization}\\\mathrm{ }\hspace{0.2cm}\rightarrow$', fontsize=10, color='0')
 
 
-ax.text(2e-4, 3e-14, r"$3H$", color=ch, fontsize=10, rotation=0)
-ax.text(9e-2, 2e-13, r"$\nu_s \nu_s \leftrightarrow \Phi$", color=c1, fontsize=10, rotation=0)
-ax.text(1.3e-3, 5e-28, r"$\nu_s \nu_\alpha \to \Phi$", color=c2, fontsize=10, rotation=0)
-ax.text(1.3e-3, 1e-23, r"$\nu_s \nu_s \to \Phi \Phi$", color=c3, fontsize=10, rotation=0)
-ax.text(8e-2, 8e-28, r"$\Phi \Phi \to \nu_s \nu_s$", color=c5, fontsize=10, rotation=0)
+Hubble_x = 10**((np.log10(x_therm) + np.log10(x_grid)[0]) / 2)
+Hubble_x_index = np.where(np.min(np.abs(x_grid-2e-4)) == np.abs(x_grid-2e-4))
+ax.text(Hubble_x, 1e5*H[Hubble_x_index], r"$H$", color=ch, rotation=0, va='top')
+
+max_nus_nus = 1e6*max(np.max(abs(C_X_dd)), np.max(abs(C_h_dd)))
+max_nus_nus_index = np.where(np.min(np.abs(1e6*abs(C_X_dd)-max_nus_nus)) == np.abs(1e6*abs(C_X_dd)-max_nus_nus))
+ypos_nus = 10**((np.log10(max_nus_nus) + np.log10(1e6*abs(C_X_dd[x_therm_index])))/2 - 2)
+
+if BP == 1: 
+    xpos_nus = 6e-1*x_grid[max_nus_nus_index]
+elif BP == 2: 
+    xpos_nus = 3e-1
+elif BP == 3: 
+    xpos_nus = x_grid[max_nus_nus_index]
+elif BP == 4: 
+    xpos_nus = 3e-1
+else: 
+    xpos_nus = 3e-1
+
+ax.text(xpos_nus, ypos_nus, r"$\nu_s \nu_s \leftrightarrow \Phi$", color=c1, rotation=0, ha='center', va='top')
+
+x_mult = 1.3
+if BP == 1: 
+    x_ss_PP = 30.3
+    x_PP_ss = 30.3
+    x_sa_P = 1.3
+
+    y_ss_PP = 1e-7
+    y_sa_P = 0.9
+elif BP == 2: 
+    x_ss_PP = 1.3
+    x_PP_ss = 1.3
+    x_sa_P = 1.3
+
+    y_ss_PP = 1e-2
+    y_sa_P = 0.9
+elif BP == 3: 
+    x_ss_PP = 1.3
+    x_PP_ss = 30.3
+    x_sa_P = 1.3
+
+    y_ss_PP = 1e-2
+    y_sa_P = 0.9
+elif BP == 4: 
+    x_ss_PP = 30.3
+    x_PP_ss = 3.3
+    x_sa_P = 3.3
+
+    y_ss_PP = 1e-2
+    y_sa_P = 1e1
+else: 
+    y_ss_PP = 1e-2
+
+ax.text(x_therm*x_sa_P, y_sa_P*np.abs(1e6*C_da_h[x_therm_index]), r"$\nu_s \nu_\alpha \to \Phi$", color=c2, rotation=0, ha='left', va='top')
+ax.text(x_therm*x_ss_PP, y_ss_PP*np.abs(1e6*C_dd_XX[x_therm_index]), r"$\nu_s \nu_s \to \Phi \Phi$", color=c3, rotation=0, ha='left', va='bottom')
+ax.text(x_therm*x_PP_ss, 2e-28, r"$\Phi \Phi \to \nu_s \nu_s$", color=c5, rotation=0, va='bottom')
 
 plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-', color='black', label=r'$\Phi=X_\mu$')
-plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\Phi=h$')
+plt.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\Phi=h_\phi$')
+BP_str = r'$\textit{BP' + f'{BP}' + r'}$'
 
-x_therm = 1e-3
+legend_plot = plt.plot(0, 0, color=None, ls=None)
+legend_BP = ax.legend(legend_plot, [BP_str], loc='lower left', handlelength=0, handletextpad=0, edgecolor='gray')
+for item in legend_BP.legend_handles:
+    item.set_visible(False)
+plt.gca().add_artist(legend_BP)
+
 plt.fill_betweenx([1e-28, 1e0], 1e-5, x_therm, color='white', alpha=1, zorder=-3)
-plt.loglog([x_therm]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
+plt.axvline(x_therm, ls=':', color='0', zorder=-2)
 # plt.loglog([1e-3]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
 #plt.fill_betweenx([1e-28, 1e-8], 1e-5, 1e-3, facecolor="white", hatch="\\", edgecolor="0.9", zorder=1)
 
@@ -346,7 +472,7 @@ plt.loglog([x_therm]*2, [1e-28, 1e0], ls=':', color='0', zorder=-2)
 props = dict(boxstyle='round', facecolor='white', alpha=0.8, linewidth=1, edgecolor="0.8")
 # ax.text(6e-1, 9e-18, r"$m_s = 15 \, \mathrm{keV}$" + "\n" + r"$m_\phi = 37.5 \, \mathrm{keV}$" + "\n" + r"$\sin^2 (2 \theta) = 1.5 \times 10^{-13}$" + "\n" + r"$y = 2.44 \times 10^{-4}$", horizontalalignment="left", fontsize=10, bbox=props)
 
-plt.legend(fontsize=9, framealpha=0.8, edgecolor='none')
+plt.legend(framealpha=0.8, edgecolor='none', loc='upper left')
 
 ax.xaxis.set_label_text(r"$m_s / T_\nu$")
 ax.yaxis.set_label_text(r"$\text{Rate} \;\; [\mathrm{keV}]$")
@@ -354,11 +480,15 @@ ax.yaxis.set_label_text(r"$\text{Rate} \;\; [\mathrm{keV}]$")
 ax.yaxis.set_major_locator(yMajorLocator)
 ax.yaxis.set_minor_locator(yMinorLocator)
 ax.yaxis.set_major_formatter(yMajorFormatter)
+ax.yaxis.set_label_position('right')
+ax.yaxis.set_ticks_position('right')
 
 plt.xlim(2e-5, 20)
-ax.set_ylim(1e-28, 1e-8)
+ymax = max(np.max(1e6*abs(C_X_dd)), np.max(1e6*abs(C_dd_X)), np.max(1e6*abs(C_h_dd)), np.max(1e6*abs(C_dd_h)))
+ax.set_ylim(1e-28, max(np.max(1e6*H)*2e3, ymax*1e1))
 plt.tight_layout()
-fig_str = f'rates_evo_md_{md_str};mX_{mX_str};mh_{mh_str};sin22th_{sin22th_str};y_{y_str}.pdf'
+fig_str = f'./saved_benchmarks/rates_evo_md_{md_str};mX_{mX_str};mh_{mh_str};sin22th_{sin22th_str};y_{y_str}_BP{BP}.pdf'
 print(f'saved {fig_str}')
-plt.savefig(fig_str)
+if save_fig:
+    plt.savefig(fig_str, bbox_inches='tight', dpi=300)
 plt.show()

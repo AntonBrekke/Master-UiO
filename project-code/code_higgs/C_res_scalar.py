@@ -452,7 +452,7 @@ def C_n_pp_dd(m_d, m_phi, k_d, k_phi, T_d, xi_d, xi_phi, vert, type = 0):
     """
 
     integ = vegas.Integrator(4 * [[0., 1.]])
-    result = integ(kernel, nitn=10, neval=1e4)
+    result = integ(kernel, nitn=10, neval=1e3)
     # if result.mean != 0.:
     #     print("Vegas error pp dd: ", result.sdev/fabs(result.mean), result.mean, result.Q)
     # print("pp dd", result.mean*chem_eq_fac/(256.*(pi**6.)), (exp(2.*xi_d)-exp(2.*xi_phi))*th_avg_sigma_v_pp_dd(T_d, m_d, m_phi, vert))

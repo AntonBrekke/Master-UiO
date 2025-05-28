@@ -1370,7 +1370,8 @@ def C_n_XX_dd(m_d, m_X, m_h, k_d, k_X, T_d, xi_d, xi_X, vert, th, m_Gamma_h2, ty
 
     # Anton: Monte-Carlo integration of the 4 integrals from 0 to 1 
     integ = vegas.Integrator(4 * [[0., 1.]])
-    result = integ(kernel, nitn=10, neval=1e4)
+    result = integ(kernel, nitn=10, neval=1e3)
+    # print(result.summary())
     # if result.mean != 0.:
     #     print("Vegas error pp dd: ", result.sdev/fabs(result.mean), result.mean, result.Q)
     # print("pp dd", result.mean*chem_eq_fac/(256.*(pi**6.)), (exp(2.*xi_d)-exp(2.*xi_X))*th_avg_sigma_v_XX_dd(T_d, m_d, m_phi, vert))
@@ -1702,10 +1703,15 @@ def sigma_XX_dd_new(s, m_d, m_X, vert):
     t_upper = -(p1cm - p3cm)**2 + 0j
     t_lower = -(p1cm + p3cm)**2 + 0j
 
-    # Longitudinal removed by hand  
-    int_t_M2_upper = 8*vert*((m_X2-6*m_d2)**2/(-m_d2-2*m_X2+s+t_upper)+(m_X2-6*m_d2)**2/(t_upper-m_d2)+((24*m_d4+m_d2*(12*s-40*m_X2)+4*m_X4+s2)*(np.log(t_upper-m_d2)-np.log(-m_d2-2*m_X2+s+t_upper)))/(2*m_X2-s)-2*t_upper)
+    # Anton: Polarization sum set to zero 
+    # int_t_M2_upper = 8*vert*((m_X2-6*m_d2)**2/(-m_d2-2*m_X2+s+t_upper)+(m_X2-6*m_d2)**2/(t_upper-m_d2)+((24*m_d4+m_d2*(12*s-40*m_X2)+4*m_X4+s2)*(np.log(t_upper-m_d2)-np.log(-m_d2-2*m_X2+s+t_upper)))/(2*m_X2-s)-2*t_upper)
 
-    int_t_M2_lower = 8*vert*((m_X2-6*m_d2)**2/(-m_d2-2*m_X2+s+t_lower)+(m_X2-6*m_d2)**2/(t_lower-m_d2)+((24*m_d4+m_d2*(12*s-40*m_X2)+4*m_X4+s2)*(np.log(t_lower-m_d2)-np.log(-m_d2-2*m_X2+s+t_lower)))/(2*m_X2-s)-2*t_lower)
+    # int_t_M2_lower = 8*vert*((m_X2-6*m_d2)**2/(-m_d2-2*m_X2+s+t_lower)+(m_X2-6*m_d2)**2/(t_lower-m_d2)+((24*m_d4+m_d2*(12*s-40*m_X2)+4*m_X4+s2)*(np.log(t_lower-m_d2)-np.log(-m_d2-2*m_X2+s+t_lower)))/(2*m_X2-s)-2*t_lower)
+
+    # Longitudinal removed by hand  
+    int_t_M2_upper = 8*vert*((m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_upper)-(m_X2-4*m_d2)**2/(m_d2-t_upper)+((4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*(np.log(m_d2-t_upper)-np.log(m_d2+2*m_X2-s-t_upper)))/(2*m_X6-m_X4*s)-2*t_upper)
+
+    int_t_M2_lower = 8*vert*((m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_lower)-(m_X2-4*m_d2)**2/(m_d2-t_lower)+((4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*(np.log(m_d2-t_lower)-np.log(m_d2+2*m_X2-s-t_lower)))/(2*m_X6-m_X4*s)-2*t_lower)
 
     # With longitudinal 
     # int_t_M2_upper = 8*vert*((m_X2-4*m_d2)**2/(-m_d2-2*m_X2+s+t_upper)-(m_X2-4*m_d2)**2/(m_d2-t_upper)+(4*m_d2*t_upper*(s-4*m_X2))/m_X4+((4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*(np.log(m_d2-t_upper)-np.log(m_d2+2*m_X2-s-t_upper)))/(2*m_X6-m_X4*s)-2*t_upper)
@@ -1740,7 +1746,7 @@ def sigma_XX_dd_Higgs(s, m_d, m_X, m_h, vert, th, m_Gamma_h2):
     H(1/(4*s)*{[s - (m1 + m2)]^2 - 4*m1^2*m2^2}) = H([s - (m1 + m2)^2]^2 - 4*m1^2*m2^2)
     = H(s - m1 - m2 - 2*m1*m2) = H(s - (m1 + m2)^2) = H(E_cm - m1 - m2)
     Cross-section:
-    sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*p1cm^2) 
+    sigma = H(E_cm - m3 - m4)*H(E_cm - m1 - m2)/(64*pi*s*p1cm^2) 
           * int_{t_lower}^{t_upper} dt |M|^2
     Note: This function can be vectorized, but is not needed. 
           Use np.vectorize(sigma_XX_dd)(s, m_d, m_X, vert) instead if array output is wanted.
@@ -1764,6 +1770,9 @@ def sigma_XX_dd_Higgs(s, m_d, m_X, m_h, vert, th, m_Gamma_h2):
     # Can cause problem with e.g. negativity of cross-section
     hprop = (s-m_h2)/((s-m_h2)**2 + m_Gamma_h2)
     hprop2 = ((s-m_h2)**2-m_Gamma_h2)/((s-m_h2)**2 + m_Gamma_h2)**2
+
+    # hprop = 1j / (s-m_h2)
+    # hprop2 = 1 / (s-m_h2)**2
 
     # off-shell propagators in CUT-scheme with top-hat cut 
     # delta = 1e3*np.sqrt(m_Gamma_h2)
@@ -1794,6 +1803,10 @@ def sigma_XX_dd_Higgs(s, m_d, m_X, m_h, vert, th, m_Gamma_h2):
     int_t_M2_upper = 8*vert*(-((4*m_d2*t_upper*(gss2*(4*m_X2-s)+2*gss*hprop*(4*m_X4-2*m_X2*s+s2)+hprop2*(4*m_d2-s)*(12*m_X4-4*m_X2*s+s2)))/(gss2*m_X4))+(1/(gss*m_X4*(2*m_X2-s)))*(gss*(4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*np.log(m_d2-t_upper)-gss*(4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*np.log(m_d2+2*m_X2-s-t_upper)+8*hprop*m_d2*(2*m_X2-s)*(m_d2*(8*m_X4-4*m_X2*s+s2)-2*m_X6)*(np.log(-m_d2-2*m_X2+s+t_upper)-np.log(t_upper-m_d2)))-(m_X2-4*m_d2)**2/(m_d2+2*m_X2-s-t_upper)-(m_X2-4*m_d2)**2/(m_d2-t_upper)-2*t_upper)
 
     int_t_M2_lower = 8*vert*(-((4*m_d2*t_lower*(gss2*(4*m_X2-s)+2*gss*hprop*(4*m_X4-2*m_X2*s+s2)+hprop2*(4*m_d2-s)*(12*m_X4-4*m_X2*s+s2)))/(gss2*m_X4))+(1/(gss*m_X4*(2*m_X2-s)))*(gss*(4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*np.log(m_d2-t_lower)-gss*(4*m_d4*s*(4*m_X2-s)+4*m_d2*m_X2*(-4*m_X4-3*m_X2*s+s2)+m_X4*(4*m_X4+s2))*np.log(m_d2+2*m_X2-s-t_lower)+8*hprop*m_d2*(2*m_X2-s)*(m_d2*(8*m_X4-4*m_X2*s+s2)-2*m_X6)*(np.log(-m_d2-2*m_X2+s+t_lower)-np.log(t_lower-m_d2)))-(m_X2-4*m_d2)**2/(m_d2+2*m_X2-s-t_lower)-(m_X2-4*m_d2)**2/(m_d2-t_lower)-2*t_lower)
+    
+    # int_t_M2_upper = 8*vert*((1/((2*m_X2-s)))*((4*m_d2*(-4*m_X2-3*s)+(4*m_X4+s2))*np.log(m_d2-t_upper)-(4*m_d2*(-4*m_X2-3*s)+(4*m_X4+s2))*np.log(m_d2+2*m_X2-s-t_upper))-(m_X2-4*m_d2)**2/(m_d2+2*m_X2-s-t_upper)-(m_X2-4*m_d2)**2/(m_d2-t_upper)-2*t_upper)
+
+    # int_t_M2_lower = 8*vert*((1/((2*m_X2-s)))*((4*m_d2*(-4*m_X2-3*s)+(4*m_X4+s2))*np.log(m_d2-t_lower)-(4*m_d2*(-4*m_X2-3*s)+(4*m_X4+s2))*np.log(m_d2+2*m_X2-s-t_lower))-(m_X2-4*m_d2)**2/(m_d2+2*m_X2-s-t_lower)-(m_X2-4*m_d2)**2/(m_d2-t_lower)-2*t_lower)
 
     # Remove longitudinal by hand in addition to Higgs 
     # int_t_M2_upper = -((8*vert*(gss2*((m_X2-6*m_d2)**2/(m_d2+2*m_X2-s-t_upper)+(m_X2-6*m_d2)**2/(m_d2-t_upper)+2*t_upper)+32*gss*hprop*m_d2*t_upper-(gss*(gss*(24*m_d4+m_d2*(12*s-40*m_X2)+4*m_X4+s2)-16*hprop*m_d2*(2*m_X2-s)*(6*m_d2-m_X2-s))*(np.log(t_upper-m_d2)-np.log(-m_d2-2*m_X2+s+t_upper)))/(2*m_X2-s)+64*hprop2*m_d2*t_upper*(4*m_d2-s)))/gss2)
@@ -1955,7 +1968,7 @@ if __name__ == '__main__':
     import time
 
     m_ratio_dX = 3
-    m_ratio_hX = 1
+    m_ratio_hX = 5
 
     m_d = 2e-5          # 1e-6*M GeV = M keV, 2e-5 GeV = 20 keV
     m_a = 0.
@@ -2135,6 +2148,8 @@ if __name__ == '__main__':
     # ax.plot(s[in_res], ker_C_34_12_s_t_integral_val_2)
     # fig.tight_layout()
     # plt.show()
+
+    C_n_XX_dd(m_d, m_X, m_h, k_d, k_X, T_d, xi_d, xi_X, vert, th, m_Gamma_h2, type=0)
 
     from C_res_scalar import C_n_pp_dd
 
@@ -2928,6 +2943,8 @@ if __name__ == '__main__':
     s_min = 4*m_X2
     # s_sigma = 10**(np.linspace(np.log10(s_min), 5.424, int(1e4)))
     s_sigma = 10**(np.linspace(np.log10(s_min), 2, int(1e4)))
+    # width = 1e-10
+    # s_sigma = 10**(np.linspace(np.log10(m_h2-width), np.log10(m_h2+width), int(1e4)))
     sigma_XX_dd_val = np.vectorize(sigma_XX_dd_violate_unitarity)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
     sigma_XX_dd_val_new = np.vectorize(sigma_XX_dd_new)(s=s_sigma, m_d=m_d, m_X=m_X, vert=vert_XX_dd)
     sigma_XX_dd_val_Higgs = np.vectorize(sigma_XX_dd_Higgs)(s=s_sigma, m_d=m_d, m_X=m_X, m_h=m_h, vert=vert_XX_dd, th=th, m_Gamma_h2=m_Gamma_h2)
@@ -2948,7 +2965,7 @@ if __name__ == '__main__':
     lw = 2
     ax.plot(np.sqrt(s_sigma)*1e6, sigma_XX_dd_val_Higgs, color=c4, label=r'Unitarity restored by Higgs', lw=lw)
     ax.plot(np.sqrt(s_sigma)*1e6, sigma_XX_dd_val, color=ch, label=r'Unitarity violation', lw=lw)
-    ax.plot(np.sqrt(s_sigma)*1e6, sigma_XX_dd_val_new, color=c2, label=r'Remove longitudinal by hand', lw=lw)
+    ax.plot(np.sqrt(s_sigma)*1e6, sigma_XX_dd_val_new, color=c2, ls=(0, (2,2)), label=r'Remove by hand', lw=lw)
     # ax.plot(np.sqrt(s_sigma)*1e6, sigma_Xh_dd_val, color='tab:orange', label=r'Something else')
     # Anton: Asymptotic s --> inf value for sigma, sigma ~ g^4*ms^2/(pi*mx^4) = g^4/(pi*m_ratio^2*m_s^2)
     # => Increase m_s or m_ratio gives decrease in asymptotic value 
@@ -2978,7 +2995,7 @@ if __name__ == '__main__':
     m_h_str = r"$m_h=\,\,$"+m_h_str+"$\,$keV"
 
     masses_string = m_d_str + m_X_str + m_h_str
-    ax.text(np.sqrt(s_sigma[-1])*1e6, 2e-5, masses_string, color='k', ha='right', va='top')
+    ax.text(np.sqrt(s_sigma[-1])*1e6, 5e-6, masses_string, color='k', ha='right', va='top')
     ax.set_xscale('log')
     ax.set_yscale('log')
     ax.set_xlim(np.sqrt(s_min)*1e6*0.5)
@@ -2988,7 +3005,7 @@ if __name__ == '__main__':
     ax.legend()
     fig.tight_layout()
     # plt.savefig(f'./thesis_figs/unitarity_violation_decoupling_Higgs.pdf')
-    # plt.savefig(f'./thesis_figs/unitarity_violation_2.pdf')
+    # plt.savefig(f'./thesis_figs/unitarity_violation.pdf')
     plt.show()
 
     # res_XX_dd = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0)

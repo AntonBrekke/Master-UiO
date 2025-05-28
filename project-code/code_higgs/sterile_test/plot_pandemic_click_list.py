@@ -105,8 +105,8 @@ def plot_pandemic(load_str):
     #ax1.text(8e-5, 2e-21, 'Thermalization', fontsize=10, color='darkorange')
     #ax1.text(5e-4, 1.3e-19, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
     #ax1.text(5e-4, 1e-22, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
-    ax1.axvline([1e-3], ls=':', color='0', zorder=-2)
-    ax2.axvline([1e-3], ls=':', color='0', zorder=-2)
+    ax1.axvline([2e-3], ls=':', color='0', zorder=-2)
+    ax2.axvline([2e-3], ls=':', color='0', zorder=-2)
     # ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
     # ax2.plot([1e-3]*2, [1e-2, np.max(Td/T_nu)*1.5], ls=':', color='0', zorder=-2)
 
@@ -132,7 +132,7 @@ def plot_pandemic(load_str):
 
     ax2.loglog(md/T_nu, Td/T_nu, color='0.4', ls='-', zorder=-4)
 
-    ax2.fill_betweenx([1e-1, 1.5e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+    ax2.fill_betweenx([1e-1, 1.5e0], 1e-5, 2e-3, color='white', alpha=1, zorder=-3)
 
     props = dict(boxstyle='round', facecolor='white', alpha=0.8, linewidth=1, edgecolor="0.8")
 

@@ -19,40 +19,65 @@ sys.path.insert(0, grandparentdir)
 
 import constants_functions as cf
 
+def get_figsize(columnwidth, wf=1.0, hf=(5.**0.5-1.0)/2.0):
+    """Parameters:
+    - wf [float]:  width fraction in columnwidth units
+    - hf [float]:  height fraction in columnwidth units.
+                    Set by default to golden ratio.
+    - columnwidth [float]: width of the column in latex. Get this from LaTeX 
+                            using \showthe\columnwidth
+    Returns:  [fig_width, fig_height]: that should be given to matplotlib
+    """
+    fig_width_pt = columnwidth*wf 
+    inches_per_pt = 1.0/72.27               # Convert pt to inch
+    fig_width = fig_width_pt*inches_per_pt  # width in inches
+    fig_height = fig_width*hf      # height in inches
+    return [fig_width, fig_height]
+
+ggplot_red = "#E24A33"
+ch = 'crimson' # crimson
+c1 = '#797ef6' # orchid
+c2 = '#1aa7ec' # sky blue
+c3 = '#4adede' # turquoise
+c4 = '#ffa62b' # gold
+c5 = '#1e2f97' # dark blue
+
+columnwidth = 418.25368     # pt, given by \showthe\textwidth in LaTeX
+
 plt.rc('text', usetex=True)
-plt.rc('font', family='serif', size=14)
+plt.rc('font', family='serif')
 # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
+params = {'axes.labelsize': 10,
+            'axes.titlesize': 10,
+            'font.size': 10 } # extend as needed
+# print(plt.rcParams.keys())
+plt.rcParams.update(params)
 
-fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(0.4*12.0, 0.4*11.0), dpi=150, edgecolor="white", gridspec_kw={'height_ratios': [2, 1]})
-ax1.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
+fig, ax1 = plt.subplots(1, 1, sharex=True, figsize=get_figsize(columnwidth=columnwidth, wf=1.0), dpi=150, edgecolor="white")
+ax1.tick_params(axis='both', which='both', direction="in", width=0.5)
 ax1.yaxis.set_ticks_position('both')
 for axis in ['top','bottom','left','right']:
     ax1.spines[axis].set_linewidth(0.5)
-ax2.tick_params(axis='both', which='both', labelsize=11, direction="in", width=0.5)
-ax2.xaxis.set_ticks_position('bottom')
-ax2.yaxis.set_ticks_position('both')
-for axis in ['top','bottom','left','right']:
-    ax2.spines[axis].set_linewidth(0.5)
 
-# xtMajor = np.array([np.log10(10**j) for j in np.linspace(-5, 2, 8)])
-# xtMinor = np.array([np.log10(i*10**j) for j in xtMajor for i in range(10)[1:10]])
-# xlMajor = [r"$10^{" + str(int(i)) + "}$" if i in xtMajor else "" for i in xtMajor]
-# xtMajor = 10**xtMajor
-# xtMinor = 10**xtMinor
-# xMajorLocator = FixedLocator(xtMajor)
-# xMinorLocator = FixedLocator(xtMinor)
-# xMajorFormatter = FixedFormatter(xlMajor)
+xtMajor = np.array([np.log10(10**j) for j in np.linspace(-5, 2, 8)])
+xtMinor = np.array([np.log10(i*10**j) for j in xtMajor for i in range(10)[1:10]])
+xlMajor = [r"$10^{" + str(int(i)) + "}$" if i in xtMajor else "" for i in xtMajor]
+xtMajor = 10**xtMajor
+xtMinor = 10**xtMinor
+xMajorLocator = FixedLocator(xtMajor)
+xMinorLocator = FixedLocator(xtMinor)
+xMajorFormatter = FixedFormatter(xlMajor)
 
 # Anton: Formatting is to move y-tick scale from GeV to keV (str(int(i+6)))
-# ytMajor = np.array([np.log10(10**j) for j in np.linspace(-25, 5, 25-(-5)+1)])
-# ytMinor = np.array([np.log10(i*10**j) for j in ytMajor for i in range(10)[1:10]])
-# ylMajor = [r"$10^{" + str(int(i+6)) + "}$" if i in ytMajor[::2] else "" for i in ytMajor]
-# ytMajor = 10**ytMajor
-# ytMinor = 10**ytMinor
-# yMajorLocator = FixedLocator(ytMajor)
-# yMinorLocator = FixedLocator(ytMinor)
-# yMajorFormatter = FixedFormatter(ylMajor)
+ytMajor = np.array([np.log10(10**j) for j in np.linspace(-25, 5, 25-(-5)+1)])
+ytMinor = np.array([np.log10(i*10**j) for j in ytMajor for i in range(10)[1:10]])
+ylMajor = [r"$10^{" + str(int(i+6)) + "}$" if i in ytMajor[::2] else "" for i in ytMajor]
+ytMajor = 10**ytMajor
+ytMinor = 10**ytMinor
+yMajorLocator = FixedLocator(ytMajor)
+yMinorLocator = FixedLocator(ytMinor)
+yMajorFormatter = FixedFormatter(ylMajor)
 
 """
 Had to fix: the right entropy 'ent' was not returned, which caused trouble in plots. 
@@ -250,18 +275,41 @@ load_str = './md_2e-05;mX_6e-05;mh_6e-05;sin22th_3e-15;y_8.98e-04;full_new.dat' 
 load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.5e-03;full_new.dat'          # interesting 
 load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'     # Perfect
 
-data = np.loadtxt(load_str)
 
-T_SM = data[:,1]
-T_nu = data[:,2]
-ent = data[:,3]
-Td = data[:,6]
-xid = data[:,7]
-xiX = data[:,8]
-xih = data[:,9]
-nd = data[:,10]
-nX = data[:,11]
-nh = data[:,12]
+### Benchmark Points ###:
+BP = 2
+if BP == 1:
+    # BP1
+    load_str = './md_1.12884e-05;mX_5.64419e-05;mh_3.38651e-05;sin22th_1.83298e-13;y_1.93457e-04;full_new.dat' 
+    x_therm = 2e-3
+if BP  == 2:
+    # BP2
+    load_str = './md_2.1e-05;mX_1.05e-04;mh_6.3e-05;sin22th_1.5e-15;y_1.313e-03;full_new.dat'
+    x_therm = 2e-3
+if BP  == 3:
+    # BP3
+    load_str = './md_4e-06;mX_2e-05;mh_1.2e-05;sin22th_3e-15;y_8.36e-04;full_new.dat'  
+    x_therm = 2e-3
+if BP == 4:
+    # BP4
+    load_str = './md_5.13483e-05;mX_2.56742e-04;mh_1.54045e-04;sin22th_3.66524e-16;y_3.36087e-03;full_new.dat' 
+    x_therm = 7e-4
+else: None  
+
+# load_str = './md_2.33572e-04;mX_1.16786e-03;mh_7.00716e-04;sin22th_1.26638e-14;y_8.76604e-04;full.dat'
+data = np.loadtxt(load_str)
+data_skip = 2
+
+T_SM = data[::data_skip, 1]
+T_nu = data[::data_skip, 2]
+ent = data[::data_skip, 3]
+Td = data[::data_skip, 6]
+xid = data[::data_skip, 7]
+xiX = data[::data_skip, 8]
+xih = data[::data_skip, 9]
+nd = data[::data_skip, 10]
+nX = data[::data_skip, 11]
+nh = data[::data_skip, 12]
 
 c1 = '#7bc043'      # green
 c2 = '#f37736'      # orange
@@ -284,18 +332,21 @@ if True:
     #ax1.text(5e-4, 1.3e-19, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
     #ax1.text(5e-4, 1e-22, r'$\rightarrow$', color='darkorange', horizontalalignment='center', verticalalignment='center')
     ax1.axvline([1e-3], ls=':', color='0', zorder=-2)
-    ax2.axvline([1e-3], ls=':', color='0', zorder=-2)
     # ax1.plot([1e-3]*2, [1e-25, 2e-8], ls=':', color='0', zorder=-2)
     # ax2.plot([1e-3]*2, [1e-2, np.max(Td/T_nu)*1.5], ls=':', color='0', zorder=-2)
 
-    ax1.text(1.5e-4, -28, r'$\mathrm{Dark}$', fontsize=8, color='0', horizontalalignment='center')
-    ax1.text(1.5e-4, -31, r'$\mathrm{Thermalization}$', fontsize=8, color='0', horizontalalignment='center')
-    ax1.text(1.5e-4, -34, r'$\rightarrow$', fontsize=8, color='0', horizontalalignment='center')
+    ax1.text(1.5e-4, -28, r'$\mathrm{Dark}$', color='0', horizontalalignment='center')
+    ax1.text(1.5e-4, -31, r'$\mathrm{Thermalization}$', color='0', horizontalalignment='center')
+    ax1.text(1.5e-4, -34, r'$\rightarrow$', color='0', horizontalalignment='center')
     #ax1.text(4.5e-5, 1e-22, r'$\hspace{-0.55cm}\mathrm{Therma-}\\\mathrm{lization}\\\mathrm{ }\hspace{0.2cm}\rightarrow$', fontsize=10, color='0')
 
-    ax1.semilogx(md/T_nu, xid-md/Td, color=c1, ls='-', zorder=-4)
-    ax1.semilogx(md/T_nu, xih-mh/Td, color=c2, ls='-', zorder=-4)
-    ax1.semilogx(md/T_nu, xiX-mX/Td, color=c3, ls='-', zorder=-4)
+    ax1.semilogx(md/T_nu, (xid*Td), color=c1, ls='-', zorder=-4)
+    ax1.semilogx(md/T_nu, (xih*Td), color=c2, ls='-', zorder=-4)
+    ax1.semilogx(md/T_nu, (xiX*Td), color=c3, ls='-', zorder=-4)
+    ax1.axhline(0)
+
+
+    print((md/T_nu)[np.where(xid*Td>0)])
 
     # ax1.semilogx([1e-8, 1e3], [mY_relic, mY_relic], color='0.55', ls='-.', zorder=-2)
     # ax1.text(3e-5, 1e-11, r'$\Omega_s h^2 = 0.12$', fontsize=11, color='0.55')
@@ -304,16 +355,16 @@ if True:
     Yh_max = np.max(xih-mh/Td)
     Ys_max = np.max(xid-md/Td)
 
-    ax1.text(md/T_nu[np.where(xiX-mX/Td==YX_max)], Ys_max-5, r'$\nu_s$', color=c1, fontsize=11)
-    ax1.text(md/T_nu[np.where(xiX-mX/Td==YX_max)], YX_max-5, r'$X$', color=c3, fontsize=11)
-    ax1.text(md/T_nu[np.where(xih-mh/Td==Yh_max)]*3, Yh_max-2, r'$h$', color=c2, fontsize=11)
+    ax1.text(md/T_nu[np.where(xiX-mX/Td==YX_max)]*1.2, Ys_max-5, r'$\nu_s$', color=c1)
+    ax1.text(md/T_nu[np.where(xih-mh/Td==Yh_max)]*3, Yh_max-2, r'$h_\phi$', color=c2)
+    ax1.text(md/T_nu[np.where(xiX-mX/Td==YX_max)]*1.2, YX_max-5, r'$X_\mu$', color=c3)
 
-    ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='-' , color='black', label=r'$\text{BP1}$')
-    ax2.plot([1e-10, 1e-9], [1e-40, 1e-35], linestyle='--', color='black', label=r'$\text{BP2}$')
-
-    ax2.loglog(md/T_nu, Td/T_nu, color='0.4', ls='-', zorder=-4)
-
-    ax2.fill_betweenx([1e-1, 1.5e0], 1e-5, 1e-3, color='white', alpha=1, zorder=-3)
+    BP_str = r'$\textit{BP' + f'{BP}' + r'}$'
+    legend_plot = plt.plot(0, 0, color=None, ls=None)
+    legend_BP = ax1.legend(legend_plot, [BP_str], loc='lower left', handlelength=0, handletextpad=0, edgecolor='gray')
+    for item in legend_BP.legend_handles:
+        item.set_visible(False)
+    plt.gca().add_artist(legend_BP)
 
     props = dict(boxstyle='round', facecolor='white', alpha=0.8, linewidth=1, edgecolor="0.8")
 
@@ -321,12 +372,7 @@ if True:
     #plt.text(1e0, 3e-23, r'$m_X = 2.5m_\chi$', fontsize=9, horizontalalignment='center', bbox=props, zorder=5)
     #ax1.text(1e0, 8e-25, r'$m_X = 2.5m_\chi$', fontsize=10, horizontalalignment='center', zorder=5)
 
-
-    ax2.legend(fontsize=10, framealpha=0.8, edgecolor='1')
-    ax2.xaxis.set_label_text(r"$m_s / T_\nu$")
     ax1.yaxis.set_label_text(r"$(\mu-m)/T_d$")
-    ax2.yaxis.set_label_text(r"$T_\text{d}/T_\nu$")
-
 
     # ax1.xaxis.set_major_locator(xMajorLocator)
     # ax1.xaxis.set_minor_locator(xMinorLocator)
@@ -338,8 +384,8 @@ if True:
     plt.xlim(2e-5, 20)
 
     # ylim + 6 will be shown
-    ax1.set_ylim(-50, 0)
-    ax2.set_ylim(np.min(Td/T_nu)*0.5, np.max(Td/T_nu)*1.5)
+    ax1.set_ylim(-0.0025, 1e-4)
+    # ax1.set_ylim(-50, 0)
     # ax1.set_title(fr'$\sin^2(2\theta)$={sin22th:.1e}, $y$={y:.1e}\\$m_d$={md:.1e}, $m_X$={mX:.1e}, $m_h$={mh:.1e}', fontsize=12)
     plt.tight_layout()
     plt.subplots_adjust(hspace=0)

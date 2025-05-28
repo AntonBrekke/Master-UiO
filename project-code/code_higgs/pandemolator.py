@@ -21,7 +21,7 @@ fac_abund_stop = 100.
 xi_ratio_stop = 100.
 
 class TimeTempRelation(object):
-    def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=300, m_psi=None, dof_psi=None, k_psi=None):
+    def __init__(self, T_start=1e8, t_end=t_max, t_gp_pd=1000, m_psi=None, dof_psi=None, k_psi=None):
         # print('Initializing TimeTempRelation')
         if m_psi is None:
             self.psi_in_SM = True
@@ -88,6 +88,9 @@ class TimeTempRelation(object):
         hubble_T5 = hubble/(T_SM**5.)
         nu_dec = True if not np.isfinite(hubble_T5) or hubble_T5 > cf.hubble_T5_nu_dec else False
 
+        # if nu_dec:
+        #     print(T_nu)
+
         der_SM = T_SM/(2.*sqrt_t) + sqrt_t*self.dTSM_dt(T_SM, hubble, nu_dec)
         der_nu = T_nu/(2.*sqrt_t) + sqrt_t*self.dTnu_dt(T_nu, hubble, nu_dec)
 
@@ -110,8 +113,8 @@ class Pandemolator(object):
         self.fac_n_X = 2. if self.m_X > 2.*self.m_chi else 1.
         self.fac_n_h = 2. if self.m_h > 2.*self.m_chi else 1.
 
-        self.C_n = C_n     # rhs of Boltzmann-eq. for n_chi + self.fac_n_X*n_X
-        self.C_rho = C_rho # rhs of Boltzmann-eq. for rho_chi + rho_X
+        self.C_n = C_n     # rhs of Boltzmann-eq. for n_chi + self.fac_n_X*n_X + self.fac_n_h*n_h
+        self.C_rho = C_rho # rhs of Boltzmann-eq. for rho_chi + rho_X + rho_h
         self.C_xi0 = C_xi0 # part of rhs of Boltzmann-eq. for n setting xi = 0 (i.e. chi chi -> X X)
 
         self.t_grid = t_grid
@@ -399,7 +402,7 @@ class Pandemolator(object):
                 event_abund.terminal = True
                 event_abund.direction = -1
                 print(f'Start solve_ivp i_max > 0')
-                sol_xi0 = solve_ivp(self.der_xi_0, [self.log_x_pts[i_max], self.log_x_pts[-1]], [rho0*(sf0**4.)], t_eval=self.log_x_pts[i_max:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='LSODA', first_step=self.log_x_pts[i_max+1]-self.log_x_pts[i_max])
+                sol_xi0 = solve_ivp(self.der_xi_0, [self.log_x_pts[i_max], self.log_x_pts[-1]], [rho0*(sf0**4.)], t_eval=self.log_x_pts[i_max:], events=(event_xi, event_abund), rtol=rtol_ode_pan, atol=0., method='RK45', first_step=self.log_x_pts[i_max+1]-self.log_x_pts[i_max])
                 print(f'End solve_ivp i_max > 0')
                 i_xi_nonzero = i_max + sol_xi0.t.size - 1
 

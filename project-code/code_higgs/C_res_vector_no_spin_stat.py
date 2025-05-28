@@ -412,15 +412,12 @@ def C_12_34(m1, m2, m3, m4, k1, k2, T1, T2, xi1, xi2, vert, m_X2, m_Gamma_X2, ty
 
 
 
-def ker_C_dd_dd_gon_gel(log_s, m_d, k_d, T_d, xi_d, vert_el, m_X2, m_Gamma_X2, res_sub):
+def ker_C_dd_dd_gon_gel(log_s, m_d, k_d, T_d, xi_d, vert_el, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, res_sub):
     s = exp(log_s)
     if s <= 4.*m_d*m_d:
         return 0.
 
-    if res_sub:
-        sigma = vector_mediator.sigma_gen(s, m_d, m_d, m_d, m_d, vert_el, m_X2, m_Gamma_X2, sub=res_sub)
-    else:
-        sigma = 2.*vector_mediator.sigma_el(s, m_d*m_d, vert_el, m_X2, m_Gamma_X2)
+    sigma = vector_mediator.sigma_gen_new(s, m_d, m_d, m_d, m_d, vert_el, m_d2, m_X2, m_h2, m_Gamma_X2, m_Gamma_h2, sub=False)
 
     sqrt_s = sqrt(s)
     if sqrt_s/T_d < max_exp_arg and 2.*xi_d < 6e2:
