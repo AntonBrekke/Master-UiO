@@ -1,6 +1,6 @@
 # Pandemic Dark Matter Boltzmann solver 
 
-#### Author: This code was originally written in the project https://iopscience.iop.org/article/10.1088/1475-7516/2013/10/044, and further developed by me, antonabr@uio.no. 
+#### Author: This code was originally written in the project https://journals.aps.org/prd/abstract/10.1103/PhysRevD.107.L071702, and further developed by me, antonabr@uio.no. 
 
 Major parts of this code served as my master thesis at the University of Oslo. 
 
