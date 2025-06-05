@@ -76,13 +76,13 @@ load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat'
 load_str = './md_5.13483e-05;mX_2.56742e-04;mh_1.54045e-04;sin22th_3.66524e-16;y_3.36087e-03;full.dat'
 
 force_write = False
-save_fig = True
+save_fig = False
 sample_data_skip = 10
 plot_data_skip = 1
 x_therm = 1e-3
 
 ### Benchmark Points ###:
-BP = 2
+BP = 1
 if BP == 1:
     # BP1
     load_str = './md_1.12884e-05;mX_5.64419e-05;mh_3.38651e-05;sin22th_1.83298e-13;y_1.93457e-04;full_new.dat' 
@@ -480,8 +480,8 @@ ax.yaxis.set_label_text(r"$\text{Rate} \;\; [\mathrm{keV}]$")
 ax.yaxis.set_major_locator(yMajorLocator)
 ax.yaxis.set_minor_locator(yMinorLocator)
 ax.yaxis.set_major_formatter(yMajorFormatter)
-ax.yaxis.set_label_position('right')
-ax.yaxis.set_ticks_position('right')
+ax.yaxis.set_label_position('left')
+ax.yaxis.set_ticks_position('left')
 
 plt.xlim(2e-5, 20)
 ymax = max(np.max(1e6*abs(C_X_dd)), np.max(1e6*abs(C_dd_X)), np.max(1e6*abs(C_h_dd)), np.max(1e6*abs(C_dd_h)))

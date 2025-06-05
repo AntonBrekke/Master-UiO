@@ -58,8 +58,10 @@ plt.rc('font', family='serif')
 # plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 params = {'axes.labelsize': 10,
-            'axes.titlesize': 10,
-            'font.size': 10 } # extend as needed
+          'xtick.labelsize': 10,
+          'ytick.labelsize': 10,
+          'axes.titlesize': 10,
+          'font.size': 10 } # extend as needed
 # print(plt.rcParams.keys())
 plt.rcParams.update(params)
 
@@ -350,7 +352,7 @@ md_B4, sin22th_B4 = float(md_B4.replace('md_', '')), float(sin22th_B4.replace('s
 plt.plot(np.log10(1e6*md_B1), np.log10(sin22th_B1), marker='*', color='tomato')
 plt.plot(np.log10(1e6*md_B2), np.log10(sin22th_B2), marker='*', color='tomato')
 plt.plot(np.log10(1e6*md_B3), np.log10(sin22th_B3), marker='*', color='tomato')
-plt.plot(np.log10(1e6*md_B4), np.log10(sin22th_B4), marker='*', color='tomato')
+# plt.plot(np.log10(1e6*md_B4), np.log10(sin22th_B4), marker='*', color='tomato')
 
 #plt.plot(np.log10(10), np.log10(3.5e-13), marker='*', color='tomato')
 #plt.plot(np.log10(20), np.log10(3.5e-15), marker='*', color='tomato')

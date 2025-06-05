@@ -660,6 +660,12 @@ if __name__ == '__main__':
     # y = 1.53e-3
     # sin2_2th = 1e-15
 
+    m_d = 5e-5
+    m_X = 3*m_d
+    m_h = 3*m_d
+    y = 3.4e-3
+    sin2_2th = 1e-16
+
 
     # Anton: fermion = 1, boson = -1 (I did not choose this convention..)
     k_d = 1.

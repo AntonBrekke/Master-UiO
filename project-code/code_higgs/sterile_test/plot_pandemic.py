@@ -287,9 +287,9 @@ load_str = './md_2e-05;mX_1e-04;mh_6e-05;sin22th_1e-15;y_1.51e-03;full_new.dat' 
 
 
 x_therm = 1e-3
-save_fig = True
+save_fig = False
 ### Benchmark Points ###:
-BP = 3
+BP = 1
 if BP == 1:
     # BP1
     load_str = './md_1.12884e-05;mX_5.64419e-05;mh_3.38651e-05;sin22th_1.83298e-13;y_1.93457e-04;full_new.dat' 

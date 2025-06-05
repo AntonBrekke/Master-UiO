@@ -3006,6 +3006,7 @@ if __name__ == '__main__':
     fig.tight_layout()
     # plt.savefig(f'./thesis_figs/unitarity_violation_decoupling_Higgs.pdf')
     # plt.savefig(f'./thesis_figs/unitarity_violation.pdf')
+    # plt.savefig(f'./thesis_figs/unitarity_violation_no_Higgs.pdf')
     plt.show()
 
     # res_XX_dd = C_n_XX_dd(m_d=m_d, m_X=m_X, k_d=k_d, k_X=k_X, T_d=T_d, xi_d=xi_d, xi_X=xi_X, vert=vert_el, type=0)
